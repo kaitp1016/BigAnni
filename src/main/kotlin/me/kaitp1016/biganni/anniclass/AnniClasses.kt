@@ -1,5 +1,6 @@
 package me.kaitp1016.biganni.anniclass
 
+import me.kaitp1016.biganni.anniclass.impl.AlchemistClass
 import me.kaitp1016.biganni.anniclass.impl.AssassinClass
 import me.kaitp1016.biganni.anniclass.impl.BerserkerClass
 import me.kaitp1016.biganni.anniclass.impl.BuilderClass
@@ -43,6 +44,7 @@ object AnniClasses {
     val SUCCUBUS = register("succubus", SuccubusClass)
     val THOR = register("thor", ThorClass)
     val ASSASSIN = register("assassin", AssassinClass)
+    val ALCHEMIST = register("alchemist", AlchemistClass)
 
     fun <T: AnniClass> register(id: String, anniClass: T): T {
         ALL_CLASSES.add(anniClass)

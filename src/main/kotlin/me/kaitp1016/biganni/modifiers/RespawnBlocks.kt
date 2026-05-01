@@ -41,7 +41,7 @@ object RespawnBlocks: Listener {
         Material.JUNGLE_LOG to RespawnableBlock(Material.JUNGLE_LOG,Material.AIR,1000,0..0,listOf(Material.JUNGLE_LOG to 1..1),false),
 
         // その他
-        Material.GRAVEL to RespawnableBlock(Material.GRAVEL,Material.COBBLESTONE,500,1..3,listOf(Material.BONE to 0..3,Material.STRING to 0..2,Material.FLINT to 0..3,Material.FEATHER to 0..2,),false),
+        Material.GRAVEL to RespawnableBlock(Material.GRAVEL,Material.COBBLESTONE,500,-5..3,listOf(Material.BONE to -5..3,Material.STRING to -5..3,Material.FLINT to -5..3,Material.FEATHER to -5..3,),false),
         Material.MELON to RespawnableBlock(Material.MELON,Material.AIR,400,1..3,listOf(Material.MELON_SLICE to 1..4,),false),
         )
 
