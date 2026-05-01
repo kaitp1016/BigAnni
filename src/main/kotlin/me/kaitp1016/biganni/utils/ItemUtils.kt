@@ -23,7 +23,7 @@ object ItemUtils {
         return persistentDataContainer.has(ItemKeys.ANNI_ITEM)
     }
 
-    fun ItemStack.getAnniItemId(): String? {
+    fun ItemStack.getAnniId(): String? {
         return persistentDataContainer.get(ItemKeys.ANNI_ITEM, PersistentDataType.STRING)
     }
 }

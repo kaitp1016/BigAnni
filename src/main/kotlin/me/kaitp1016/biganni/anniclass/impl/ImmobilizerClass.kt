@@ -3,11 +3,10 @@ package me.kaitp1016.biganni.anniclass.impl
 import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.UseCooldown
-import io.papermc.paper.event.player.PrePlayerAttackEntityEvent
 import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
 import me.kaitp1016.biganni.plugin
-import me.kaitp1016.biganni.utils.ItemUtils.getAnniItemId
+import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import me.kaitp1016.biganni.utils.Scheduler
@@ -28,7 +27,6 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import org.jline.nativ.Kernel32
 import kotlin.math.max
 import kotlin.math.min
 
@@ -75,7 +73,7 @@ object ImmobilizerClass: AnniClass(), Listener {
         if (!isSelected(player)) return
 
         val item = event.item ?: return
-        if (item.getAnniItemId() != IMMOBILIZE_ITEM_ID || player.hasCooldown(item)) return
+        if (item.getAnniId() != IMMOBILIZE_ITEM_ID || player.hasCooldown(item)) return
 
         if (event.action == Action.RIGHT_CLICK_BLOCK || event.action == Action.RIGHT_CLICK_AIR) {
             val team = player.toMC().teamColor

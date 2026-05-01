@@ -1,14 +1,12 @@
-package me.kaitp1016.biganni.modifier
+package me.kaitp1016.biganni.modifiers
 
 import me.kaitp1016.biganni.ItemKeys
 import org.bukkit.Sound
-import org.bukkit.craftbukkit.inventory.CraftInventory
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.enchantment.EnchantItemEvent
 import org.bukkit.event.entity.PlayerDeathEvent
-import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryAction
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryType
@@ -16,7 +14,6 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.inventory.CraftingInventory
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.PlayerInventory
 
 object TaggedItem: Listener {
     @EventHandler

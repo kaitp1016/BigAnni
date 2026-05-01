@@ -5,13 +5,12 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.UseCooldown
 import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
-import me.kaitp1016.biganni.utils.ItemUtils.getAnniItemId
+import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.world.item.Items
-import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.entity.Player
@@ -81,7 +80,7 @@ object EnchanterClass: AnniClass(), Listener {
         if (!isSelected(player)) return
 
         val item = event.item ?: return
-        if (item.getAnniItemId() != INTENSIFIER_ITEM_ID || player.hasCooldown(item)) return
+        if (item.getAnniId() != INTENSIFIER_ITEM_ID || player.hasCooldown(item)) return
 
         intensifiers.add(IntensifierAbility(player,INTENSIFIER_TIME))
         player.setCooldown(INTENSIFIER_COOLDOWN_GROUP,INTENSIFIER_COOLDOWN)

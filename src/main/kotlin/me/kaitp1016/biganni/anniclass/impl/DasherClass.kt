@@ -5,7 +5,7 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.UseCooldown
 import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
-import me.kaitp1016.biganni.utils.ItemUtils.getAnniItemId
+import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.kyori.adventure.key.Key
@@ -59,7 +59,7 @@ object DasherClass: AnniClass(), Listener {
         if (!player.isSneaking || !isSelected(player)) return
 
         val item = event.item ?: return
-        if (item.getAnniItemId() != BLINK_ITEM_ID || player.hasCooldown(item)) return
+        if (item.getAnniId() != BLINK_ITEM_ID || player.hasCooldown(item)) return
 
         val pos = player.rayTraceBlocks(30.0)?.hitBlock ?: return
         if (!canTeleport(pos)) return
@@ -100,7 +100,7 @@ object DasherClass: AnniClass(), Listener {
         }
 
         Bukkit.getOnlinePlayers().forEach { player ->
-            if (!player.isSneaking || !isSelected(player) || player.inventory.itemInMainHand.getAnniItemId() != BLINK_ITEM_ID) return@forEach
+            if (!player.isSneaking || !isSelected(player) || player.inventory.itemInMainHand.getAnniId() != BLINK_ITEM_ID) return@forEach
 
             val pos = player.rayTraceBlocks(30.0)?.hitBlock ?: return@forEach
             val block = if (canTeleport(pos)) Blocks.DIAMOND_BLOCK else Blocks.REDSTONE_BLOCK

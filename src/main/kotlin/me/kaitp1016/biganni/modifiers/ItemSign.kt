@@ -1,13 +1,11 @@
-package me.kaitp1016.biganni.modifier
+package me.kaitp1016.biganni.modifiers
 
 import me.kaitp1016.biganni.ItemKeys
-import me.kaitp1016.biganni.plugin
 import me.kaitp1016.biganni.utils.ItemUtils.addLore
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
-import org.bukkit.NamespacedKey
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.enchantment.EnchantItemEvent

@@ -4,7 +4,7 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.UseCooldown
 import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
-import me.kaitp1016.biganni.utils.ItemUtils.getAnniItemId
+import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import me.kaitp1016.biganni.utils.Scheduler
@@ -12,23 +12,17 @@ import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.sounds.SoundEvent
-import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.item.Items
-import net.minecraft.world.level.Level
-import net.minecraft.world.phys.Vec3
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
-import org.bukkit.event.entity.EntityRemoveEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
-import java.util.function.Consumer
 
 object DefenderClass: AnniClass(), Listener {
     override val name = "Defender"
@@ -74,7 +68,7 @@ object DefenderClass: AnniClass(), Listener {
         if (!isSelected(player)) return
 
         val item = event.item ?: return
-        if (item.getAnniItemId() != ALERT_ITEM_ID || player.hasCooldown(item)) return
+        if (item.getAnniId() != ALERT_ITEM_ID || player.hasCooldown(item)) return
 
         val level = player.world.toMC()
 

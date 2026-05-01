@@ -5,7 +5,7 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.UseCooldown
 import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
-import me.kaitp1016.biganni.utils.ItemUtils.getAnniItemId
+import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
@@ -67,7 +67,7 @@ object WarriorClass: AnniClass(), Listener {
         if (!isSelected(player)) return
 
         val item = event.item ?: return
-        if (item.getAnniItemId() != FRENZY_ITEM_ID || player.hasCooldown(item)) return
+        if (item.getAnniId() != FRENZY_ITEM_ID || player.hasCooldown(item)) return
 
         player.addPotionEffect(PotionEffect(PotionEffectType.SPEED,FRENZY_TIME,0))
         player.playSound(player.location, Sound.ENTITY_POLAR_BEAR_WARNING,1f,1f)

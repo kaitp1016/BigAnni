@@ -2,16 +2,13 @@ package me.kaitp1016.biganni.anniclass.impl
 
 import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import me.kaitp1016.biganni.anniclass.AnniClass
-import me.kaitp1016.biganni.anniclass.AnniClassManager.isAnniClass
 import me.kaitp1016.biganni.utils.ItemUtils.addLore
-import me.kaitp1016.biganni.utils.ItemUtils.getAnniItemId
+import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
-import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import net.minecraft.world.item.Items
-import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -65,7 +62,7 @@ object ScoutClass: AnniClass(), Listener {
 
         val hand = event.hand ?: return
         val item = event.player.inventory.getItem(hand)
-        if (item.getAnniItemId() != GRAPPLING_HOOK_ID) return
+        if (item.getAnniId() != GRAPPLING_HOOK_ID) return
 
         if (cooldowns.any { it.player == player }) {
             event.isCancelled = true

@@ -6,14 +6,13 @@ import net.minecraft.network.protocol.game.ClientboundResetScorePacket
 import net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket
 import net.minecraft.network.protocol.game.ClientboundSetScorePacket
-import net.minecraft.server.commands.ScoreboardCommand
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.scores.DisplaySlot
 import net.minecraft.world.scores.Objective
 import net.minecraft.world.scores.criteria.ObjectiveCriteria
 import java.util.*
 
-object ScoreboardHandler {
+object ScoreboardManager {
     private const val INTERNAL_OBJECTIVE_NAME = "annihilation"
 
     private val lines = mutableMapOf<Int,Component>()

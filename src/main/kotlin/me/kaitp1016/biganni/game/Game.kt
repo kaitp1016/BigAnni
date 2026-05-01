@@ -4,7 +4,6 @@ import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import me.kaitp1016.biganni.packetgui.impl.AnniClassSelector
 import me.kaitp1016.biganni.plugin
 import me.kaitp1016.biganni.utils.MCUtils.toMC
-import me.kaitp1016.biganni.utils.Scheduler
 import net.kyori.adventure.key.Key
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
@@ -42,17 +41,17 @@ object Game: Listener {
         teams.add(AnniTeam("Red", BlockPos(118,-51,-188),"§c", Location(Bukkit.getWorld(Key.key("sys","coastal")),109.5, -38.0, -177.5, 45f, 0f)))
         teams.add(AnniTeam("Blue", BlockPos(-118,-51,190),"§9",Location(Bukkit.getWorld(Key.key("sys","coastal")),-108.5, -38.0, 180.5, -135f, 0f)))
 
-        ScoreboardHandler.reset()
-        ScoreboardHandler.setLine(0, Component.literal("§6apple.playit.plus"))
-        ScoreboardHandler.setLine(1, Component.empty())
+        ScoreboardManager.reset()
+        ScoreboardManager.setLine(0, Component.literal("§6apple.playit.plus"))
+        ScoreboardManager.setLine(1, Component.empty())
 
         teams.forEachIndexed { index,team ->
-            ScoreboardHandler.setLine(2 + index, Component.literal("${team.color}${team.name} Nexus: §b${team.health}"))
+            ScoreboardManager.setLine(2 + index, Component.literal("${team.color}${team.name} Nexus: §b${team.health}"))
         }
 
-        ScoreboardHandler.setLine(teams.size + 2, Component.empty())
-        ScoreboardHandler.setLine(teams.size + 3, Component.literal("§6Map: §lCoastal"))
-        ScoreboardHandler.setLine(teams.size + 4, Component.empty())
+        ScoreboardManager.setLine(teams.size + 2, Component.empty())
+        ScoreboardManager.setLine(teams.size + 3, Component.literal("§6Map: §lCoastal"))
+        ScoreboardManager.setLine(teams.size + 4, Component.empty())
 
         Bukkit.getOnlinePlayers().forEach {
             it.kill()
@@ -81,7 +80,7 @@ object Game: Listener {
             }
         }
 
-        BossBarHandler.onTick()
+        BossBarManager.onTick()
     }
 
     @EventHandler(priority = EventPriority.LOW)
@@ -117,7 +116,7 @@ object Game: Listener {
         }
 
         val index = teams.indexOf(team) + 2
-        ScoreboardHandler.setLine(index,Component.literal("${team.color}${team.name} Nexus: §b${team.health}"))
+        ScoreboardManager.setLine(index,Component.literal("${team.color}${team.name} Nexus: §b${team.health}"))
     }
 
     @EventHandler
@@ -133,8 +132,8 @@ object Game: Listener {
         val player = event.player
         val mcPlayer = player.toMC()
 
-        BossBarHandler.onJoin(player)
-        ScoreboardHandler.onJoin(mcPlayer)
+        BossBarManager.onJoin(player)
+        ScoreboardManager.onJoin(mcPlayer)
 
 
         val attackSpeed = player.getAttribute(Attribute.ATTACK_SPEED)
@@ -146,7 +145,7 @@ object Game: Listener {
     @EventHandler
     fun onQuit(event: PlayerQuitEvent) {
         val player = event.player
-        BossBarHandler.onQuit(player)
+        BossBarManager.onQuit(player)
     }
 
     @EventHandler

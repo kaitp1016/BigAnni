@@ -1,30 +1,22 @@
 package me.kaitp1016.biganni.anniclass.impl
 
-import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.UseCooldown
 import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
 import me.kaitp1016.biganni.plugin
-import me.kaitp1016.biganni.utils.ItemUtils.getAnniItemId
+import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
-import me.kaitp1016.biganni.utils.MCUtils.toMC
 import me.kaitp1016.biganni.utils.Scheduler
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
-import net.minecraft.core.BlockPos
-import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket
 import net.minecraft.world.item.Items
-import net.minecraft.world.level.block.Blocks
-import org.bukkit.Bukkit
-import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.Sound
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
-import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -80,7 +72,7 @@ object BerserkerClass: AnniClass(), Listener {
         if (!isSelected(player)) return
 
         val item = event.item ?: return
-        if (item.getAnniItemId() != BERSERKER_ITEM_ID || player.hasCooldown(item)) return
+        if (item.getAnniId() != BERSERKER_ITEM_ID || player.hasCooldown(item)) return
 
         player.world.playSound(player,Sound.ENTITY_RAVAGER_ROAR,1f,1f)
         player.addPotionEffect(PotionEffect(PotionEffectType.SPEED,300,0))

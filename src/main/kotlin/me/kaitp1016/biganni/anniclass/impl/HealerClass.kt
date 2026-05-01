@@ -5,7 +5,7 @@ import io.papermc.paper.datacomponent.item.UseCooldown
 import io.papermc.paper.event.player.PrePlayerAttackEntityEvent
 import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
-import me.kaitp1016.biganni.utils.ItemUtils.getAnniItemId
+import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.kyori.adventure.key.Key
@@ -61,7 +61,7 @@ object HealerClass: AnniClass(), Listener {
         if (!isSelected(player)) return
 
         val item = event.item ?: return
-        if (item.getAnniItemId() != BANDAGE_ITEM_ID || player.hasCooldown(item)) return
+        if (item.getAnniId() != BANDAGE_ITEM_ID || player.hasCooldown(item)) return
 
         val team = player.toMC().teamColor
 
@@ -81,7 +81,7 @@ object HealerClass: AnniClass(), Listener {
         if (!isSelected(player)) return
 
         val item = player.inventory.itemInMainHand
-        if (item.getAnniItemId() != BANDAGE_ITEM_ID || player.hasCooldown(item)) return
+        if (item.getAnniId() != BANDAGE_ITEM_ID || player.hasCooldown(item)) return
 
         val target = event.attacked
         if (target !is Player || target.toMC().teamColor != player.toMC().teamColor) return

@@ -6,10 +6,9 @@ import io.papermc.paper.datacomponent.item.UseCooldown
 import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
 import me.kaitp1016.biganni.mc
-import me.kaitp1016.biganni.utils.ItemUtils.getAnniItemId
+import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
-import me.kaitp1016.biganni.utils.Scheduler
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -94,7 +93,7 @@ object SuccubusClass: AnniClass(), Listener {
         if (!isSelected(player)) return
 
         val item = event.player.inventory.itemInMainHand
-        if (item.getAnniItemId() != DRAIN_ITEM_ID || player.hasCooldown(item)) return
+        if (item.getAnniId() != DRAIN_ITEM_ID || player.hasCooldown(item)) return
 
         val target = event.rightClicked as? Player ?: return
         val maxHealth = target.getAttribute(Attribute.MAX_HEALTH)?.value ?: return

@@ -1,4 +1,4 @@
-package me.kaitp1016.biganni.modifier
+package me.kaitp1016.biganni.modifiers
 
 import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import me.kaitp1016.biganni.anniclass.impl.MinerClass

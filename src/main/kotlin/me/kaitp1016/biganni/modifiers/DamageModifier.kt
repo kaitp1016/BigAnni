@@ -1,4 +1,4 @@
-package me.kaitp1016.biganni.modifier
+package me.kaitp1016.biganni.modifiers
 
 import org.bukkit.damage.DamageType
 import org.bukkit.event.EventHandler

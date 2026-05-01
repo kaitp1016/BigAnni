@@ -1,4 +1,4 @@
-package me.kaitp1016.biganni.modifier
+package me.kaitp1016.biganni.modifiers
 
 import org.bukkit.GameMode
 import org.bukkit.Material

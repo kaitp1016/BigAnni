@@ -1,7 +1,7 @@
 package me.kaitp1016.biganni.anniclass.impl
 
 import me.kaitp1016.biganni.anniclass.AnniClass
-import me.kaitp1016.biganni.utils.ItemUtils.getAnniItemId
+import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -58,7 +58,7 @@ object CivilianClass: AnniClass(), Listener {
         if (!isSelected(player)) return
 
         val item = event.item ?: return
-        if (item.getAnniItemId() != CRAFT_O_MATIC_ITEM_ID || player.hasCooldown(item)) return
+        if (item.getAnniId() != CRAFT_O_MATIC_ITEM_ID || player.hasCooldown(item)) return
 
         player.openInventory(Bukkit.createInventory(player, InventoryType.WORKBENCH))
     }

@@ -4,7 +4,7 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.UseCooldown
 import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
-import me.kaitp1016.biganni.utils.ItemUtils.getAnniItemId
+import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
@@ -54,7 +54,7 @@ object BuilderClass: AnniClass(), Listener {
         if (!isSelected(player)) return
 
         val item = event.item ?: return
-        if (item.getAnniItemId() != RESOURCE_DROP_ITEM_ID || player.hasCooldown(item)) return
+        if (item.getAnniId() != RESOURCE_DROP_ITEM_ID || player.hasCooldown(item)) return
 
         player.openInventory(Bukkit.createInventory(player,27,Component.text("Resource Drop")).apply {
             setItem(Random.nextInt(0,26),ItemStack(Material.WHITE_WOOL).also { it.amount = Random.nextInt(10,64) })

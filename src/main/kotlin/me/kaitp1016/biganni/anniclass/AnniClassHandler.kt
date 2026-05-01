@@ -17,10 +17,6 @@ object AnniClassHandler: Listener {
     }
 
     @EventHandler
-    fun onJoin(event: PlayerJoinEvent) {}
-
-
-    @EventHandler
     fun onRespawn(event: PlayerRespawnEvent) {
         val player = event.player
         val uuid = player.uniqueId

@@ -2,7 +2,7 @@ package me.kaitp1016.biganni.anniclass.impl
 
 import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import me.kaitp1016.biganni.anniclass.AnniClass
-import me.kaitp1016.biganni.utils.ItemUtils.getAnniItemId
+import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.kyori.adventure.text.Component
@@ -22,7 +22,6 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.ItemStack
 import java.util.UUID
 import kotlin.random.Random
@@ -143,7 +142,7 @@ object TransporterClass: AnniClass(), Listener {
 
         val hand = event.hand ?: return
         val item = event.player.inventory.getItem(hand)
-        if (item.getAnniItemId() != PORTAL_MAKER_ID) return
+        if (item.getAnniId() != PORTAL_MAKER_ID) return
 
         val world = clickedBlock.world
 

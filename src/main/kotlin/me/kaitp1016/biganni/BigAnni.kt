@@ -3,7 +3,7 @@ package me.kaitp1016.biganni
 import me.kaitp1016.biganni.anniclass.AnniClassHandler
 import me.kaitp1016.biganni.events.EventManager
 import me.kaitp1016.biganni.game.Game
-import me.kaitp1016.biganni.modifier.*
+import me.kaitp1016.biganni.modifiers.*
 import me.kaitp1016.biganni.packetgui.PacketGuiManager
 import me.kaitp1016.biganni.utils.Scheduler
 import net.minecraft.server.MinecraftServer
@@ -24,6 +24,7 @@ class BigAnni : JavaPlugin() {
             TaggedItem,
             RespawnBlocks,
             CooldownFix,
+            EnderFurnace,
             AnniClassHandler,
             PacketGuiManager,
             EventManager,

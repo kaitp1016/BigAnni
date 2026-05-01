@@ -5,10 +5,8 @@ import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelPromise
 import me.kaitp1016.biganni.events.impl.PacketReciveEvent
 import me.kaitp1016.biganni.events.impl.PacketSendEvent
-import me.kaitp1016.biganni.plugin
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.minecraft.network.protocol.Packet
-import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -20,10 +18,10 @@ object EventManager: Listener {
     fun onJoin(event: PlayerJoinEvent) {
         val player = event.player
 
-        player.toMC().connection.connection.channel.pipeline().addBefore("packet_handler","battleroyal_packet_listener_${player.name}", PacketListener(player))
+        player.toMC().connection.connection.channel.pipeline().addBefore("packet_handler","battleroyal_packet_listener_${player.name}", PacketEventHandler(player))
     }
 
-    class PacketListener: ChannelDuplexHandler {
+    class PacketEventHandler: ChannelDuplexHandler {
         val player: Player
 
         constructor(player: Player) {

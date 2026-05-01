@@ -5,7 +5,7 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.UseCooldown
 import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
-import me.kaitp1016.biganni.utils.ItemUtils.getAnniItemId
+import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
@@ -81,7 +81,7 @@ object MinerClass: AnniClass(), Listener {
         if (!isSelected(player)) return
 
         val item = event.item ?: return
-        if (item.getAnniItemId() != GOLD_RUSH_ITEM_ID || player.hasCooldown(item)) return
+        if (item.getAnniId() != GOLD_RUSH_ITEM_ID || player.hasCooldown(item)) return
 
         goldrushes.add(GoldRushAbility(player,GOLD_RUSH_TIME))
         player.setCooldown(GOLD_RUSH_COOLDOWN_GROUP,GOLD_RUSH_COOLDOWN)

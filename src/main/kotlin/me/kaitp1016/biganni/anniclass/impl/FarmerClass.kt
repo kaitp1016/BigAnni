@@ -5,7 +5,7 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.UseCooldown
 import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
-import me.kaitp1016.biganni.utils.ItemUtils.getAnniItemId
+import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import me.kaitp1016.biganni.utils.Scheduler
@@ -18,7 +18,6 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.CropBlock
-import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.block.data.Ageable
@@ -96,7 +95,7 @@ object FarmerClass: AnniClass(), Listener {
         val item = event.item ?: return
         if (player.hasCooldown(item)) return
 
-        val itemId = item.getAnniItemId()
+        val itemId = item.getAnniId()
         if (itemId == FEAST_ITEM_ID) {
             val world = player.world
             val team = player.toMC().teamColor

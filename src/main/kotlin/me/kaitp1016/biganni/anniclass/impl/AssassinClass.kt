@@ -7,7 +7,8 @@ import io.papermc.paper.datacomponent.item.UseCooldown
 import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
 import me.kaitp1016.biganni.events.impl.PacketSendEvent
-import me.kaitp1016.biganni.utils.ItemUtils.getAnniItemId
+import me.kaitp1016.biganni.plugin
+import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.kyori.adventure.key.Key
@@ -16,8 +17,12 @@ import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.item.Items
+import net.minecraft.world.level.block.entity.FurnaceBlockEntity
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import org.bukkit.Sound
+import org.bukkit.attribute.Attribute
+import org.bukkit.attribute.AttributeModifier
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -28,6 +33,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
+import kotlin.math.abs
 import net.minecraft.world.entity.player.Player as MCPlayer
 import kotlin.math.max
 
@@ -43,6 +49,8 @@ object AssassinClass: AnniClass(), Listener {
     const val LEAP_ITEM_ID = "assassin_leap"
     const val LEAP_COOLDOWN = 800
     val LEAP_COOLDOWN_GROUP = Key.key(PLUGIN_ID,"assassin_leap")
+
+    val FEATHER_FALLING_KEY = NamespacedKey(plugin,"assassin_feather_falling")
 
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {
         return super.getDefaultItems(player).also {
@@ -60,6 +68,18 @@ object AssassinClass: AnniClass(), Listener {
         }
     }
 
+    override fun onSelect(player: Player) {
+        player.getAttribute(Attribute.FALL_DAMAGE_MULTIPLIER)?.addTransientModifier(AttributeModifier(FEATHER_FALLING_KEY,-1000000.0, AttributeModifier.Operation.ADD_NUMBER))
+
+        super.onSelect(player)
+    }
+
+    override fun onUnselect(player: Player) {
+        player.getAttribute(Attribute.FALL_DAMAGE_MULTIPLIER)?.removeModifier(FEATHER_FALLING_KEY)
+
+        super.onUnselect(player)
+    }
+
     val invisibleSlots = arrayOf(EquipmentSlot.HEAD,EquipmentSlot.CHEST,EquipmentSlot.LEGS,EquipmentSlot.FEET,EquipmentSlot.OFFHAND,)
 
     data class InvisiblePlayer(val player: MCPlayer, val entityId: Int, var time: Int)
@@ -75,7 +95,7 @@ object AssassinClass: AnniClass(), Listener {
         if (!isSelected(player)) return
 
         val item = event.item ?: return
-        if (item.getAnniItemId() != LEAP_ITEM_ID || player.hasCooldown(item)) return
+        if (item.getAnniId() != LEAP_ITEM_ID || player.hasCooldown(item)) return
 
         player.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY,max(LEAP_INVISIBLE_TIME,player.getPotionEffect(PotionEffectType.INVISIBILITY)?.duration ?: 0),0))
         invisiblePlayers.add(InvisiblePlayer(player.toMC(),player.entityId,LEAP_INVISIBLE_TIME))
@@ -84,14 +104,14 @@ object AssassinClass: AnniClass(), Listener {
         val slots = invisibleSlots.map { slot -> Pair(slot, net.minecraft.world.item.ItemStack.EMPTY) }
         val packet = ClientboundSetEquipmentPacket(player.entityId,slots)
 
-        mcPlayer.`moonrise$getTrackedEntity`().seenBy.forEach {
+        mcPlayer.`moonrise$getTrackedEntity`()?.seenBy?.forEach {
             it.send(packet)
         }
 
         player.velocity = player.location.direction.clone().apply {
             add(Vector(0.0,0.2,0.0))
             normalize()
-            multiply(2f)
+            y = max(y,0.3)
         }
 
         player.world.playSound(player.location, Sound.ENTITY_WITHER_SHOOT,2f,2f)
@@ -144,7 +164,7 @@ object AssassinClass: AnniClass(), Listener {
         val slots = invisibleSlots.map { slot -> Pair(slot,equipment.get(slot)) }
         val packet = ClientboundSetEquipmentPacket(player.id,slots)
 
-        player.`moonrise$getTrackedEntity`().seenBy.forEach {
+        player.`moonrise$getTrackedEntity`()?.seenBy?.forEach {
             it.send(packet)
         }
     }

@@ -7,7 +7,7 @@ import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
 import me.kaitp1016.biganni.mc
 import me.kaitp1016.biganni.packetgui.ChestPacketGui
-import me.kaitp1016.biganni.utils.ItemUtils.getAnniItemId
+import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.kyori.adventure.key.Key
@@ -103,7 +103,7 @@ object RiftWalkerClass: AnniClass(), Listener {
         if (!isSelected(player)) return
 
         val item = event.item ?: return
-        if (item.getAnniItemId() != OPEN_RIFT_ITEM_ID || player.hasCooldown(item)) return
+        if (item.getAnniId() != OPEN_RIFT_ITEM_ID || player.hasCooldown(item)) return
 
         RiftSelectGui(player.toMC()).open()
     }
