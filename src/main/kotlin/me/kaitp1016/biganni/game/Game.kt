@@ -3,6 +3,7 @@ package me.kaitp1016.biganni.game
 import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import me.kaitp1016.biganni.packetgui.impl.AnniClassSelector
 import me.kaitp1016.biganni.plugin
+import me.kaitp1016.biganni.utils.ItemUtils.isAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.kyori.adventure.key.Key
 import net.minecraft.core.BlockPos
@@ -18,6 +19,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
+import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.*
 import kotlin.random.Random
 
@@ -157,5 +159,14 @@ object Game: Listener {
         val team = teams.find { it.name.equals(teamName,ignoreCase = true) } ?: return
 
         event.respawnLocation = team.spawn
+    }
+
+    @EventHandler
+    fun onClick(event: InventoryClickEvent) {
+        val item = event.currentItem ?: return
+        if (isStarted && phase < 4 && item.type == Material.BLAZE_POWDER && !item.isAnniItem()) {
+            event.isCancelled = true
+            event.whoClicked.sendMessage("このアイテムはPhase 4まで使用できません!")
+        }
     }
 }

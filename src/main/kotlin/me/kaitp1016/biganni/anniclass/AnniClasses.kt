@@ -14,6 +14,7 @@ import me.kaitp1016.biganni.anniclass.impl.IcemanClass
 import me.kaitp1016.biganni.anniclass.impl.ImmobilizerClass
 import me.kaitp1016.biganni.anniclass.impl.MinerClass
 import me.kaitp1016.biganni.anniclass.impl.RiftWalkerClass
+import me.kaitp1016.biganni.anniclass.impl.ScorpioClass
 import me.kaitp1016.biganni.anniclass.impl.ScoutClass
 import me.kaitp1016.biganni.anniclass.impl.SuccubusClass
 import me.kaitp1016.biganni.anniclass.impl.ThorClass
@@ -45,6 +46,7 @@ object AnniClasses {
     val THOR = register("thor", ThorClass)
     val ASSASSIN = register("assassin", AssassinClass)
     val ALCHEMIST = register("alchemist", AlchemistClass)
+    val SCORPIO = register("scorpio", ScorpioClass)
 
     fun <T: AnniClass> register(id: String, anniClass: T): T {
         ALL_CLASSES.add(anniClass)

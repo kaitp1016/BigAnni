@@ -30,7 +30,7 @@ object MinerClass: AnniClass(), Listener {
     override val description = arrayOf(
         "この職業の時は常に鉱石の獲得量が2倍になる。",
         "アビリティを使用することで鉱石の獲得量が3倍になる。",
-        "鉱石を掘ったときに溶鉱炉を獲得し、アビリティを使用してる場合は石炭を確立で獲得する。。",
+        "鉱石を掘ったときに溶鉱炉を獲得し、アビリティを使用してる場合は石炭を確率で獲得する。",
     )
 
     const val GOLD_RUSH_ITEM_ID = "miner_gold_rush"

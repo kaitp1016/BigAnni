@@ -23,7 +23,7 @@ class   AnniClassSelector: ChestPacketGui {
         AnniClasses.ALL_CLASSES.forEachIndexed { index, anniClass ->
             val lore = anniClass.description.map { Component.literal(it).withStyle(Style.EMPTY.withItalic(false)).withColor(CommonColors.WHITE) }
             setItem(index, ItemStack(anniClass.icon).apply {
-                set(DataComponents.ITEM_NAME, Component.literal(anniClass.name))
+                set(DataComponents.ITEM_NAME, Component.literal(anniClass.name).withColor(CommonColors.WHITE))
                 set(DataComponents.LORE, ItemLore(lore))
             })
         }

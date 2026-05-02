@@ -51,6 +51,7 @@ object AssassinClass: AnniClass(), Listener {
     val LEAP_COOLDOWN_GROUP = Key.key(PLUGIN_ID,"assassin_leap")
 
     val FEATHER_FALLING_KEY = NamespacedKey(plugin,"assassin_feather_falling")
+    val ARMOR_REDUCE_KEY = NamespacedKey(plugin,"assassin_armor_reduce")
 
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {
         return super.getDefaultItems(player).also {
@@ -76,6 +77,7 @@ object AssassinClass: AnniClass(), Listener {
 
     override fun onUnselect(player: Player) {
         player.getAttribute(Attribute.FALL_DAMAGE_MULTIPLIER)?.removeModifier(FEATHER_FALLING_KEY)
+        player.getAttribute(Attribute.ARMOR)?.removeModifier(ARMOR_REDUCE_KEY)
 
         super.onUnselect(player)
     }
@@ -115,6 +117,7 @@ object AssassinClass: AnniClass(), Listener {
         }
 
         player.world.playSound(player.location, Sound.ENTITY_WITHER_SHOOT,2f,2f)
+        player.getAttribute(Attribute.ARMOR)?.addTransientModifier(AttributeModifier(ARMOR_REDUCE_KEY,-1000000.0, AttributeModifier.Operation.ADD_NUMBER))
 
         player.setCooldown(LEAP_COOLDOWN_GROUP,LEAP_COOLDOWN)
     }
@@ -163,6 +166,7 @@ object AssassinClass: AnniClass(), Listener {
         val equipment = player.inventory.equipment
         val slots = invisibleSlots.map { slot -> Pair(slot,equipment.get(slot)) }
         val packet = ClientboundSetEquipmentPacket(player.id,slots)
+        player.bukkitEntity.getAttribute(Attribute.ARMOR)?.removeModifier(ARMOR_REDUCE_KEY)
 
         player.`moonrise$getTrackedEntity`()?.seenBy?.forEach {
             it.send(packet)
