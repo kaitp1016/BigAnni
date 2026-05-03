@@ -15,6 +15,8 @@ import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.util.Mth
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.entity.projectile.Projectile.ProjectileFactory
@@ -35,6 +37,7 @@ import org.bukkit.event.block.Action
 import org.bukkit.event.entity.EntityRemoveEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
+import kotlin.math.PI
 import kotlin.math.min
 import net.minecraft.world.item.ItemStack as MCItemStack
 
@@ -172,6 +175,14 @@ object ScorpioClass: AnniClass(), Listener {
             thrower.connection.send(ClientboundLevelParticlesPacket(ParticleTypes.FIREWORK, false, true, this.x, this.y, this.z, 0f, 0f, 0f, 0f, 1))
 
             super.tick()
+        }
+
+        override fun shootFromRotation(source: Entity, xRot: Float, yRot: Float, yOffset: Float, pow: Float, uncertainty: Float) {
+            val xd = -Mth.sin(yRot * (PI / 180f)) * Mth.cos(xRot * (PI / 180f))
+            val yd = -Mth.sin((xRot + yOffset) * (PI / 180f))
+            val zd = Mth.cos(yRot * (PI / 180f)) * Mth.cos(xRot * (PI / 180f))
+
+            shoot(xd.toDouble(), yd.toDouble(), zd.toDouble(), pow, uncertainty)
         }
     }
 }

@@ -88,7 +88,7 @@ object Game: Listener {
     @EventHandler(priority = EventPriority.LOW)
     fun onBreakLowest(event: BlockBreakEvent) {
         val block = event.block
-        if (block.type == Material.DIAMOND_ORE && phase < 3) {
+        if (block.type == Material.DIAMOND_ORE && isStarted && phase < 3) {
             event.isCancelled = true
         }
     }
