@@ -21,6 +21,7 @@ class BigAnni : JavaPlugin() {
             RequiredTool,
             LauncherPad,
             GoldenAppleModifier,
+            BrewingStandModifier,
             TaggedItem,
             RespawnBlocks,
             CooldownFix,

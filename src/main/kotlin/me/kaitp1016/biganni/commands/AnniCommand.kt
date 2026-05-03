@@ -12,7 +12,7 @@ import org.bukkit.entity.Player
 
 object AnniCommand {
     fun register(): LiteralArgumentBuilder<CommandSourceStack> {
-        return Commands.literal("anni").requires { it.sender.hasPermission("biganni.command.anni") }.then(
+        return Commands.literal("anni").then(
             Commands.literal("classselector").executes {
             val player = (it.source.executor as Player).toMC()
             AnniClassSelector(player, null).open()

@@ -16,7 +16,6 @@ import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.entity.projectile.Projectile.ProjectileFactory
 import net.minecraft.world.entity.projectile.throwableitemprojectile.Snowball
@@ -49,7 +48,7 @@ object ScorpioClass: AnniClass(), Listener {
 
     const val SCORPIO_HOOK_ITEM_ID = "scorpio_hook"
     const val SCORPIO_HOOK_COOLDOWN = 60
-    val SCORPIO_HOOK_COOLDOWN_GROUP = Key.key(PLUGIN_ID,"scorpio_hook")
+    val SCORPIO_HOOK_COOLDOWN_GROUP = Key.key(PLUGIN_ID, "scorpio_hook")
 
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {
         return super.getDefaultItems(player).also {
@@ -71,15 +70,14 @@ object ScorpioClass: AnniClass(), Listener {
     }
 
     enum class HookType {
-        PULL_SELF,
-        PULL_OTHER,
+        PULL_SELF, PULL_OTHER,
     }
 
     @EventHandler
     fun onInteract(event: PlayerInteractEvent) {
         val player = event.player
         if (!isSelected(player)) return
-0
+
         val item = event.item ?: return
         if (item.getAnniId() != SCORPIO_HOOK_ITEM_ID || player.hasCooldown(item)) return
 
@@ -87,29 +85,28 @@ object ScorpioClass: AnniClass(), Listener {
         val mcPlayer = player.toMC()
         val mcItem = item.toMC() ?: return
         val level = mcPlayer.level()
+
         if (action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {
-            val snowball = Projectile.spawnProjectileFromRotationDelayed(ProjectileFactory { level: ServerLevel, mob: LivingEntity, item: MCItemStack -> Hook(mcPlayer,HookType.PULL_OTHER,level, mob) }, level, mcItem, mcPlayer, -10.0f, 1.0f, 1.0f)
+            val snowball = Projectile.spawnProjectileFromRotationDelayed(ProjectileFactory { level: ServerLevel, mob: LivingEntity, item: MCItemStack -> Hook(mcPlayer, HookType.PULL_OTHER, level, mob) }, level, mcItem, mcPlayer, -10.0f, 1.0f, 1.0f)
             if (!snowball.attemptSpawn()) return
-        }
-        else if (action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK) {
-            val snowball = Projectile.spawnProjectileFromRotationDelayed(ProjectileFactory { level: ServerLevel, mob: LivingEntity, item: MCItemStack -> Hook(mcPlayer,HookType.PULL_SELF,level, mob) }, level, mcItem, mcPlayer, -10.0f, 1.0f, 1.0f)
+        } else if (action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK) {
+            val snowball = Projectile.spawnProjectileFromRotationDelayed(ProjectileFactory { level: ServerLevel, mob: LivingEntity, item: MCItemStack -> Hook(mcPlayer, HookType.PULL_SELF, level, mob) }, level, mcItem, mcPlayer, -10.0f, 1.0f, 1.0f)
             if (!snowball.attemptSpawn()) return
-        }
-        else {
+        } else {
             return
         }
 
-        player.setCooldown(SCORPIO_HOOK_COOLDOWN_GROUP,SCORPIO_HOOK_COOLDOWN)
-        player.world.playSound(player.location, Sound.ENTITY_SNOWBALL_THROW,2f,1f)
+        player.setCooldown(SCORPIO_HOOK_COOLDOWN_GROUP, SCORPIO_HOOK_COOLDOWN)
+        player.world.playSound(player.location, Sound.ENTITY_SNOWBALL_THROW, 2f, 1f)
 
         event.isCancelled = true
     }
 
-    class Hook: Snowball {
+    class Hook : Snowball {
         val thrower: ServerPlayer
         val type: HookType
 
-        constructor(thrower: ServerPlayer,type: HookType, level: Level, mob: LivingEntity):super(level,mob, MCItemStack(Items.NETHER_STAR)) {
+        constructor(thrower: ServerPlayer, type: HookType, level: Level, mob: LivingEntity) : super(level, mob, MCItemStack(Items.NETHER_STAR)) {
             this.thrower = thrower
             this.type = type
         }
@@ -122,28 +119,28 @@ object ScorpioClass: AnniClass(), Listener {
             if (type == HookType.PULL_SELF) {
                 if (team != target.teamColor) return
 
-                thrower.deltaMovement = target.position().subtract(thrower.position()).multiply(1.0,0.0,1.0).normalize().multiply(9.0,0.0,9.0).add(0.0,0.5,0.0)
+                thrower.deltaMovement = target.position().subtract(thrower.position()).multiply(1.0, 0.0, 1.0).normalize().multiply(9.0, 0.0, 9.0).add(0.0, 0.5, 0.0)
                 thrower.hurtMarked = true
 
                 this.level().broadcastEntityEvent(this, 3.toByte())
                 this.discard(EntityRemoveEvent.Cause.HIT)
 
-                bukkitEntity.world.playSound(bukkitEntity.location,Sound.BLOCK_WOODEN_DOOR_OPEN,2f,0f)
+                bukkitEntity.world.playSound(bukkitEntity.location, Sound.BLOCK_WOODEN_DOOR_OPEN, 2f, 0f)
             }
             if (type == HookType.PULL_OTHER) {
-                if (team == target.teamColor) return
+                if (team == target.teamColor || BerserkerClass.abilityPlayers.contains(target.bukkitEntity)) return
 
                 val pos = thrower.getRayTrace(1, ClipContext.Fluid.ANY).location
 
                 val level = thrower.level()
-                val blockPos = BlockPos(pos.x.toInt(),pos.y.toInt(),pos.z.toInt())
-                if (!level.getBlockState(blockPos.offset(0,1,0)).canBeReplaced() || !level.getBlockState(blockPos.offset(0,2,0)).canBeReplaced()) return
+                val blockPos = BlockPos(pos.x.toInt(), pos.y.toInt(), pos.z.toInt())
+                if (!level.getBlockState(blockPos.offset(0, 1, 0)).canBeReplaced() || !level.getBlockState(blockPos.offset(0, 2, 0)).canBeReplaced()) return
 
-                var y = min(blockPos.y,256)
+                var y = min(blockPos.y, 256)
                 var isVoid = true
 
                 while (y > -64) {
-                    val state = level.getBlockState(BlockPos(blockPos.x,y,blockPos.z))
+                    val state = level.getBlockState(BlockPos(blockPos.x, y, blockPos.z))
                     if (!state.isAir && state.block != Blocks.STRUCTURE_VOID) {
                         isVoid = false
                         break
@@ -154,10 +151,10 @@ object ScorpioClass: AnniClass(), Listener {
 
                 if (isVoid) return
 
-                target.teleportTo(pos.x,pos.y,pos.z)
+                target.teleportTo(pos.x, pos.y, pos.z)
 
-                this.level().broadcastEntityEvent(this, 3.toByte())
-                this.discard(EntityRemoveEvent.Cause.HIT)
+                level().broadcastEntityEvent(this, 3.toByte())
+                discard(EntityRemoveEvent.Cause.HIT)
             }
         }
 
@@ -172,7 +169,7 @@ object ScorpioClass: AnniClass(), Listener {
         }
 
         override fun tick() {
-            thrower.connection.send(ClientboundLevelParticlesPacket(ParticleTypes.FIREWORK,false,true,this.x,this.y,this.z,0f,0f,0f,0f,1))
+            thrower.connection.send(ClientboundLevelParticlesPacket(ParticleTypes.FIREWORK, false, true, this.x, this.y, this.z, 0f, 0f, 0f, 0f, 1))
 
             super.tick()
         }

@@ -66,6 +66,8 @@ object BerserkerClass: AnniClass(), Listener {
         attribute.removeModifier(BERSERKER_HEALTH_PASSIVE_KEY)
     }
 
+    val abilityPlayers = mutableListOf<Player>()
+
     @EventHandler
     fun onInteract(event: PlayerInteractEvent) {
         val player = event.player
@@ -77,9 +79,11 @@ object BerserkerClass: AnniClass(), Listener {
         player.world.playSound(player,Sound.ENTITY_RAVAGER_ROAR,1f,1f)
         player.addPotionEffect(PotionEffect(PotionEffectType.SPEED,300,0))
         player.setCooldown(BERSERKER_COOLDOWN_GROUP,BERSERKER_COOLDOWN)
+        abilityPlayers.add(player)
 
         Scheduler.scheduleTask(300) {
             player.world.playSound(player,Sound.ENTITY_WOLF_SHAKE,1f,2f)
+            abilityPlayers.remove(player)
         }
     }
 
