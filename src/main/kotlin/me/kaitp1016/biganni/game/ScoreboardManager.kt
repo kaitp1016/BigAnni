@@ -2,6 +2,7 @@ package me.kaitp1016.biganni.game
 
 import me.kaitp1016.biganni.mc
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.numbers.BlankFormat
 import net.minecraft.network.protocol.game.ClientboundResetScorePacket
 import net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket
@@ -18,12 +19,12 @@ object ScoreboardManager {
     private val lines = mutableMapOf<Int,Component>()
 
     fun onJoin(player: ServerPlayer) {
-        val objective = Objective(mc.scoreboard,INTERNAL_OBJECTIVE_NAME, ObjectiveCriteria.DUMMY, Component.literal("§c§lANNI§e§lHI§9§lLATI§a§lON"), ObjectiveCriteria.RenderType.INTEGER,false,null)
+        val objective = Objective(mc.scoreboard,INTERNAL_OBJECTIVE_NAME, ObjectiveCriteria.DUMMY, Component.literal("§c§lANNI§e§lHI§9§lLATI§a§lON"), ObjectiveCriteria.RenderType.INTEGER,false, BlankFormat.INSTANCE)
         player.connection.send(ClientboundSetObjectivePacket(objective, ClientboundSetObjectivePacket.METHOD_ADD))
         player.connection.send(ClientboundSetDisplayObjectivePacket(DisplaySlot.SIDEBAR, objective))
 
         lines.forEach { (index,text) ->
-            player.connection.send(ClientboundSetScorePacket("$index",INTERNAL_OBJECTIVE_NAME,index,Optional.of(text), Optional.empty()))
+            player.connection.send(ClientboundSetScorePacket("$index",INTERNAL_OBJECTIVE_NAME,index,Optional.of(text), Optional.of(BlankFormat.INSTANCE)))
         }
     }
 
@@ -39,7 +40,7 @@ object ScoreboardManager {
 
     fun setLine(index: Int,component: Component) {
         mc.playerList.players.forEach {
-            it.connection.send(ClientboundSetScorePacket("$index",INTERNAL_OBJECTIVE_NAME,index,Optional.of(component), Optional.empty()))
+            it.connection.send(ClientboundSetScorePacket("$index",INTERNAL_OBJECTIVE_NAME,index,Optional.of(component), Optional.of(BlankFormat.INSTANCE)))
         }
 
         lines[index] = component

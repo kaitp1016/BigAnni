@@ -47,9 +47,7 @@ object Game: Listener {
         ScoreboardManager.setLine(0, Component.literal("§6apple.playit.plus"))
         ScoreboardManager.setLine(1, Component.empty())
 
-        teams.forEachIndexed { index,team ->
-            ScoreboardManager.setLine(2 + index, Component.literal("${team.color}${team.name} Nexus: §b${team.health}"))
-        }
+        teams.forEach { updateNexusHealth(it) }
 
         ScoreboardManager.setLine(teams.size + 2, Component.empty())
         ScoreboardManager.setLine(teams.size + 3, Component.literal("§6Map: §lCoastal"))
@@ -64,6 +62,11 @@ object Game: Listener {
         isStarted = false
         phase = -1
         teams.clear()
+    }
+
+    fun updateNexusHealth(team: AnniTeam) {
+        val index = teams.indexOf(team) + 2
+        ScoreboardManager.setLine(index,Component.literal("${team.color}${team.name} Nexus: §b${team.health}"))
     }
 
     @EventHandler
@@ -117,8 +120,7 @@ object Game: Listener {
             if (it.toMC().team?.name.equals(team.name,ignoreCase = true)) it.playSound(it, Sound.BLOCK_ANVIL_PLACE,2f,pitch)
         }
 
-        val index = teams.indexOf(team) + 2
-        ScoreboardManager.setLine(index,Component.literal("${team.color}${team.name} Nexus: §b${team.health}"))
+        updateNexusHealth(team)
     }
 
     @EventHandler
@@ -136,7 +138,6 @@ object Game: Listener {
 
         BossBarManager.onJoin(player)
         ScoreboardManager.onJoin(mcPlayer)
-
 
         val attackSpeed = player.getAttribute(Attribute.ATTACK_SPEED)
         if (attackSpeed?.getModifier(ATTACK_SPEED_MODIFIER) == null) {
