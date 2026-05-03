@@ -184,5 +184,9 @@ object ScorpioClass: AnniClass(), Listener {
 
             shoot(xd.toDouble(), yd.toDouble(), zd.toDouble(), pow, uncertainty)
         }
+
+        override fun isInWater(): Boolean {
+            return false
+        }
     }
 }
