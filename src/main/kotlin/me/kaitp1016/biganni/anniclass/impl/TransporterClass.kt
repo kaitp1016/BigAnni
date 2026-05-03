@@ -196,6 +196,7 @@ object TransporterClass: AnniClass(), Listener {
 
         val uuid = player.uniqueId
         val portal = portals.find { it.owner == uuid } ?: return
+        if (portal.secound != null) return
 
         destroy(portal)
         portals.remove(portal)

@@ -1,6 +1,5 @@
 package me.kaitp1016.biganni.anniclass.impl
 
-import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.UseCooldown
 import me.kaitp1016.biganni.PLUGIN_ID
@@ -13,7 +12,6 @@ import me.kaitp1016.biganni.utils.Scheduler
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
-import net.minecraft.tags.BlockTags
 import net.minecraft.world.item.Items
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
@@ -23,14 +21,10 @@ import org.bukkit.attribute.AttributeModifier
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import org.bukkit.util.VoxelShape
-import kotlin.math.max
-import kotlin.math.min
 
 object SwapperClass: AnniClass(), Listener {
     override val name = "Swapper"
@@ -77,7 +71,7 @@ object SwapperClass: AnniClass(), Listener {
 
         val raytrace = player.rayTraceEntities(20)
         val target = raytrace?.hitEntity as? Player ?: return
-        if (BerserkerClass.abilityPlayers.contains(target)) return
+        if (player.toMC().teamColor == target.toMC().teamColor || BerserkerClass.abilityPlayers.contains(target)) return
 
         val selfLocation = player.location
         player.teleport(target.location)

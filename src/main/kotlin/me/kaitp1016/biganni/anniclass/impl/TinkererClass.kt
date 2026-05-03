@@ -3,13 +3,14 @@ package me.kaitp1016.biganni.anniclass.impl
 import me.kaitp1016.biganni.anniclass.AnniClass
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.minecraft.core.BlockPos
+import net.minecraft.tags.ItemTags
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Blocks
 import org.bukkit.Material
-import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
@@ -52,8 +53,10 @@ object TinkererClass: AnniClass(), Listener {
 
     val pads = mutableListOf<PlacedPad>()
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     fun onPlace(event: BlockPlaceEvent) {
+        if (event.isCancelled) return
+
         val player = event.player
         if (!isSelected(player)) return
 
@@ -98,7 +101,7 @@ object TinkererClass: AnniClass(), Listener {
     }
 
     // 剣のエンチャントをはがす
-    val swords = listOf(Material.WOODEN_SWORD,Material.STONE_SWORD,Material.IRON_SWORD,Material.GOLDEN_SWORD,Material.DIAMOND_SWORD,Material.COPPER_SWORD,Material.NETHERITE_SWORD)
+    val allowedTags = listOf(ItemTags.PICKAXES,ItemTags.SWORDS,ItemTags.HOES,ItemTags.SHOVELS,ItemTags.AXES)
 
     @EventHandler
     fun onCraft(event: PrepareItemCraftEvent) {
@@ -108,7 +111,7 @@ object TinkererClass: AnniClass(), Listener {
         val matrix = event.inventory.matrix.filter { it?.type != null && !it.isEmpty }
         if (matrix.size != 2 || matrix.none { it?.type == Material.BOOK && it.amount == 1 }) return
 
-        val sword = matrix.find { swords.contains(it?.type) && it?.enchantments?.isNotEmpty() == true && it.toMC()?.isDamaged == false } ?: return
+        val sword = matrix.find { allowedTags.any { tag -> it?.toMC()?.`is`(tag) == true } && it?.enchantments?.isNotEmpty() == true && it.toMC()?.isDamaged == false } ?: return
 
         val book = ItemStack(Material.ENCHANTED_BOOK).also { book ->
             sword.enchantments.forEach {

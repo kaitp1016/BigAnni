@@ -17,7 +17,6 @@ import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.item.Items
-import net.minecraft.world.level.block.entity.FurnaceBlockEntity
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.Sound
@@ -33,9 +32,8 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
-import kotlin.math.abs
-import net.minecraft.world.entity.player.Player as MCPlayer
 import kotlin.math.max
+import net.minecraft.world.entity.player.Player as MCPlayer
 
 object AssassinClass: AnniClass(), Listener {
     override val name = "Assassin"
@@ -70,7 +68,7 @@ object AssassinClass: AnniClass(), Listener {
     }
 
     override fun onSelect(player: Player) {
-        player.getAttribute(Attribute.FALL_DAMAGE_MULTIPLIER)?.addTransientModifier(AttributeModifier(FEATHER_FALLING_KEY,-1000000.0, AttributeModifier.Operation.ADD_NUMBER))
+        player.getAttribute(Attribute.FALL_DAMAGE_MULTIPLIER)?.addModifier(AttributeModifier(FEATHER_FALLING_KEY,-1000.0, AttributeModifier.Operation.ADD_NUMBER))
 
         super.onSelect(player)
     }

@@ -43,7 +43,7 @@ object LauncherPad: Listener {
             val fallDamageAttribute = player.getAttribute(Attributes.FALL_DAMAGE_MULTIPLIER)
 
             if (fallDamageAttribute?.hasModifier(LAUNCHER_PAD_FEATHER_FALLING_IDENTFIER) == false) {
-                fallDamageAttribute.addTransientModifier(AttributeModifier(LAUNCHER_PAD_FEATHER_FALLING_IDENTFIER,-1000.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+                fallDamageAttribute.addTransientModifier(AttributeModifier(LAUNCHER_PAD_FEATHER_FALLING_IDENTFIER,-1000.0, AttributeModifier.Operation.ADD_VALUE))
             }
 
             bukkitPlayer.playSound(bukkitPlayer,Sound.ENTITY_WITHER_SHOOT,1f,2f)
