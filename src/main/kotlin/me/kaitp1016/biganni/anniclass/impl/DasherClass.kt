@@ -61,7 +61,7 @@ object DasherClass: AnniClass(), Listener {
         val item = event.item ?: return
         if (item.getAnniId() != BLINK_ITEM_ID || player.hasCooldown(item)) return
 
-        val pos = player.rayTraceBlocks(30.0)?.hitBlock ?: return
+        val pos = player.world.rayTraceBlocks(player.eyeLocation,player.location.direction,30.0, FluidCollisionMode.ALWAYS,true)?.hitBlock ?: return
         if (!canTeleport(pos)) return
 
         val distance = pos.location.distance(player.location)
@@ -102,7 +102,7 @@ object DasherClass: AnniClass(), Listener {
         Bukkit.getOnlinePlayers().forEach { player ->
             if (!player.isSneaking || !isSelected(player) || player.inventory.itemInMainHand.getAnniId() != BLINK_ITEM_ID) return@forEach
 
-            val pos = player.rayTraceBlocks(30.0)?.hitBlock ?: return@forEach
+            val pos = player.world.rayTraceBlocks(player.eyeLocation,player.location.direction,30.0, FluidCollisionMode.ALWAYS,true)?.hitBlock ?: return@forEach
             val block = if (canTeleport(pos)) Blocks.DIAMOND_BLOCK else Blocks.REDSTONE_BLOCK
 
             val blockPos = BlockPos(pos.x,pos.y,pos.z)
@@ -114,6 +114,6 @@ object DasherClass: AnniClass(), Listener {
 
     fun canTeleport(block: Block): Boolean {
         val world = block.world
-        return world.getBlockAt(block.x,block.y + 1,block.z).isEmpty && world.getBlockAt(block.x,block.y + 2, block.z).isEmpty
+        return world.getBlockAt(block.x,block.y + 1,block.z).isPassable && world.getBlockAt(block.x,block.y + 2, block.z).isPassable
     }
 }

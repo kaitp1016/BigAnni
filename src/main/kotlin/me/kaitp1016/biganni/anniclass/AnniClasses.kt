@@ -8,6 +8,7 @@ import me.kaitp1016.biganni.anniclass.impl.CivilianClass
 import me.kaitp1016.biganni.anniclass.impl.DasherClass
 import me.kaitp1016.biganni.anniclass.impl.DefenderClass
 import me.kaitp1016.biganni.anniclass.impl.EnchanterClass
+import me.kaitp1016.biganni.anniclass.impl.EngineerClass
 import me.kaitp1016.biganni.anniclass.impl.FarmerClass
 import me.kaitp1016.biganni.anniclass.impl.HealerClass
 import me.kaitp1016.biganni.anniclass.impl.IcemanClass
@@ -49,6 +50,7 @@ object AnniClasses {
     val ALCHEMIST = register("alchemist", AlchemistClass)
     val SCORPIO = register("scorpio", ScorpioClass)
     val SWAPPER = register("swapper", SwapperClass)
+    val ENGINEER = register("engineer", EngineerClass)
 
     fun <T: AnniClass> register(id: String, anniClass: T): T {
         ALL_CLASSES.add(anniClass)

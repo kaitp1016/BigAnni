@@ -76,10 +76,12 @@ object TransporterClass: AnniClass(), Listener {
             if (otherSide == null || !canUse(world,pos)) return
 
             world.getNearbyPlayers(location.clone().add(0.5,1.0,0.5),0.3,0.1).forEach { player ->
-                val ownerName = portal?.owner?.let { Bukkit.getPlayer(it) }?.teamDisplayName() ?: Component.text("Error")
+                val ownerUUID = portal?.owner ?: return@forEach
+                val owner = Bukkit.getPlayer(ownerUUID) ?: return@forEach
+                val ownerName = owner.teamDisplayName()
                 player.sendActionBar(ownerName.append(Component.text("'s Portal").color(NamedTextColor.GRAY)))
 
-                if (!player.isSneaking || teleportPlayers.contains(player) || !canUse(otherSide!!.world,otherSide!!.pos)) return@forEach
+                if (owner.toMC().teamColor !=  player.toMC().teamColor || !player.isSneaking || teleportPlayers.contains(player) || !canUse(otherSide!!.world,otherSide!!.pos)) return@forEach
 
                 player.teleport(otherSide!!.location.clone().apply {
                     add(0.5,1.0,0.5)
