@@ -35,7 +35,9 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
+import org.bukkit.event.entity.EntityInteractEvent
 import org.bukkit.event.entity.EntityRemoveEvent
+import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
@@ -47,6 +49,7 @@ object EngineerClass: AnniClass(), Listener {
     override val icon = Items.TNT
     override val description = arrayOf(
         "アビリティを使用すると爆弾を設置し、敵が設置したブロックを破壊できる。",
+        "Evertoolは視点先のブロックに対応するツールにになる。",
     )
 
     const val BUNKER_BUSTER_DROP_ITEM_ID = "engineer_bunker_buster"
@@ -64,8 +67,6 @@ object EngineerClass: AnniClass(), Listener {
                 uniqueClassItem()
                 soulbound()
                 setAnniItem(EVERTOOL_ITEM_ID)
-
-                setData(DataComponentTypes.USE_COOLDOWN, UseCooldown.useCooldown(BUNKER_BUSTER_COOLDOWN / 20f).cooldownGroup(BUNKER_BUSTER_COOLDOWN_GROUP).build())
 
                 editMeta {
                     it.itemName(Component.text("Evertool").color(NamedTextColor.GOLD))
@@ -198,6 +199,18 @@ object EngineerClass: AnniClass(), Listener {
 
         val levelBlocks = placedBlocks[level] ?: return
         levelBlocks.remove(pos)
+    }
+
+    @EventHandler
+    fun onInteractEntity(event: PlayerInteractEntityEvent) {
+        val target = event.rightClicked.toMC()
+        if (target !is BunkerBusterTNT) return
+
+        val player = event.player.toMC()
+        if (target.spawner.teamColor == player.teamColor) return
+
+        val level = event.player.toMC().level()
+        target.kill(level)
     }
 
     class BunkerBusterTNT: PrimedTnt {

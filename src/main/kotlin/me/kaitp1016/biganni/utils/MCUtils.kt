@@ -7,11 +7,14 @@ import org.bukkit.World
 import org.bukkit.block.Block
 import org.bukkit.craftbukkit.CraftWorld
 import org.bukkit.craftbukkit.block.CraftBlock
+import org.bukkit.craftbukkit.entity.CraftEntity
 import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.craftbukkit.inventory.CraftItemStack
+import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import net.minecraft.world.item.ItemStack as MCItemStack
+import net.minecraft.world.entity.Entity as MCEntity
 
 object MCUtils {
     fun ItemStack.toMC(): MCItemStack? {
@@ -20,6 +23,10 @@ object MCUtils {
 
     fun Player.toMC(): ServerPlayer {
         return (this as CraftPlayer).handle
+    }
+
+    fun Entity.toMC(): MCEntity {
+        return (this as CraftEntity).handle
     }
 
     fun Block.toMC(): BlockState {
