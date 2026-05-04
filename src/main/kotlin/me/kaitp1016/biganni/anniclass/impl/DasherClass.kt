@@ -13,6 +13,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.core.BlockPos
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket
+import net.minecraft.tags.BlockTags
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.Blocks
 import org.bukkit.*
@@ -114,6 +115,9 @@ object DasherClass: AnniClass(), Listener {
 
     fun canTeleport(block: Block): Boolean {
         val world = block.world
+        val underBlock = world.getBlockAt(block.x,block.y,block.z)
+        if (underBlock.type == Material.GLASS || underBlock.type == Material.BRICKS) return false
+
         return world.getBlockAt(block.x,block.y + 1,block.z).isPassable && world.getBlockAt(block.x,block.y + 2, block.z).isPassable
     }
 }

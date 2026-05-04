@@ -5,6 +5,7 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.UseCooldown
 import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
+import me.kaitp1016.biganni.features.DelayingBlock
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
@@ -262,7 +263,7 @@ object EngineerClass: AnniClass(), Listener {
             override fun shouldBlockExplode(explosion: Explosion, level: BlockGetter, pos: BlockPos, state: BlockState, power: Float): Boolean {
                 val level = (level as ServerLevel)
                 val placedTeam = placedBlocks[level]?.get(pos)
-                if (placedTeam == null || placedTeam == team) return false
+                if (placedTeam == null || placedTeam == team || DelayingBlock.isDelayingBlock(level,pos)) return false
 
                 return super.shouldBlockExplode(explosion, level, pos, state, power)
             }
@@ -279,9 +280,9 @@ object EngineerClass: AnniClass(), Listener {
         if (block == null) return null
 
         val block = block.toMC()
-        blockTags.find { block.`is`(it.first) }?.second?.let { return it }
+        if (block.`is`(BlockTags.LEAVES) || block.`is`(BlockTags.WOOL)) return Material.SHEARS
 
-        if (block.`is`(BlockTags.WOOL)) return Material.SHEARS
+        blockTags.find { block.`is`(it.first) }?.second?.let { return it }
 
         return null
     }

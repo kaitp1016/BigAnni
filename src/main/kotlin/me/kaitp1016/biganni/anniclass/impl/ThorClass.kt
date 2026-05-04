@@ -53,7 +53,7 @@ object ThorClass: AnniClass(), Listener {
 
                 editMeta {
                     it.itemName(Component.text("Hammer").color(NamedTextColor.GOLD))
-                    it.addAttributeModifier(Attribute.ATTACK_DAMAGE, AttributeModifier(AXE_ATTRIBUTE_MODIFIER_KEY,4.5, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.MAINHAND))
+                    it.addAttributeModifier(Attribute.ATTACK_DAMAGE, AttributeModifier(AXE_ATTRIBUTE_MODIFIER_KEY,3.5, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.MAINHAND))
                 }
 
                 addUnsafeEnchantment(Enchantment.UNBREAKING,10)

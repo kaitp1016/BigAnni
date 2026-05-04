@@ -4,6 +4,7 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.UseCooldown
 import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
+import me.kaitp1016.biganni.features.DelayingBlock
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import net.kyori.adventure.key.Key
@@ -64,6 +65,7 @@ object BuilderClass: AnniClass(), Listener {
             setItem(Random.nextInt(0,26),ItemStack(Material.BRICKS).also { it.amount = Random.nextInt(10,64) })
             setItem(Random.nextInt(0,26),ItemStack(Material.GLASS).also { it.amount = Random.nextInt(10,64) })
             setItem(Random.nextInt(0,26),ItemStack(Material.OAK_FENCE).also { it.amount = Random.nextInt(10,64) })
+            if (Random.nextInt(0,3) == 0) setItem(Random.nextInt(0,26), DelayingBlock.createItem())
         })
 
         player.setCooldown(RESOURCE_DROP_COOLDOWN_GROUP,RESOURCE_DROP_COOLDOWN)

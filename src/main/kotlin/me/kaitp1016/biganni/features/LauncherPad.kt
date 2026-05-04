@@ -1,4 +1,4 @@
-package me.kaitp1016.biganni.modifiers
+package me.kaitp1016.biganni.features
 
 import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import me.kaitp1016.biganni.PLUGIN_ID
@@ -17,7 +17,7 @@ import org.bukkit.util.Vector
 object LauncherPad: Listener {
     val LAUNCHER_PAD_FEATHER_FALLING_IDENTFIER = Identifier.fromNamespaceAndPath(PLUGIN_ID,"launcehr_pad_feather_falling")
 
-    data class FeatherFalling(val player: Player,var tick: Int = 200)
+    data class FeatherFalling(val player: Player, var tick: Int = 200)
 
     val featherFallings = mutableListOf<FeatherFalling>()
 
@@ -37,16 +37,16 @@ object LauncherPad: Listener {
                 this.setY(0.0)
                 this.normalize()
                 this.multiply(3f)
-                this.add(Vector(0.0,1.0,0.0))
+                this.add(Vector(0.0, 1.0, 0.0))
             }
 
             val fallDamageAttribute = player.getAttribute(Attributes.FALL_DAMAGE_MULTIPLIER)
 
             if (fallDamageAttribute?.hasModifier(LAUNCHER_PAD_FEATHER_FALLING_IDENTFIER) == false) {
-                fallDamageAttribute.addTransientModifier(AttributeModifier(LAUNCHER_PAD_FEATHER_FALLING_IDENTFIER,-1000.0, AttributeModifier.Operation.ADD_VALUE))
+                fallDamageAttribute.addTransientModifier(AttributeModifier(LAUNCHER_PAD_FEATHER_FALLING_IDENTFIER, -1000.0, AttributeModifier.Operation.ADD_VALUE))
             }
 
-            bukkitPlayer.playSound(bukkitPlayer,Sound.ENTITY_WITHER_SHOOT,1f,2f)
+            bukkitPlayer.playSound(bukkitPlayer, Sound.ENTITY_WITHER_SHOOT,1f,2f)
 
             val original = featherFallings.find { it.player == player }
             if (original != null) {
