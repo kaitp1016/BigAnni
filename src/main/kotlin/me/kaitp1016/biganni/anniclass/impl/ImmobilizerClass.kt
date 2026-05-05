@@ -6,6 +6,7 @@ import io.papermc.paper.datacomponent.item.UseCooldown
 import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
 import me.kaitp1016.biganni.plugin
+import me.kaitp1016.biganni.utils.FallDamageResistance
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
@@ -87,11 +88,10 @@ object ImmobilizerClass: AnniClass(), Listener {
                     target.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION,effectTime,1))
                     target.addPotionEffect(PotionEffect(PotionEffectType.WEAKNESS,effectTime,127))
                     target.getAttribute(Attribute.JUMP_STRENGTH)?.addTransientModifier(AttributeModifier(IMMOBILIZE_JUMP_REDUCE_KEY,-1000.0, AttributeModifier.Operation.ADD_SCALAR))
-                    target.getAttribute(Attribute.FALL_DAMAGE_MULTIPLIER)?.addTransientModifier(AttributeModifier(IMMOBILIZE_FEATHER_FALLING_KEY,-1000.0, AttributeModifier.Operation.ADD_SCALAR))
+                    FallDamageResistance.add(target,effectTime)
 
                     Scheduler.scheduleTask(effectTime) {
                         target.getAttribute(Attribute.JUMP_STRENGTH)?.removeModifier(IMMOBILIZE_JUMP_REDUCE_KEY)
-                        target.getAttribute(Attribute.FALL_DAMAGE_MULTIPLIER)?.removeModifier(IMMOBILIZE_FEATHER_FALLING_KEY)
                     }
 
                     target.playSound(target, Sound.ENTITY_PLAYER_BIG_FALL,2f,0f)

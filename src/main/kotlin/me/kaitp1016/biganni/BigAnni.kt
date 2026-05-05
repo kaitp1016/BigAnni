@@ -6,6 +6,8 @@ import me.kaitp1016.biganni.features.*
 import me.kaitp1016.biganni.game.Game
 import me.kaitp1016.biganni.modifiers.*
 import me.kaitp1016.biganni.packetgui.PacketGuiManager
+import me.kaitp1016.biganni.utils.FallDamageResistance
+import me.kaitp1016.biganni.utils.FullyInvisible
 import me.kaitp1016.biganni.utils.Scheduler
 import net.minecraft.server.MinecraftServer
 import org.bukkit.plugin.java.JavaPlugin
@@ -27,7 +29,10 @@ class BigAnni : JavaPlugin() {
             RespawnBlocks,
             CooldownFix,
             EnderFurnace,
+            InvisibleModifier,
             DelayingBlock,
+            FallDamageResistance,
+            FullyInvisible,
             AnniClassHandler,
             PacketGuiManager,
             EventManager,

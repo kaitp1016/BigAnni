@@ -76,7 +76,7 @@ object ScoutClass: AnniClass(), Listener {
         }
 
         val velocity = player.location.clone().subtract(hook.location).apply {
-            y *= 0.4
+            y *= 0.6
             multiply(-0.3)
         }
 

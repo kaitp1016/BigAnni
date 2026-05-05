@@ -6,17 +6,14 @@ import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.core.BlockPos
-import net.minecraft.network.chat.TextColor
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.item.ItemEntity
-import org.bukkit.Bukkit
-import org.bukkit.Material
+import net.minecraft.world.item.Items
+import net.minecraft.world.level.block.Blocks
 import org.bukkit.Sound
-import org.bukkit.craftbukkit.inventory.CraftItemStack
-import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -31,7 +28,7 @@ object DelayingBlock: Listener {
     // IntはTeamColor
     val delayingBlocks = mutableMapOf<ServerLevel, HashMap<BlockPos, ServerPlayer>>()
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGH)
     fun onPlace(event: BlockPlaceEvent) {
         val item = event.itemInHand
         if (event.isCancelled || item.getAnniId() != DELAYING_BLOCK_ID) return
@@ -45,8 +42,10 @@ object DelayingBlock: Listener {
         blocksInLevel[pos] = player
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     fun onBreak(event: BlockBreakEvent) {
+        if (event.isCancelled) return
+
         val player = event.player.toMC()
         val blocksInLevel = delayingBlocks[player.level()] ?: return
         val block = event.block
@@ -54,15 +53,18 @@ object DelayingBlock: Listener {
         val team = player.teamColor
 
         val miningBlock = blocksInLevel[pos]
-        if (miningBlock != null && miningBlock != player) {
-            if (miningBlock.teamColor == team) {
+        if (miningBlock != null) {
+            if (miningBlock != player && miningBlock.teamColor == team) {
                 event.isCancelled = true
                 return
             }
+
             blocksInLevel.remove(pos)
             event.isCancelled = true
 
-            player.level().addFreshEntity(ItemEntity(player.level(),block.x + 0.5,block.y + 0.5,block.z + 0.5, CraftItemStack.asNMSCopy(createItem() as CraftItemStack)))
+            val level = player.level()
+            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState())
+            level.addFreshEntity(ItemEntity(player.level(),block.x + 0.5,block.y + 0.5,block.z + 0.5, createItem().toMC()!!))
 
             return
         }
@@ -78,7 +80,7 @@ object DelayingBlock: Listener {
     }
 
     fun createItem(): ItemStack {
-        return ItemStack(Material.SEA_LANTERN).apply {
+        return net.minecraft.world.item.ItemStack(Items.SEA_LANTERN).bukkitStack.apply {
             editMeta {
                 it.itemName(Component.text("Delaying Block").color(NamedTextColor.AQUA))
             }

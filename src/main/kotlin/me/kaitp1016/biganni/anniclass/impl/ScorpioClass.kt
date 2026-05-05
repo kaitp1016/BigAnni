@@ -137,7 +137,7 @@ object ScorpioClass: AnniClass(), Listener {
 
                 val level = thrower.level()
                 val blockPos = BlockPos(pos.x.toInt(), pos.y.toInt(), pos.z.toInt())
-                if (!level.getBlockState(blockPos.offset(0, 1, 0)).canBeReplaced() || !level.getBlockState(blockPos.offset(0, 2, 0)).canBeReplaced()) return
+                if (!level.getBlockState(blockPos.offset(0, 0, 0)).canBeReplaced()   || !level.getBlockState(blockPos.offset(0, 1, 0)).canBeReplaced()) return
 
                 var y = min(blockPos.y, 256)
                 var isVoid = true

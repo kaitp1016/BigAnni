@@ -5,6 +5,7 @@ import io.papermc.paper.datacomponent.item.UseCooldown
 import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
 import me.kaitp1016.biganni.plugin
+import me.kaitp1016.biganni.utils.FallDamageResistance
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
@@ -84,11 +85,7 @@ object SwapperClass: AnniClass(), Listener {
         target.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS,0,60))
         target.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION,1,100))
 
-        target.getAttribute(Attribute.FALL_DAMAGE_MULTIPLIER)?.addTransientModifier(AttributeModifier(SWAPPER_FEATHER_FALLING,-100000.0, AttributeModifier.Operation.ADD_NUMBER))
-
-        Scheduler.scheduleTask(100) {
-            target.getAttribute(Attribute.FALL_DAMAGE_MULTIPLIER)?.removeModifier(SWAPPER_FEATHER_FALLING)
-        }
+        FallDamageResistance.add(target,100)
 
         player.setCooldown(SWAPPER_COOLDOWN_GROUP,SWAPPER_COOLDOWN)
     }
