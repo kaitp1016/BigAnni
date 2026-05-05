@@ -29,7 +29,7 @@ import kotlin.math.max
 
 object AssassinClass: AnniClass(), Listener {
     override val name = "Assassin"
-    override val icon = Items.POTION
+    override val icon = Items.FEATHER
     override val description = arrayOf(
         "アビリティを使用すると前に飛び、6秒間の透明化を獲得する。",
         "この透明化は防具も透明化される。"
