@@ -122,7 +122,7 @@ object ScorpioClass: AnniClass(), Listener {
             if (type == HookType.PULL_SELF) {
                 if (team != target.teamColor) return
 
-                thrower.deltaMovement = target.position().subtract(thrower.position()).multiply(1.0, 0.0, 1.0).normalize().multiply(9.0, 0.0, 9.0).add(0.0, 0.5, 0.0)
+                thrower.deltaMovement = target.position().subtract(thrower.position()).multiply(1.0, 0.0, 1.0).normalize().multiply(5.0, 0.0, 5.0).add(0.0, 0.5, 0.0)
                 thrower.hurtMarked = true
 
                 this.level().broadcastEntityEvent(this, 3.toByte())

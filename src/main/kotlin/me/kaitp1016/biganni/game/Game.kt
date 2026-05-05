@@ -47,8 +47,8 @@ object Game: Listener {
         isStarted = true
 
         teams.clear()
-        teams.add(AnniTeam("Red", BlockPos(118,-51,-188),"§c", Location(Bukkit.getWorld(Key.key("sys","coastal")),109.5, -38.0, -177.5, 45f, 0f)))
         teams.add(AnniTeam("Blue", BlockPos(-118,-51,190),"§9",Location(Bukkit.getWorld(Key.key("sys","coastal")),-108.5, -38.0, 180.5, -135f, 0f)))
+        teams.add(AnniTeam("Red", BlockPos(118,-51,-188),"§c", Location(Bukkit.getWorld(Key.key("sys","coastal")),109.5, -38.0, -177.5, 45f, 0f)))
 
         ScoreboardManager.reset()
         ScoreboardManager.setLine(0, Component.literal("§6apple.playit.plus"))
@@ -73,7 +73,8 @@ object Game: Listener {
 
     fun updateNexusHealth(team: AnniTeam) {
         val index = teams.indexOf(team) + 2
-        ScoreboardManager.setLine(index,Component.literal("${team.color}${team.name} Nexus: §b${team.health}"))
+        val health = if (team.health < 1) "§c✘" else "§b${team.health}"
+        ScoreboardManager.setLine(index,Component.literal("${team.color}${team.name} Nexus: ${health}"))
     }
 
     @EventHandler
@@ -124,10 +125,15 @@ object Game: Listener {
         player.playSound(player, Sound.BLOCK_ANVIL_PLACE,2f,pitch)
 
         Bukkit.getOnlinePlayers().forEach {
-            if (it.toMC().team?.name.equals(team.name,ignoreCase = true)) it.playSound(it, Sound.BLOCK_ANVIL_PLACE,2f,pitch)
+            if (team.health < 1) it.playSound(it, Sound.ENTITY_GENERIC_EXPLODE,2f,0f)
+            else if (it.toMC().team?.name.equals(team.name,ignoreCase = true)) it.playSound(it, Sound.BLOCK_ANVIL_PLACE,2f,pitch)
         }
 
         updateNexusHealth(team)
+
+        if (team.health < 1) {
+            block.world.setBlockData(block.location, Material.BEDROCK.createBlockData())
+        }
     }
 
     @EventHandler

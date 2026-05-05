@@ -10,6 +10,7 @@ import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
+import net.minecraft.tags.BlockTags
 import net.minecraft.world.item.Items
 import org.bukkit.Color
 import org.bukkit.Material
@@ -106,10 +107,12 @@ object MinerClass: AnniClass(), Listener {
         event.amount *= multiply
     }
 
+    val ores = listOf(Material.DIAMOND_ORE, Material.COAL_ORE, Material.IRON_ORE, Material.LAPIS_ORE, Material.GOLD_ORE, Material.EMERALD_ORE, Material.REDSTONE_ORE, Material.COPPER_ORE,)
+
     @EventHandler
     fun onHit(event: PlayerInteractEvent) {
         val player = event.player
-        if (event.action != Action.LEFT_CLICK_BLOCK || !isSelected(player) || goldrushes.none { it.player == player }) return
+        if (event.action != Action.LEFT_CLICK_BLOCK || !isSelected(player) || !ores.contains(event.clickedBlock?.type) || goldrushes.none { it.player == player }) return
 
         val face = event.blockFace
         val pos = event.clickedBlock?.location?.apply {
@@ -121,7 +124,7 @@ object MinerClass: AnniClass(), Listener {
             .location(pos.world,pos.x,pos.y,pos.z)
             .receivers(12,true)
             .count(1)
-            .data(Particle.DustOptions(Color.fromRGB(255,255,0),0.8f))
+            .color(255,220,220,50)
             .spawn()
     }
 

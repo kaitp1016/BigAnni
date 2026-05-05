@@ -64,7 +64,9 @@ object DelayingBlock: Listener {
 
             val level = player.level()
             level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState())
-            level.addFreshEntity(ItemEntity(player.level(),block.x + 0.5,block.y + 0.5,block.z + 0.5, createItem().toMC()!!))
+            level.addFreshEntity(ItemEntity(player.level(),block.x + 0.5,block.y + 0.5,block.z + 0.5, createItem().toMC()!!).apply {
+                pickupDelay = 10
+            })
 
             return
         }

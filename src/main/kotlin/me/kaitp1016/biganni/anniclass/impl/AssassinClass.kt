@@ -72,7 +72,7 @@ object AssassinClass: AnniClass(), Listener {
         player.velocity = player.location.direction.clone().apply {
             add(Vector(0.0,0.2,0.0))
             normalize()
-            y = max(y,0.3)
+            y = max(y,0.6)
         }
 
         player.world.playSound(player.location, Sound.ENTITY_WITHER_SHOOT,2f,2f)
