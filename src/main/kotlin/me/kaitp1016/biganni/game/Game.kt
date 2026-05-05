@@ -1,13 +1,19 @@
 package me.kaitp1016.biganni.game
 
 import com.destroystokyo.paper.event.server.ServerTickStartEvent
+import com.sun.jna.platform.win32.OaIdl
+import io.papermc.paper.event.player.AsyncChatEvent
+import me.kaitp1016.biganni.mc
 import me.kaitp1016.biganni.packetgui.impl.AnniClassSelector
 import me.kaitp1016.biganni.plugin
 import me.kaitp1016.biganni.utils.ItemUtils.isAnniItem
+import me.kaitp1016.biganni.utils.MCUtils.toBukkit
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.kyori.adventure.key.Key
+import net.kyori.adventure.text.format.TextColor
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
+import net.minecraft.util.CommonColors
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
@@ -22,6 +28,7 @@ import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.*
 import kotlin.random.Random
+import net.kyori.adventure.text.Component as BukkitComponent
 
 object Game: Listener {
     const val PHASE_TIME = 9600
@@ -169,5 +176,25 @@ object Game: Listener {
             event.isCancelled = true
             event.whoClicked.sendMessage("このアイテムはPhase 4まで使用できません!")
         }
+    }
+
+    @EventHandler
+    fun onChat(event: AsyncChatEvent) {
+        val bukkitPlayer = event.player
+        val player = bukkitPlayer.toMC()
+        if (player.team == null) return
+
+        if (event.message().toMC().string.startsWith("!")) {
+            event.message(BukkitComponent.text(event.message().toMC().string.removePrefix("!")))
+            return
+        }
+
+        val message = Component.literal("§7[").append(Component.literal("Team").withColor(player.teamColor).append(Component.literal("§7]§f ").withColor(CommonColors.WHITE).append(player.plainTextName).append(Component.literal("§7: §f").withColor(CommonColors.WHITE).append(event.message().toMC()))))
+
+        mc.playerList.players.forEach {
+            if (it.teamColor == player.teamColor) it.sendSystemMessage(message)
+        }
+
+        event.isCancelled = true
     }
 }

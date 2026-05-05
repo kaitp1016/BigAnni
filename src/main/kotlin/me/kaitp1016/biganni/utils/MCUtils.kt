@@ -1,5 +1,7 @@
 package me.kaitp1016.biganni.utils
 
+import io.papermc.paper.adventure.PaperAdventure
+import net.kyori.adventure.text.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.level.block.state.BlockState
@@ -15,6 +17,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import net.minecraft.world.item.ItemStack as MCItemStack
 import net.minecraft.world.entity.Entity as MCEntity
+import net.minecraft.network.chat.Component as MCComponent
 
 object MCUtils {
     fun ItemStack.toMC(): MCItemStack? {
@@ -35,5 +38,13 @@ object MCUtils {
 
     fun World.toMC(): ServerLevel {
         return (this as CraftWorld).handle
+    }
+
+    fun Component.toMC(): MCComponent {
+        return PaperAdventure.asVanilla(this)
+    }
+
+    fun MCComponent.toBukkit(): Component {
+        return PaperAdventure.asAdventure(this)
     }
 }
