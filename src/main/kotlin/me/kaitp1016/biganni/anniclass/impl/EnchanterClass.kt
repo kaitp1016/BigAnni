@@ -21,6 +21,9 @@ import org.bukkit.event.enchantment.EnchantItemEvent
 import org.bukkit.event.player.PlayerExpChangeEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.sin
 import kotlin.random.Random
 
 object EnchanterClass: AnniClass(), Listener {
@@ -101,23 +104,26 @@ object EnchanterClass: AnniClass(), Listener {
         val player = event.player
         if (!isSelected(player)) return
 
-        val multiply = if (intensifiers.any { it.player == player }) 3 else 2
+        val isIntensifier = intensifiers.any { it.player == player }
+        val multiply = if (isIntensifier) 3 else 2
         event.amount *= multiply
-    }
 
-    @EventHandler
-    fun onHit(event: PlayerInteractEvent) {
-        val player = event.player
-        if (event.action != Action.LEFT_CLICK_BLOCK || !isSelected(player) || intensifiers.none { it.player == player }) return
+        val distance = 1.5
+        val amount = 32
+        val world = player.world
 
-        val face = event.blockFace
-        val pos = event.clickedBlock?.location?.clone()?.add(0.5,0.0,0.0) ?: return
+        repeat(amount) {
+            val angle = 360f / amount * it * PI / 180f
+            val x = player.x + distance * cos(angle)
+            val z = player.z + 0.5 + distance * sin(angle)
+            val y = player.y + 1.0
 
-        Particle.ENCHANT.builder()
-            .location(pos.world,pos.x,pos.y,pos.z)
-            .receivers(12,true)
-            .count(24)
-            .offset(0.0,0.0,0.0)
-            .spawn()
+            Particle.ENCHANT.builder()
+                .location(world,x,y,z)
+                .receivers(32,true)
+                .count(0)
+                .offset(0.0,0.0,0.0)
+                .spawn()
+        }
     }
 }

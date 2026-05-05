@@ -35,6 +35,7 @@ import org.bukkit.block.data.Levelled
 import org.bukkit.craftbukkit.block.CraftBlock
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.block.BlockPlaceEvent
@@ -92,8 +93,10 @@ object AlchemistClass: AnniClass(), Listener {
 
     val stands = mutableListOf<PlacedStand>()
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     fun onPlace(event: BlockPlaceEvent) {
+        if (event.isCancelled) return
+
         val player = event.player
         if (!isSelected(player)) return
 
