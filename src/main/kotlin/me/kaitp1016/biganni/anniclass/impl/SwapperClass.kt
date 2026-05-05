@@ -38,8 +38,6 @@ object SwapperClass: AnniClass(), Listener {
     const val SWAPPER_COOLDOWN = 1200
     val SWAPPER_COOLDOWN_GROUP = Key.key(PLUGIN_ID,"swapper_swapper")
 
-    val SWAPPER_FEATHER_FALLING = NamespacedKey(plugin,"swapper_feather_falling")
-
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {
         return super.getDefaultItems(player).also {
             it.add(ItemStack(Material.MUSIC_DISC_CAT).apply {

@@ -37,7 +37,7 @@ object MinerClass: AnniClass(), Listener {
     const val GOLD_RUSH_COOLDOWN = 2400
     val GOLD_RUSH_COOLDOWN_GROUP = Key.key(PLUGIN_ID,"miner_gold_rush")
 
-    const val GOLD_RUSH_TIME = 300
+    const val GOLD_RUSH_TIME = 400
 
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {
         return super.getDefaultItems(player).also {

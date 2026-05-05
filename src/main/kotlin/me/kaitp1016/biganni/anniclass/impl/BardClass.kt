@@ -16,9 +16,7 @@ import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.core.component.DataComponents
-import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.chat.Style
-import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.effect.MobEffect
@@ -28,11 +26,11 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.JukeboxSong
 import net.minecraft.world.item.component.ItemLore
+import net.minecraft.world.item.component.TooltipDisplay
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.entity.JukeboxBlockEntity
 import net.minecraft.world.phys.AABB
-import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.entity.Player
@@ -80,10 +78,10 @@ object BardClass: AnniClass(), Listener {
     const val BUFF_BOX_RANGE = 15
 
     enum class Buff(val title: String, val description: String, val icon: Item, val effect: Holder<MobEffect>, val isBuff: Boolean) {
-        SHACKLE(title = "Shackle",description = "敵に速度低下を付与する。",icon = Items.MUSIC_DISC_STAL,effect = MobEffects.SLOWNESS, isBuff = false),
-        INTIMIDATE(title = "Intimidate",description = "敵に弱体化を付与する。",icon = Items.MUSIC_DISC_MELLOHI,effect = MobEffects.WEAKNESS, isBuff = false),
-        ENLIGHTEN(title = "Enlighten",description = "味方に移動速度上昇を付与する。",icon = Items.MUSIC_DISC_FAR,effect = MobEffects.SPEED, isBuff = true),
         INVIGORATE(title = "Invigorate",description = "味方に再生を付与する。",icon = Items.MUSIC_DISC_MALL,effect = MobEffects.REGENERATION, isBuff = true),
+        ENLIGHTEN(title = "Enlighten",description = "味方に移動速度上昇を付与する。",icon = Items.MUSIC_DISC_FAR,effect = MobEffects.SPEED, isBuff = true),
+        INTIMIDATE(title = "Intimidate",description = "敵に弱体化を付与する。",icon = Items.MUSIC_DISC_MELLOHI,effect = MobEffects.WEAKNESS, isBuff = false),
+        SHACKLE(title = "Shackle",description = "敵に移動速度低下を付与する。",icon = Items.MUSIC_DISC_STAL,effect = MobEffects.SLOWNESS, isBuff = false),
     }
 
     data class Buffbox(val owner: Player,val level: Level, val pos: BlockPos,var buff: Buff?) {
@@ -209,12 +207,13 @@ object BardClass: AnniClass(), Listener {
                 this.setItem(slot, net.minecraft.world.item.ItemStack(buff.icon).apply {
                     set(DataComponents.ITEM_NAME, net.minecraft.network.chat.Component.literal(buff.title).withColor(0xFFAA00))
                     set(DataComponents.LORE, ItemLore(listOf(net.minecraft.network.chat.Component.literal(buff.description).withStyle(Style.EMPTY.withItalic(false).withColor(0x55FF55)))))
+                    set(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay(false,linkedSetOf(DataComponents.JUKEBOX_PLAYABLE)))
                 })
             }
 
             setItem(buffs.size, net.minecraft.world.item.ItemStack(Items.JUKEBOX).apply {
                 set(DataComponents.ITEM_NAME, net.minecraft.network.chat.Component.literal("Reclaim Buffbox").withColor(0xFFAA00))
-                set(DataComponents.LORE, ItemLore(listOf(net.minecraft.network.chat.Component.literal("Buffboxを拾う。").withStyle(Style.EMPTY.withItalic(false).withColor(0x55FF55)))))
+                set(DataComponents.LORE, ItemLore(listOf(net.minecraft.network.chat.Component.literal("Buffboxを回収する。").withStyle(Style.EMPTY.withItalic(false).withColor(0x55FF55)))))
             })
         }
 
