@@ -50,7 +50,7 @@ object EngineerClass: AnniClass(), Listener {
     override val icon = Items.TNT
     override val description = arrayOf(
         "アビリティを使用すると爆弾を設置し、敵が設置したブロックを破壊できる。",
-        "Evertoolは視点先のブロックに対応するツールになる。",
+        "Evertoolは視点先のブロックに対応するツールwになる。",
     )
 
     const val BUNKER_BUSTER_DROP_ITEM_ID = "engineer_bunker_buster"

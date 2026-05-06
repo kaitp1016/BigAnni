@@ -79,7 +79,7 @@ object RiftWalkerClass: AnniClass(), Listener {
             }
 
             if (time <= 0) {
-                val players = world.getNearbyPlayers(rifter.location, 3.0, 3.0).filter { it.toMC().teamColor == rifter.toMC().teamColor && it.isSneaking }.sortedBy { it.location.distance(rifter.location) }.take(4)
+                val players = world.getNearbyPlayers(rifter.location, 3.0, 3.0).filter { it == rifter || (it.toMC().teamColor == rifter.toMC().teamColor && it.isSneaking) }.sortedBy { it.location.distance(rifter.location) }.take(4)
                 players.forEach {
                     it.teleport(target)
                 }

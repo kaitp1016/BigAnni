@@ -120,7 +120,10 @@ object BardClass: AnniClass(), Listener {
 
         buffboxes.removeAll { box ->
             val state = box.level.getBlockState(box.pos)
-            if (state.block != Blocks.JUKEBOX) return@removeAll true
+            if (state.block != Blocks.JUKEBOX) {
+                box.owner.give(createBardBox())
+                return@removeAll true
+            }
 
             box.tick++
             if (box.tick % 20 == 0) {
@@ -225,6 +228,7 @@ object BardClass: AnniClass(), Listener {
                     player.bukkitEntity.give(createBardBox())
                     player.bukkitEntity.setCooldown(BUFF_BOX_COOLDOWN_GROUP,BUFF_BOX_COOLDOWN)
 
+                    buffboxes.remove(box)
                     box.level.setBlockAndUpdate(box.pos,Blocks.AIR.defaultBlockState())
                     close()
 

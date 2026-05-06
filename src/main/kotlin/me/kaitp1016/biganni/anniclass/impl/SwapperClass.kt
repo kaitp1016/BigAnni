@@ -79,9 +79,9 @@ object SwapperClass: AnniClass(), Listener {
         player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT,1f,1f)
         target.playSound(target, Sound.ENTITY_ENDERMAN_TELEPORT,1f,1f)
 
-        target.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION,1,100))
-        target.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS,0,60))
-        target.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION,1,100))
+        target.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION,100,1))
+        target.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS,60,0))
+        target.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION,100,1))
 
         FallDamageResistance.add(target,100)
 

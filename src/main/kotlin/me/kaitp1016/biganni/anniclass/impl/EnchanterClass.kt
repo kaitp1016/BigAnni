@@ -108,22 +108,19 @@ object EnchanterClass: AnniClass(), Listener {
         val multiply = if (isIntensifier) 3 else 2
         event.amount *= multiply
 
-        val distance = 1.5
-        val amount = 32
-        val world = player.world
+        if (isIntensifier) {
+            val distance = 1.5
+            val amount = 32
+            val world = player.world
 
-        repeat(amount) {
-            val angle = 360f / amount * it * PI / 180f
-            val x = player.x + distance * cos(angle)
-            val z = player.z + 0.5 + distance * sin(angle)
-            val y = player.y + 1.0
+            repeat(amount) {
+                val angle = 360f / amount * it * PI / 180f
+                val x = player.x + distance * cos(angle)
+                val z = player.z + 0.5 + distance * sin(angle)
+                val y = player.y + 1.0
 
-            Particle.ENCHANT.builder()
-                .location(world,x,y,z)
-                .receivers(32,true)
-                .count(0)
-                .offset(0.0,0.0,0.0)
-                .spawn()
+                Particle.ENCHANT.builder().location(world, x, y, z).receivers(32, true).count(0).offset(0.0, 0.0, 0.0).spawn()
+            }
         }
     }
 }

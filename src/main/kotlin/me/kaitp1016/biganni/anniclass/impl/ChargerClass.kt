@@ -70,7 +70,7 @@ object ChargerClass: AnniClass(), Listener {
         val attackSpeed = player.getAttribute(Attribute.ATTACK_SPEED)
         if (attackSpeed?.getModifier(Game.ATTACK_SPEED_MODIFIER) == null) attackSpeed?.addModifier(AttributeModifier(Game.ATTACK_SPEED_MODIFIER,100000.0, AttributeModifier.Operation.ADD_NUMBER))
 
-        super.onSelect(player)
+        super.onUnselect(player)
     }
 
     @EventHandler

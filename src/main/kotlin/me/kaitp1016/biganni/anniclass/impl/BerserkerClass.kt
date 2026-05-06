@@ -98,7 +98,7 @@ object BerserkerClass: AnniClass(), Listener {
         val killer = event.damageSource.causingEntity as? Player ?: return
         if (isSelected(killer)) {
             val attribute = killer.getAttribute(Attribute.MAX_HEALTH)!!
-            val amount = min(40.0,(attribute.getModifier(BERSERKER_HEALTH_PASSIVE_KEY)?.amount?.plus(1) ?: 1.0))
+            val amount = min(20.0,(attribute.getModifier(BERSERKER_HEALTH_PASSIVE_KEY)?.amount?.plus(1) ?: 1.0))
 
             attribute.removeModifier(BERSERKER_HEALTH_PASSIVE_KEY)
             attribute.addTransientModifier(AttributeModifier(BERSERKER_HEALTH_PASSIVE_KEY,amount, AttributeModifier.Operation.ADD_NUMBER))

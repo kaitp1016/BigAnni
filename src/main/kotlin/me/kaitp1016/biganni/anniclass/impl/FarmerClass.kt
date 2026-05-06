@@ -85,6 +85,8 @@ object FarmerClass: AnniClass(), Listener {
         }
     }
 
+    val faminePlayers = mutableListOf<Player>()
+
     @EventHandler
     fun onInteract(event: PlayerInteractEvent) {
         if (event.action != Action.RIGHT_CLICK_BLOCK && event.action != Action.RIGHT_CLICK_AIR) return
@@ -119,8 +121,9 @@ object FarmerClass: AnniClass(), Listener {
             world.getNearbyPlayers(player.location,13.0).forEach { target ->
                 if (target.toMC().teamColor == team) return@forEach
 
-                target.addPotionEffect(PotionEffect(PotionEffectType.HUNGER,600,19))
+                target.addPotionEffect(PotionEffect(PotionEffectType.HUNGER,600,79))
                 target.playSound(target, Sound.ENTITY_SKELETON_HORSE_DEATH,1f,1f)
+                faminePlayers.add(target)
             }
 
             player.playSound(player, Sound.ENTITY_SKELETON_HORSE_DEATH,1f,1f)
@@ -153,20 +156,31 @@ object FarmerClass: AnniClass(), Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     fun onTick(event: ServerTickStartEvent) {
-        if (plants.isEmpty()) return
+        if (plants.isNotEmpty()) {
+            plants.removeAll {(level,pos) ->
+                val state = level.getBlockState(pos)
+                if (state.block != Blocks.WHEAT) return@removeAll true
 
-        plants.removeAll {(level,pos) ->
-            val state = level.getBlockState(pos)
-            if (state.block != Blocks.WHEAT) return@removeAll true
+                if (Random.nextInt(0,100) == 0) {
+                    val age = state.getValue(CropBlock.AGE)
+                    if (age >= CropBlock.MAX_AGE) return@removeAll true
 
-            if (Random.nextInt(0,100) == 0) {
-                val age = state.getValue(CropBlock.AGE)
-                if (age >= CropBlock.MAX_AGE) return@removeAll true
+                    level.setBlockAndUpdate(pos,state.setValue(CropBlock.AGE,age + 1))
+                }
 
-                level.setBlockAndUpdate(pos,state.setValue(CropBlock.AGE,age + 1))
+                return@removeAll false
             }
+        }
 
-            return@removeAll false
+        if (faminePlayers.isNotEmpty()) {
+            faminePlayers.removeAll {player ->
+                if (player.foodLevel < 7) {
+                    player.removePotionEffect(PotionEffectType.HUNGER)
+                    return@removeAll true
+                }
+
+                return@removeAll false
+            }
         }
     }
 
