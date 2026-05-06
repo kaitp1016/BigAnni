@@ -16,8 +16,8 @@ import net.minecraft.world.item.component.ItemLore
 import org.bukkit.Bukkit
 
 class   AnniClassSelector: ChestPacketGui {
-    override val displayName = Component.literal("Anni Class Selector")
-    override val name = "anni kit selector"
+    override val displayName = Component.literal("Class Selector")
+    override val name = "Class Selector"
 
     constructor(player: ServerPlayer,parent: AbstractPacketGui? = null): super(player,54) {
         AnniClasses.ALL_CLASSES.forEachIndexed { index, anniClass ->

@@ -93,6 +93,16 @@ object Game: Listener {
             }
         }
 
+        if (phase > 4) {
+            BossBarManager.setTitle("Phase 5 - §cDouble §fNexus Damage!")
+        }
+        else {
+            val min = phaseTime / 20 / 60
+            val sec = phaseTime / 20 % 60
+
+            BossBarManager.setTitle("Phase ${this.phase} - ${min}:${if (sec > 9) "$sec" else "0${sec}"}")
+        }
+
         BossBarManager.onTick()
     }
 

@@ -73,6 +73,7 @@ object AssassinClass: AnniClass(), Listener {
             add(Vector(0.0,0.2,0.0))
             normalize()
             y = max(y,0.6)
+            multiply(1.5)
         }
 
         player.world.playSound(player.location, Sound.ENTITY_WITHER_SHOOT,2f,2f)

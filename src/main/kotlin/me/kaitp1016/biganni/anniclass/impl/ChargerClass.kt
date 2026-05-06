@@ -85,7 +85,8 @@ object ChargerClass: AnniClass(), Listener {
 
         val team = player.toMC().teamColor
         player.world.getNearbyPlayers(player.location,6.0).forEach { target ->
-            if (target.toMC().teamColor == team) return@forEach
+            if (target.toMC().teamColor == team || BerserkerClass.isUsingAbility(target)) return@forEach
+
 
             target.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS,FEARFUL_TIME,0))
         }

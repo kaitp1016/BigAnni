@@ -44,7 +44,6 @@ object ImmobilizerClass: AnniClass(), Listener {
     val IMMOBILIZE_COOLDOWN_GROUP = Key.key(PLUGIN_ID,"imobilizer_immobilize")
 
     val IMMOBILIZE_JUMP_REDUCE_KEY = NamespacedKey(plugin,"immobilize_jump_reduce")
-    val IMMOBILIZE_FEATHER_FALLING_KEY = NamespacedKey(plugin,"immobilize_feather_falling")
 
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {
         return super.getDefaultItems(player).also {
@@ -81,6 +80,8 @@ object ImmobilizerClass: AnniClass(), Listener {
 
             player.world.getNearbyPlayers(player.location,5.0).forEach { target ->
                 if ((target.toMC().teamColor != team && targetCooldown.none { it.player == it }) || player == target) {
+                    if (BerserkerClass.isUsingAbility(target)) return@forEach
+
                     val effectTime = getEffectTime(target)
 
                     target.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS,effectTime,10))
@@ -130,6 +131,6 @@ object ImmobilizerClass: AnniClass(), Listener {
     }
 
     private fun getEffectTime(player: Player): Int {
-        return min(max(((player.getAttribute(Attribute.ARMOR)?.baseValue ?: 0.0) * 10).toInt(),40),100)
+        return min(max(((player.getAttribute(Attribute.ARMOR)?.value ?: 0.0) * 5).toInt(),40),100)
     }
 }

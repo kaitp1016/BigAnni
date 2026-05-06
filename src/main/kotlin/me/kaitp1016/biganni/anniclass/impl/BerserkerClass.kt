@@ -32,7 +32,7 @@ object BerserkerClass: AnniClass(), Listener {
     override val icon = Items.NETHERITE_INGOT
     override val description = arrayOf(
         "プレイヤーを殺すごとに体力がハートが0.5個分増える。",
-        "アビリティを使用することで移動速度が上昇する。",
+        "アビリティを使用することで移動速度が上昇し、クラスのアビリティーのデバフを受けなくなる。",
     )
 
     const val BERSERKER_ITEM_ID = "berserker_berserker"
@@ -103,5 +103,9 @@ object BerserkerClass: AnniClass(), Listener {
             attribute.removeModifier(BERSERKER_HEALTH_PASSIVE_KEY)
             attribute.addTransientModifier(AttributeModifier(BERSERKER_HEALTH_PASSIVE_KEY,amount, AttributeModifier.Operation.ADD_NUMBER))
         }
+    }
+
+    fun isUsingAbility(player: Player): Boolean {
+        return abilityPlayers.contains(player)
     }
 }

@@ -93,7 +93,7 @@ object IcemanClass: AnniClass(), Listener {
             if (!enabledPlayers.contains(player) || !isSelected(player)) return@forEach
 
             val level = player.world.toMC()
-            val pos = BlockPos(player.x.toInt(), player.y.toInt() - 1, player.z.toInt())
+            val pos = BlockPos(player.x.toInt(), (player.y - 2).toInt(), player.z.toInt())
 
             for (dx in -2..2) {
                 for (dz in -2..2) {

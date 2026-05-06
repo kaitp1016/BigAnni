@@ -70,7 +70,7 @@ object SwapperClass: AnniClass(), Listener {
 
         val raytrace = player.rayTraceEntities(20)
         val target = raytrace?.hitEntity as? Player ?: return
-        if (player.toMC().teamColor == target.toMC().teamColor || BerserkerClass.abilityPlayers.contains(target)) return
+        if (player.toMC().teamColor == target.toMC().teamColor || BerserkerClass.isUsingAbility(target)) return
 
         val selfLocation = player.location
         player.teleport(target.location)

@@ -4,11 +4,15 @@ import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import me.kaitp1016.biganni.anniclass.AnniClass
 import me.kaitp1016.biganni.events.impl.PacketReciveEvent
 import me.kaitp1016.biganni.mc
+import me.kaitp1016.biganni.plugin
 import net.minecraft.network.protocol.game.ServerboundPlayerAbilitiesPacket
 import net.minecraft.world.item.Items
 import org.bukkit.Bukkit
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import org.bukkit.Sound
+import org.bukkit.attribute.Attribute
+import org.bukkit.attribute.AttributeModifier
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -31,16 +35,20 @@ object AcrobatClass: AnniClass(), Listener {
         }
     }
 
+    val ACROBAT_FALL_DAMAGE_RESITANCE = NamespacedKey(plugin,"acrobat_fall_damage_resistance")
+
     data class AcrobatCooldown(val player: Player, var tick: Int)
     val cooldowns = mutableListOf<AcrobatCooldown>()
 
     override fun onSelect(player: Player) {
         player.allowFlight = true
+        player.getAttribute(Attribute.FALL_DAMAGE_MULTIPLIER)?.addModifier(AttributeModifier(ACROBAT_FALL_DAMAGE_RESITANCE,-1000.0, AttributeModifier.Operation.ADD_NUMBER))
         super.onSelect(player)
     }
 
     override fun onUnselect(player: Player) {
         player.allowFlight = false
+        player.getAttribute(Attribute.FALL_DAMAGE_MULTIPLIER)?.removeModifier(ACROBAT_FALL_DAMAGE_RESITANCE)
         cooldowns.removeIf { it.player == player }
 
         super.onUnselect(player)
@@ -55,7 +63,8 @@ object AcrobatClass: AnniClass(), Listener {
                 player.velocity = player.location.direction.clone().apply {
                     add(Vector(0.0,0.2,0.0))
                     normalize()
-                    y = max(y,0.3)
+                    y = max(y,0.6)
+                    multiply(1.75)
                 }
 
                 player.playSound(player , Sound.ENTITY_WITHER_SHOOT,1f,2f)

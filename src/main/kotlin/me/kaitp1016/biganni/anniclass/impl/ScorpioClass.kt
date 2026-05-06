@@ -131,7 +131,7 @@ object ScorpioClass: AnniClass(), Listener {
                 bukkitEntity.world.playSound(bukkitEntity.location, Sound.BLOCK_WOODEN_DOOR_OPEN, 2f, 0f)
             }
             if (type == HookType.PULL_OTHER) {
-                if (team == target.teamColor || BerserkerClass.abilityPlayers.contains(target.bukkitEntity)) return
+                if (team == target.teamColor || BerserkerClass.isUsingAbility(target.bukkitEntity)) return
 
                 val pos = thrower.getRayTrace(1, ClipContext.Fluid.ANY).location
 

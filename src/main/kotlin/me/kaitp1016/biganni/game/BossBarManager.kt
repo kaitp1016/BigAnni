@@ -16,10 +16,13 @@ object BossBarManager {
         bossbar.removePlayer(player)
     }
 
+    fun setTitle(title: String) {
+        bossbar.setTitle(title)
+    }
+
     fun onTick() {
         if (!Game.isStarted) return
 
         bossbar.progress = Game.phaseTime.toDouble() / Game.PHASE_TIME
-        bossbar.setTitle("§aPhase ${Game.phase}")
     }
 }
