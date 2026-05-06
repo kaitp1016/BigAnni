@@ -71,7 +71,7 @@ object ScoutClass: AnniClass(), Listener {
 
         val hook = event.hook
         val world = hook.world
-        if (!hook.isOnGround && !world.getBlockAt(hook.x.toInt(),hook.y.toInt(),hook.z.toInt()).isBuildable && !world.getBlockAt(hook.x.toInt(),hook.y.toInt() - 1,hook.z.toInt()).isBuildable) {
+        if (!hook.isOnGround && !world.getBlockAt(hook.x.toInt(),(hook.y - 0.5).toInt(),hook.z.toInt()).isBuildable && !world.getBlockAt(hook.x.toInt(),(hook.y - 1.5).toInt(),hook.z.toInt()).isBuildable) {
             return
         }
 

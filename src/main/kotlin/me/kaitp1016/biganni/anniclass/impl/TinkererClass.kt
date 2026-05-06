@@ -46,7 +46,7 @@ object TinkererClass: AnniClass(), Listener {
         Material.COAL_BLOCK to PadType(PotionEffect(PotionEffectType.HASTE,900,0),Material.COAL),
         Material.DIAMOND_BLOCK to PadType(PotionEffect(PotionEffectType.SPEED,400,1),Material.DIAMOND),
         Material.GOLD_BLOCK to PadType(PotionEffect(PotionEffectType.HASTE,300,1),Material.GOLD_INGOT),
-        Material.EMERALD_BLOCK to PadType(PotionEffect(PotionEffectType.ABSORPTION,400,10),Material.EMERALD),
+        Material.EMERALD_BLOCK to PadType(PotionEffect(PotionEffectType.ABSORPTION,400,0),Material.EMERALD),
     )
 
     data class PlacedPad(val level: Level, val pos: BlockPos, val owner: Player, val type: PadType)

@@ -126,6 +126,7 @@ object Game: Listener {
 
         Bukkit.getOnlinePlayers().forEach {
             if (team.health < 1) it.playSound(it, Sound.ENTITY_GENERIC_EXPLODE,2f,0f)
+            else if (block.location.distance(it.location) < 30) it.playSound(it, Sound.BLOCK_NOTE_BLOCK_HARP,2f,2f)
             else if (it.toMC().team?.name.equals(team.name,ignoreCase = true)) it.playSound(it, Sound.BLOCK_ANVIL_PLACE,2f,pitch)
         }
 
