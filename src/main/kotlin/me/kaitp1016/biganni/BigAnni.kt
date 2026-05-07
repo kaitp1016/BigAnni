@@ -31,6 +31,7 @@ class BigAnni : JavaPlugin() {
             EnderFurnace,
             InvisibleModifier,
             DelayingBlock,
+            WeaknessModifier,
             FallDamageResistance,
             FullyInvisible,
             AnniClassHandler,

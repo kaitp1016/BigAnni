@@ -63,7 +63,7 @@ object ImmobilizerClass: AnniClass(), Listener {
         }
     }
 
-    data class TargetCooldown(val player: Player,var time: Int)
+    data class TargetCooldown(val player: Player, var time: Int)
 
     val targetCooldown = mutableListOf<TargetCooldown>()
 
@@ -78,28 +78,25 @@ object ImmobilizerClass: AnniClass(), Listener {
         if (event.action == Action.RIGHT_CLICK_BLOCK || event.action == Action.RIGHT_CLICK_AIR) {
             val team = player.toMC().teamColor
 
-            player.world.getNearbyPlayers(player.location,5.0).forEach { target ->
-                if ((target.toMC().teamColor != team && targetCooldown.none { it.player == it }) || player == target) {
-                    if (BerserkerClass.isUsingAbility(target)) return@forEach
+            val targets = player.world.getNearbyPlayers(player.location,5.0).filter { target -> (target.toMC().teamColor != team && targetCooldown.none { it.player == it }) || player == target }
+            if (targets.size == 1) return
 
-                    val effectTime = getEffectTime(target)
+            targets.forEach { target ->
+                val effectTime = getEffectTime(target)
 
-                    target.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS,effectTime,10))
-                    target.addPotionEffect(PotionEffect(PotionEffectType.MINING_FATIGUE,effectTime,1))
-                    target.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION,effectTime,1))
-                    target.addPotionEffect(PotionEffect(PotionEffectType.WEAKNESS,effectTime,127))
-                    target.getAttribute(Attribute.JUMP_STRENGTH)?.addTransientModifier(AttributeModifier(IMMOBILIZE_JUMP_REDUCE_KEY,-1000.0, AttributeModifier.Operation.ADD_SCALAR))
-                    FallDamageResistance.add(target,effectTime)
+                target.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS, effectTime, 10))
+                target.addPotionEffect(PotionEffect(PotionEffectType.MINING_FATIGUE, effectTime, 1))
+                target.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION, effectTime, 1))
+                target.addPotionEffect(PotionEffect(PotionEffectType.WEAKNESS, effectTime, 127))
+                target.getAttribute(Attribute.JUMP_STRENGTH)?.addTransientModifier(AttributeModifier(IMMOBILIZE_JUMP_REDUCE_KEY, -1000.0, AttributeModifier.Operation.ADD_SCALAR))
+                FallDamageResistance.add(target, effectTime)
 
-                    Scheduler.scheduleTask(effectTime) {
-                        target.getAttribute(Attribute.JUMP_STRENGTH)?.removeModifier(IMMOBILIZE_JUMP_REDUCE_KEY)
-                    }
-
-                    target.playSound(target, Sound.ENTITY_PLAYER_BIG_FALL,2f,0f)
-                    targetCooldown.add(TargetCooldown(player,IMMOBILIZE_COOLDOWN))
+                Scheduler.scheduleTask(effectTime) {
+                    target.getAttribute(Attribute.JUMP_STRENGTH)?.removeModifier(IMMOBILIZE_JUMP_REDUCE_KEY)
                 }
 
-                player.setCooldown(IMMOBILIZE_COOLDOWN_GROUP,IMMOBILIZE_COOLDOWN)
+                target.playSound(target, Sound.ENTITY_PLAYER_BIG_FALL, 2f, 0f)
+                targetCooldown.add(TargetCooldown(player, IMMOBILIZE_COOLDOWN))
             }
 
             player.setCooldown(IMMOBILIZE_COOLDOWN_GROUP,IMMOBILIZE_COOLDOWN)
@@ -108,14 +105,14 @@ object ImmobilizerClass: AnniClass(), Listener {
         if (event.action == Action.LEFT_CLICK_BLOCK || event.action == Action.LEFT_CLICK_AIR) {
             val team = player.toMC().teamColor
 
-            player.world.getNearbyPlayers(player.location,5.0).forEach { target ->
-                if (target.toMC().teamColor != team) {
-                    target.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS,100, 2))
-                    target.playSound(target, Sound.BLOCK_SLIME_BLOCK_BREAK,2f,2f)
-                }
+            val targets = player.world.getNearbyPlayers(player.location,5.0).filter { it.toMC().teamColor != team }
+            if (targets.isEmpty()) return
 
-                player.playSound(player, Sound.BLOCK_SLIME_BLOCK_BREAK,2f,2f)
-                player.setCooldown(IMMOBILIZE_COOLDOWN_GROUP, IMMOBILIZE_COOLDOWN)
+            targets.forEach { target ->
+                target.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS,100, 2))
+                target.playSound(target, Sound.BLOCK_SLIME_BLOCK_BREAK,2f,2f)
+                target.playSound(player, Sound.BLOCK_SLIME_BLOCK_BREAK,2f,2f)
+                target.setCooldown(IMMOBILIZE_COOLDOWN_GROUP, IMMOBILIZE_COOLDOWN)
             }
         }
     }

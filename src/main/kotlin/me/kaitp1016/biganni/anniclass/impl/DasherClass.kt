@@ -118,6 +118,8 @@ object DasherClass: AnniClass(), Listener {
         val underBlock = world.getBlockAt(block.x,block.y,block.z)
         if (underBlock.type == Material.GLASS || underBlock.type == Material.BRICKS) return false
 
-        return world.getBlockAt(block.x,block.y + 1,block.z).isPassable && world.getBlockAt(block.x,block.y + 2, block.z).isPassable
+        val feetBlock = world.getBlockAt(block.x,block.y + 1,block.z)
+        val chestBlock = world.getBlockAt(block.x,block.y + 2, block.z)
+        return feetBlock.isPassable && !feetBlock.isLiquid && chestBlock.isPassable && !feetBlock.isLiquid
     }
 }

@@ -23,6 +23,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
+import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
@@ -91,5 +92,12 @@ object ThorClass: AnniClass(), Listener {
         player.addPotionEffect(PotionEffect(PotionEffectType.RESISTANCE,400,0))
 
         player.setCooldown(HAMMER_COOLDOWN_GROUP,HAMMER_COOLDOWN)
+    }
+
+    @EventHandler
+    fun onBreak(event: BlockBreakEvent) {
+        if (!isSelected(event.player) || event.player.inventory.itemInMainHand.getAnniId() != HAMMER_ITEM_ID) return
+
+        event.isCancelled = true
     }
 }
