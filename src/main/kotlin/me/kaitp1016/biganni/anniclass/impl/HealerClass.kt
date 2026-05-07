@@ -1,17 +1,27 @@
 package me.kaitp1016.biganni.anniclass.impl
 
+import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.UseCooldown
 import io.papermc.paper.event.player.PrePlayerAttackEntityEvent
 import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
+import me.kaitp1016.biganni.mc
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
+import net.minecraft.network.protocol.game.ClientboundResetScorePacket
+import net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket
+import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket
+import net.minecraft.network.protocol.game.ClientboundSetScorePacket
 import net.minecraft.world.item.Items
+import net.minecraft.world.scores.DisplaySlot
+import net.minecraft.world.scores.Objective
+import net.minecraft.world.scores.criteria.ObjectiveCriteria
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
@@ -22,11 +32,14 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import java.util.Optional
 
 object HealerClass: AnniClass(), Listener {
     override val name = "Healer"
+    override val deathMessageName = "HLR"
     override val icon = Items.GOLDEN_APPLE
     override val description = arrayOf(
+        "味方のHPが常に見える。",
         "左クリックでアビリティを使用すると単体の味方を大幅に回復できる。",
         "右クリックでアビリティを使用すると周りにいるの味方を回復できる。",
     )
@@ -51,6 +64,37 @@ object HealerClass: AnniClass(), Listener {
 
             it.add(ItemStack(Material.WOODEN_SHOVEL).uniqueClassItem().soulbound())
         }
+    }
+
+    const val INTERNAL_HP_OBJECTIVE = "HP"
+
+    override fun onSelect(player: Player) {
+        val mcPlayer = player.toMC()
+        val objective = Objective(mc.scoreboard, INTERNAL_HP_OBJECTIVE, ObjectiveCriteria.DUMMY, net.minecraft.network.chat.Component.literal("HP"), ObjectiveCriteria.RenderType.HEARTS, false, null)
+        mcPlayer.connection.send(ClientboundSetObjectivePacket(objective, ClientboundSetObjectivePacket.METHOD_ADD))
+        mcPlayer.connection.send(ClientboundSetDisplayObjectivePacket(DisplaySlot.BELOW_NAME, objective))
+
+        val team = mcPlayer.teamColor
+        Bukkit.getOnlinePlayers().forEach {
+            val target = it.toMC()
+            if (target.teamColor == team) {
+                mcPlayer.connection.send(ClientboundSetScorePacket(it.name, INTERNAL_HP_OBJECTIVE, target.health.toInt(), Optional.empty(), Optional.empty()))
+            }
+            else {
+                mcPlayer.connection.send(ClientboundResetScorePacket(target.scoreboardName,objective.name))
+            }
+        }
+
+        super.onSelect(player)
+    }
+
+    override fun onUnselect(player: Player) {
+        val mcPlayer = player.toMC()
+        val objective = Objective(mc.scoreboard, INTERNAL_HP_OBJECTIVE, ObjectiveCriteria.DUMMY, net.minecraft.network.chat.Component.literal("HP"), ObjectiveCriteria.RenderType.INTEGER,false, null)
+        mcPlayer.connection.send(ClientboundSetDisplayObjectivePacket(DisplaySlot.BELOW_NAME,null))
+        mcPlayer.connection.send(ClientboundSetObjectivePacket(objective, ClientboundSetObjectivePacket.METHOD_REMOVE))
+
+        super.onUnselect(player)
     }
 
     @EventHandler
@@ -91,5 +135,24 @@ object HealerClass: AnniClass(), Listener {
 
         player.setCooldown(BANDAGE_COOLDOWN_GROUP,BANDAGE_COOLDOWN)
 
+    }
+
+    @EventHandler
+    fun onTick(event: ServerTickStartEvent) {
+        Bukkit.getOnlinePlayers().forEach { player ->
+            if (!isSelected(player)) return@forEach
+
+            val mcPlayer = player.toMC()
+            val team = mcPlayer.teamColor
+
+            player.world.getNearbyPlayers(player.location,12.0).forEach {
+                if (it.toMC().teamColor == team) {
+                    mcPlayer.connection.send(ClientboundSetScorePacket(it.name, INTERNAL_HP_OBJECTIVE,it.health.toInt(),Optional.empty(), Optional.empty()))
+                }
+                else {
+                    mcPlayer.connection.send(ClientboundResetScorePacket(it.name, INTERNAL_HP_OBJECTIVE))
+                }
+            }
+        }
     }
 }

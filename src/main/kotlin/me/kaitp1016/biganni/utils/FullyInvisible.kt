@@ -7,6 +7,7 @@ import me.kaitp1016.biganni.events.impl.PacketSendEvent
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket
 import net.minecraft.world.entity.EquipmentSlot
+import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -45,6 +46,7 @@ object FullyInvisible: Listener {
         player.removePotionEffect(PotionEffectType.INVISIBILITY)
         revealInvisible(player.toMC())
         invisiblePlayers.removeIf { it.entityId == entityId }
+        player.playSound(player.location, Sound.ENTITY_ZOMBIE_VILLAGER_CONVERTED,1f,1f)
     }
 
     @EventHandler

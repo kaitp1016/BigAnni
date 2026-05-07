@@ -27,6 +27,7 @@ import kotlin.math.min
 object WarriorClass: AnniClass(), Listener {
     override val icon = Items.STONE_SWORD
     override val name = "Warrior"
+    override val deathMessageName = "WAR"
     override val description = arrayOf(
         "この職業の時は常に攻撃力が増える。",
         "アビリティを追加することで追加で攻撃力が増え、移動速度が増える。",

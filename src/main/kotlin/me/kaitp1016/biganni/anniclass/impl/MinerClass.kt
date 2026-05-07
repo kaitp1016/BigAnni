@@ -28,6 +28,7 @@ import kotlin.random.Random
 object MinerClass: AnniClass(), Listener {
     override val icon = Items.STONE_PICKAXE
     override val name = "Miner"
+    override val deathMessageName = "MNR"
     override val description = arrayOf(
         "この職業の時は常に鉱石の獲得量が2倍になる。",
         "アビリティを使用することで鉱石の獲得量が3倍になる。",
@@ -128,10 +129,10 @@ object MinerClass: AnniClass(), Listener {
             .spawn()
     }
 
-    fun getMultiply(player: Player): Float {
-        if (!isSelected(player)) return 1f
-        if (goldrushes.any { it.player == player }) return 3f
-        return 2f
+    fun getMultiply(player: Player): Int {
+        if (!isSelected(player)) return 1
+        if (goldrushes.any { it.player == player }) return 3
+        return 2
     }
 
     fun onMine(player: Player) {

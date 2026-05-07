@@ -44,6 +44,7 @@ import net.minecraft.world.item.ItemStack as MCItemStack
 object ScorpioClass: AnniClass(), Listener {
     override val icon = Items.NETHER_STAR
     override val name = "Scropio"
+    override val deathMessageName = "SCR"
     override val description = arrayOf(
         "右クリックでアビリティを使用すると、当った敵を自身の視点の先にテレポートできる。",
         "左クリックでアビリティを使用すると、当たった味方に向かって引っ張られる。",

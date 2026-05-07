@@ -25,6 +25,7 @@ import org.bukkit.persistence.PersistentDataType
 
 abstract class AnniClass {
     abstract val name: String
+    abstract val deathMessageName: String
     abstract val icon: Item
     abstract val description: Array<String>
 

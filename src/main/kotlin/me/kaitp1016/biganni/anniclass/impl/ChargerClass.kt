@@ -29,6 +29,7 @@ import org.bukkit.potion.PotionEffectType
 object ChargerClass: AnniClass(), Listener {
     override val icon = Items.NETHERITE_SWORD
     override val name = "Charger"
+    override val deathMessageName = "CHR"
     override val description = arrayOf(
         "連打ができなくなり、連打が可能な場合は他の効果は発動しない。",
         "近接ダメージがクリティカルなら1.1倍、それ以外は1.3倍になる。",

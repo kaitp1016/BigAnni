@@ -32,6 +32,7 @@ import org.bukkit.potion.PotionEffectType
 
 object ThorClass: AnniClass(), Listener {
     override val name = "Thor"
+    override val deathMessageName = "THR"
     override val icon = Items.GOLDEN_AXE
     override val description = arrayOf(
         "アビリティを使用すると周りの敵に魔法ダメージを与え、耐性を獲得する",

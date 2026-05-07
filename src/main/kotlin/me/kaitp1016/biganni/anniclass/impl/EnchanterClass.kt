@@ -11,6 +11,7 @@ import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.world.item.Items
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.entity.Player
@@ -18,17 +19,20 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.enchantment.EnchantItemEvent
+import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerExpChangeEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 import kotlin.math.PI
 import kotlin.math.cos
+import kotlin.math.max
 import kotlin.math.sin
 import kotlin.random.Random
 
 object EnchanterClass: AnniClass(), Listener {
     override val icon = Items.ENCHANTING_TABLE
     override val name = "Enchanter"
+    override val deathMessageName = "ENC"
     override val description = arrayOf(
         "この職業の時は常に経験値の獲得量が2倍になる。",
         "アビリティを使用することで経験値の獲得量が3倍になる。",
@@ -97,6 +101,18 @@ object EnchanterClass: AnniClass(), Listener {
             it.time--
             return@removeAll it.time <= 0
         }
+    }
+
+    @EventHandler
+    fun onDamage(event: EntityDamageEvent) {
+        val player = event.entity as? Player ?: return
+        if (!isSelected(player) || player.health > 7) return
+
+        val level = player.level
+        val damage = event.damage
+
+        event.damage = max(0.0,event.damage - level)
+        player.level = max(player.level - damage.toInt(),0)
     }
 
     @EventHandler

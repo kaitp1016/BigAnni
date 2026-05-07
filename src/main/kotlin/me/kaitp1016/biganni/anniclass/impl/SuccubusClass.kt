@@ -12,6 +12,7 @@ import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
+import net.minecraft.network.protocol.game.ClientboundResetScorePacket
 import net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket
 import net.minecraft.network.protocol.game.ClientboundSetScorePacket
@@ -34,9 +35,10 @@ import java.util.*
 
 object SuccubusClass: AnniClass(), Listener {
     override val name = "Succubus"
+    override val deathMessageName = "SUC"
     override val icon = Items.RED_DYE
     override val description = arrayOf(
-        "プレイヤーのHPが常に表示される。",
+        "敵のHPが常に表示される。",
         "アビリティを使用すると敵のHPが30%未満なら即死させる。",
         "それ以外なら敵の体力分だけ貫通ダメージを受ける。"
     )
@@ -71,8 +73,15 @@ object SuccubusClass: AnniClass(), Listener {
         mcPlayer.connection.send(ClientboundSetObjectivePacket(objective, ClientboundSetObjectivePacket.METHOD_ADD))
         mcPlayer.connection.send(ClientboundSetDisplayObjectivePacket(DisplaySlot.BELOW_NAME, objective))
 
+        val team = mcPlayer.teamColor
         Bukkit.getOnlinePlayers().forEach {
-            mcPlayer.connection.send(ClientboundSetScorePacket(it.name, INTERNAL_HP_OBJECTIVE, player.health.toInt(), Optional.empty(), Optional.empty()))
+            val target = it.toMC()
+            if (target.teamColor != team) {
+                mcPlayer.connection.send(ClientboundSetScorePacket(it.name, HealerClass.INTERNAL_HP_OBJECTIVE, target.health.toInt(), Optional.empty(), Optional.empty()))
+            }
+            else {
+                mcPlayer.connection.send(ClientboundResetScorePacket(target.scoreboardName,objective.name))
+            }
         }
 
         super.onSelect(player)
@@ -80,7 +89,7 @@ object SuccubusClass: AnniClass(), Listener {
 
     override fun onUnselect(player: Player) {
         val mcPlayer = player.toMC()
-        val objective = Objective(mc.scoreboard, INTERNAL_HP_OBJECTIVE, ObjectiveCriteria.DUMMY, net.minecraft.network.chat.Component.literal("HP"), ObjectiveCriteria.RenderType.INTEGER,false, null)
+        val objective = Objective(mc.scoreboard, INTERNAL_HP_OBJECTIVE, ObjectiveCriteria.DUMMY, net.minecraft.network.chat.Component.literal("HP"), ObjectiveCriteria.RenderType.HEARTS,false, null)
         mcPlayer.connection.send(ClientboundSetDisplayObjectivePacket(DisplaySlot.BELOW_NAME,null))
         mcPlayer.connection.send(ClientboundSetObjectivePacket(objective, ClientboundSetObjectivePacket.METHOD_REMOVE))
 
@@ -125,10 +134,17 @@ object SuccubusClass: AnniClass(), Listener {
     fun onTick(event: ServerTickStartEvent) {
         Bukkit.getOnlinePlayers().forEach { player ->
             if (!isSelected(player)) return@forEach
-            val mcPlayer = player.toMC()
 
-            player.world.getNearbyPlayers(player.location,12.0).forEach{
-                mcPlayer.connection.send(ClientboundSetScorePacket(it.name,INTERNAL_HP_OBJECTIVE,it.health.toInt(),Optional.empty(), Optional.empty()))
+            val mcPlayer = player.toMC()
+            val team = mcPlayer.teamColor
+
+            player.world.getNearbyPlayers(player.location,12.0).forEach {
+                if (it.toMC().teamColor != team) {
+                    mcPlayer.connection.send(ClientboundSetScorePacket(it.name,INTERNAL_HP_OBJECTIVE,it.health.toInt(),Optional.empty(), Optional.empty()))
+                }
+                else {
+                    mcPlayer.connection.send(ClientboundResetScorePacket(it.name,INTERNAL_HP_OBJECTIVE))
+                }
             }
         }
     }

@@ -10,10 +10,15 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.util.Vector
+import kotlin.math.floor
 
 object LauncherPad: Listener {
     @EventHandler
     fun onMove(event: PlayerMoveEvent) {
+        val from = event.from
+        val to = event.to
+        if (from.x.toInt() == to.x.toInt() && from.y.toInt() == to.y.toInt() && from.z.toInt() == to.z.toInt()) return
+
         val player = event.player.toMC()
         if (!player.onGround) return
 

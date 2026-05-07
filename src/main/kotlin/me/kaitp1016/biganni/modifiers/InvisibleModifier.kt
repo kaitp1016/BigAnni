@@ -1,5 +1,6 @@
 package me.kaitp1016.biganni.modifiers
 
+import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -14,6 +15,7 @@ object InvisibleModifier: Listener {
         if (!player.hasPotionEffect(PotionEffectType.INVISIBILITY)) return
 
         player.removePotionEffect(PotionEffectType.INVISIBILITY)
+        player.playSound(player.location, Sound.ENTITY_ZOMBIE_VILLAGER_CONVERTED,1f,1f)
     }
 
     @EventHandler
@@ -22,5 +24,6 @@ object InvisibleModifier: Listener {
         if (!player.hasPotionEffect(PotionEffectType.INVISIBILITY)) return
 
         player.removePotionEffect(PotionEffectType.INVISIBILITY)
+        player.playSound(player.location, Sound.ENTITY_ZOMBIE_VILLAGER_CONVERTED,1f,1f)
     }
 }

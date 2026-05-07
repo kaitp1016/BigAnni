@@ -3,6 +3,7 @@ package me.kaitp1016.biganni.game
 import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import com.sun.jna.platform.win32.OaIdl
 import io.papermc.paper.event.player.AsyncChatEvent
+import me.kaitp1016.biganni.anniclass.AnniClassManager.getAnniClass
 import me.kaitp1016.biganni.mc
 import me.kaitp1016.biganni.packetgui.impl.AnniClassSelector
 import me.kaitp1016.biganni.plugin
@@ -10,6 +11,7 @@ import me.kaitp1016.biganni.utils.ItemUtils.isAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toBukkit
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.kyori.adventure.key.Key
+import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextColor
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
@@ -21,10 +23,14 @@ import org.bukkit.NamespacedKey
 import org.bukkit.Sound
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
+import org.bukkit.damage.DamageSource
+import org.bukkit.damage.DamageType
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
+import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.*
 import kotlin.random.Random
@@ -215,5 +221,28 @@ object Game: Listener {
         }
 
         event.isCancelled = true
+    }
+
+    @EventHandler
+    fun onDeath(event: PlayerDeathEvent) {
+        val source = event.damageSource
+        val player = event.player
+        val playerClass = player.getAnniClass() ?: return
+        val killer = source.causingEntity as? Player
+
+        if (killer == null) {
+            event.deathMessage(player.teamDisplayName().append(BukkitComponent.text("(${playerClass.deathMessageName})").append(BukkitComponent.text(" died.").color(NamedTextColor.GRAY))))
+        }
+        else {
+            val reason = getDeathReason(source)
+            val killerClass = killer.getAnniClass() ?: return
+            event.deathMessage(killer.teamDisplayName().append(BukkitComponent.text("(${killerClass.deathMessageName})").append(BukkitComponent.text(" $reason ").color(NamedTextColor.GRAY).append(BukkitComponent.empty().color(NamedTextColor.WHITE).append(player.teamDisplayName().append(BukkitComponent.text("(${playerClass.deathMessageName})")))))))
+        }
+    }
+
+    private fun getDeathReason(source: DamageSource): String {
+        if (source.damageType == DamageType.ARROW) return "shot"
+
+        return "killed"
     }
 }

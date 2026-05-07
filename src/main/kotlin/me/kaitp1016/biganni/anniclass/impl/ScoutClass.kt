@@ -5,6 +5,7 @@ import me.kaitp1016.biganni.anniclass.AnniClass
 import me.kaitp1016.biganni.utils.ItemUtils.addLore
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
+import me.kaitp1016.biganni.utils.Utils.toIntCorrect
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -19,6 +20,7 @@ import org.bukkit.inventory.ItemStack
 
 object ScoutClass: AnniClass(), Listener {
     override val name = "Scout"
+    override val deathMessageName = "SCO"
     override val icon = Items.FISHING_ROD
     override val description = arrayOf(
         "グラップリングフックが初期装備に含まれている。",
@@ -71,7 +73,7 @@ object ScoutClass: AnniClass(), Listener {
 
         val hook = event.hook
         val world = hook.world
-        if (!hook.isOnGround && !world.getBlockAt(hook.x.toInt(),(hook.y - 0.5).toInt(),hook.z.toInt()).isBuildable && !world.getBlockAt(hook.x.toInt(),(hook.y - 1.5).toInt(),hook.z.toInt()).isBuildable) {
+        if (!hook.isOnGround && !world.getBlockAt(hook.x.toInt(),hook.y.toIntCorrect(),hook.z.toInt()).isBuildable && !world.getBlockAt(hook.x.toInt(),(hook.y - 1).toIntCorrect(),hook.z.toInt()).isBuildable) {
             return
         }
 
@@ -104,7 +106,7 @@ object ScoutClass: AnniClass(), Listener {
         }
 
         val entity = event.entity
-        if (entity is Player && isSelected(causingEntity)) {
+        if (entity is Player && isSelected(entity)) {
             addCooldown(entity)
         }
     }

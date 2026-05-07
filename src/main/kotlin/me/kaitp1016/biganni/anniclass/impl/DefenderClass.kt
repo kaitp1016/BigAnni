@@ -26,6 +26,7 @@ import org.bukkit.inventory.ItemStack
 
 object DefenderClass: AnniClass(), Listener {
     override val name = "Defender"
+    override val deathMessageName = "DFR"
     override val icon = Items.PRISMARINE_SHARD
     override val description = arrayOf(
         "アビリティを使用することでアラートを設置できる。",

@@ -22,6 +22,7 @@ import kotlin.math.max
 
 object AcrobatClass: AnniClass(), Listener {
     override val name = "Acrobat"
+    override val deathMessageName = "ACR"
     override val icon = Items.FEATHER
     override val description = arrayOf(
         "常に落下ダメージを食らわなくなる。",
@@ -83,6 +84,7 @@ object AcrobatClass: AnniClass(), Listener {
             it.tick--
             if (it.tick < 1) {
                 it.player.allowFlight = true
+                it.player.playSound(it.player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1f,2f)
                 return@removeAll true
             }
             return@removeAll false

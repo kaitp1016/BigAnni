@@ -5,6 +5,7 @@ import me.kaitp1016.biganni.anniclass.AnniClass
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
+import me.kaitp1016.biganni.utils.Utils.toIntCorrect
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.core.BlockPos
@@ -23,6 +24,7 @@ import org.bukkit.inventory.ItemStack
 object IcemanClass: AnniClass(), Listener {
     override val icon = Items.ICE
     override val name = "Iceman"
+    override val deathMessageName = "ICM"
     override val description = arrayOf(
         "この職業の時、自身の周りの水が凍るようになる。",
         "アビリティを使用することで能力を切り替えることができる。",
@@ -93,7 +95,7 @@ object IcemanClass: AnniClass(), Listener {
             if (!enabledPlayers.contains(player) || !isSelected(player)) return@forEach
 
             val level = player.world.toMC()
-            val pos = BlockPos(player.x.toInt(), (player.y - 2).toInt(), player.z.toInt())
+            val pos = BlockPos(player.x.toInt(), (player.y - 0.999).toIntCorrect(), player.z.toInt())
 
             for (dx in -2..2) {
                 for (dz in -2..2) {

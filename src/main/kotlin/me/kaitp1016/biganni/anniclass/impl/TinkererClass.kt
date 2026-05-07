@@ -8,6 +8,7 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Blocks
 import org.bukkit.Material
+import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -19,9 +20,11 @@ import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import kotlin.math.floor
 
 object TinkererClass: AnniClass(), Listener {
     override val name = "Tinkerer"
+    override val deathMessageName = "TIR"
     override val icon = Items.REDSTONE_BLOCK
     override val description = arrayOf(
         "鉱石ブロックを設置するとエフェクトを獲得するブロックになる。",
@@ -75,12 +78,17 @@ object TinkererClass: AnniClass(), Listener {
 
     @EventHandler
     fun onMove(event: PlayerMoveEvent) {
+        val from = event.from
+        val to = event.to
+        if (from.x.toInt() == to.x.toInt() && from.y.toInt() == to.y.toInt() && from.z.toInt() == to.z.toInt()) return
+
         val player = event.player.toMC()
         val pos = player.blockPosition().offset(0,-1,0)
         val level = player.level()
 
         val pad = pads.find { it.pos == pos && level == it.level } ?: return
         event.player.addPotionEffect(pad.type.effect)
+        event.player.playSound(event.player, Sound.ENTITY_BLAZE_AMBIENT,1f,1f)
     }
 
     @EventHandler

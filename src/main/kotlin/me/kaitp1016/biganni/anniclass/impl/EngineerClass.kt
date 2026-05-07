@@ -47,6 +47,7 @@ import java.util.function.IntPredicate
 
 object EngineerClass: AnniClass(), Listener {
     override val name = "Enginner"
+    override val deathMessageName = "ENG"
     override val icon = Items.TNT
     override val description = arrayOf(
         "アビリティを使用すると爆弾を設置し、敵が設置したブロックを破壊できる。",
