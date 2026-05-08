@@ -31,7 +31,7 @@ import org.bukkit.inventory.ItemStack
 object LumberjackClass: AnniClass(), Listener {
     override val icon = Items.STONE_AXE
     override val name = "Lumberjack"
-    override val deathMessageName = "LMJ"
+    override val deathMessageName = "LUM"
     override val description = arrayOf(
         "原木を掘った時に2倍の原木を入手できる。", "斧で殴った時に常に0.5ハート分のダメージが増える。", "アビリティを使用すると、斧で殴った時に敵の防具の耐久値を減らすことができる。"
     )

@@ -1,5 +1,8 @@
 package me.kaitp1016.biganni.anniclass
 
+import com.destroystokyo.paper.event.server.ServerTickStartEvent
+import me.kaitp1016.biganni.anniclass.AnniClassManager.getAnniClass
+import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
@@ -22,5 +25,12 @@ object AnniClassHandler: Listener {
         val uuid = player.uniqueId
 
         AnniClassManager.classes[uuid]?.onRespawn(player)
+    }
+
+    @EventHandler
+    fun onTick(event: ServerTickStartEvent) {
+        Bukkit.getOnlinePlayers().forEach {
+            it.getAnniClass()?.onUserTick(it)
+        }
     }
 }

@@ -33,7 +33,7 @@ import kotlin.math.min
 
 object ImmobilizerClass: AnniClass(), Listener {
     override val name = "Immobilizer"
-    override val deathMessageName = "IMB"
+    override val deathMessageName = "IMM"
     override val icon = Items.SLIME_BALL
     override val description = arrayOf(
         "左クリックでアビリティを使用すると周りの敵の移動速度を低下できる。",
@@ -88,8 +88,8 @@ object ImmobilizerClass: AnniClass(), Listener {
                 target.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS, effectTime, 10))
                 target.addPotionEffect(PotionEffect(PotionEffectType.MINING_FATIGUE, effectTime, 1))
                 target.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION, effectTime, 1))
-                target.addPotionEffect(PotionEffect(PotionEffectType.WEAKNESS, effectTime, 127))
-                target.getAttribute(Attribute.JUMP_STRENGTH)?.addTransientModifier(AttributeModifier(IMMOBILIZE_JUMP_REDUCE_KEY, -1000.0, AttributeModifier.Operation.ADD_SCALAR))
+                target.addPotionEffect(PotionEffect(PotionEffectType.WEAKNESS, effectTime, 99))
+                target.getAttribute(Attribute.JUMP_STRENGTH)?.addTransientModifier(AttributeModifier(IMMOBILIZE_JUMP_REDUCE_KEY, -10.0, AttributeModifier.Operation.ADD_NUMBER))
                 FallDamageResistance.add(target, effectTime)
 
                 Scheduler.scheduleTask(effectTime) {
@@ -110,7 +110,7 @@ object ImmobilizerClass: AnniClass(), Listener {
             if (targets.isEmpty()) return
 
             targets.forEach { target ->
-                target.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS,100, 2))
+                target.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS,99, 2))
                 target.playSound(target, Sound.BLOCK_SLIME_BLOCK_BREAK,2f,2f)
                 target.playSound(player, Sound.BLOCK_SLIME_BLOCK_BREAK,2f,2f)
                 target.setCooldown(IMMOBILIZE_COOLDOWN_GROUP, IMMOBILIZE_COOLDOWN)

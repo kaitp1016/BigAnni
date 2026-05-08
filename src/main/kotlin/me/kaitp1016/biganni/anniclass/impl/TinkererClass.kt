@@ -24,7 +24,7 @@ import kotlin.math.floor
 
 object TinkererClass: AnniClass(), Listener {
     override val name = "Tinkerer"
-    override val deathMessageName = "TIR"
+    override val deathMessageName = "TIN"
     override val icon = Items.REDSTONE_BLOCK
     override val description = arrayOf(
         "鉱石ブロックを設置するとエフェクトを獲得するブロックになる。",

@@ -28,7 +28,7 @@ import kotlin.random.Random
 
 object TransporterClass: AnniClass(), Listener {
     override val name = "Transporter"
-    override val deathMessageName = "TPR"
+    override val deathMessageName = "TRA"
     override val icon = Items.QUARTZ
     override val description = arrayOf(
         "また、アビリティを使用することで、次にアビリティを使用した",

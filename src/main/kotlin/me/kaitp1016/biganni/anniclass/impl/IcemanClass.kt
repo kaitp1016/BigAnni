@@ -87,28 +87,6 @@ object IcemanClass: AnniClass(), Listener {
 
     @EventHandler
     fun onTick(event: ServerTickStartEvent) {
-        Bukkit.getOnlinePlayers().forEach { player ->
-            if (!enabledPlayers.contains(player) || !isSelected(player)) return@forEach
-
-            val level = player.world.toMC()
-            val pos = BlockPos(player.x.toInt(), (player.y - 0.999).toIntCorrect(), player.z.toInt())
-
-            for (dx in -2..2) {
-                for (dz in -2..2) {
-                    val pos = pos.offset(dx, 0, dz)
-                    val block = level.getBlockState(pos)
-                    if (block.block == Blocks.WATER && block.fluidState.isSource && level.getBlockState(pos.offset(0, 1, 0)).isAir) {
-                        level.setBlockAndUpdate(pos, Blocks.FROSTED_ICE.defaultBlockState())
-                        ices.add(FrostIce(level, pos))
-                    }
-                    if (block.block == Blocks.FROSTED_ICE) {
-                        ices.find { it.pos == pos }?.tick = 20
-                        level.setBlockAndUpdate(pos, Blocks.FROSTED_ICE.defaultBlockState())
-                    }
-                }
-            }
-        }
-
         if (!ices.isEmpty()) {
             ices.removeAll { ice ->
                 ice.tick--
@@ -119,6 +97,28 @@ object IcemanClass: AnniClass(), Listener {
                 }
 
                 false
+            }
+        }
+    }
+
+    override fun onUserTick(player: Player) {
+        if (!enabledPlayers.contains(player)) return
+
+        val level = player.world.toMC()
+        val pos = BlockPos(player.x.toInt(), (player.y - 0.999).toIntCorrect(), player.z.toInt())
+
+        for (dx in -2..2) {
+            for (dz in -2..2) {
+                val pos = pos.offset(dx, 0, dz)
+                val block = level.getBlockState(pos)
+                if (block.block == Blocks.WATER && block.fluidState.isSource && level.getBlockState(pos.offset(0, 1, 0)).isAir) {
+                    level.setBlockAndUpdate(pos, Blocks.FROSTED_ICE.defaultBlockState())
+                    ices.add(FrostIce(level, pos))
+                }
+                if (block.block == Blocks.FROSTED_ICE) {
+                    ices.find { it.pos == pos }?.tick = 20
+                    level.setBlockAndUpdate(pos, Blocks.FROSTED_ICE.defaultBlockState())
+                }
             }
         }
     }

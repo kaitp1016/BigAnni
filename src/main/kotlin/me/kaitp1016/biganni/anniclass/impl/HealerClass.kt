@@ -36,7 +36,7 @@ import java.util.Optional
 
 object HealerClass: AnniClass(), Listener {
     override val name = "Healer"
-    override val deathMessageName = "HLR"
+    override val deathMessageName = "HEA"
     override val icon = Items.GOLDEN_APPLE
     override val description = arrayOf(
         "味方のHPが常に見える。",
@@ -137,21 +137,18 @@ object HealerClass: AnniClass(), Listener {
 
     }
 
-    @EventHandler
-    fun onTick(event: ServerTickStartEvent) {
-        Bukkit.getOnlinePlayers().forEach { player ->
-            if (!isSelected(player)) return@forEach
+    override fun onUserTick(player: Player) {
+        if (!isSelected(player)) return
 
-            val mcPlayer = player.toMC()
-            val team = mcPlayer.teamColor
+        val mcPlayer = player.toMC()
+        val team = mcPlayer.teamColor
 
-            player.world.getNearbyPlayers(player.location,12.0).forEach {
-                if (it.toMC().teamColor == team) {
-                    mcPlayer.connection.send(ClientboundSetScorePacket(it.name, INTERNAL_HP_OBJECTIVE,it.health.toInt(),Optional.empty(), Optional.empty()))
-                }
-                else {
-                    mcPlayer.connection.send(ClientboundResetScorePacket(it.name, INTERNAL_HP_OBJECTIVE))
-                }
+        player.world.getNearbyPlayers(player.location,12.0).forEach {
+            if (it.toMC().teamColor == team) {
+                mcPlayer.connection.send(ClientboundSetScorePacket(it.name, INTERNAL_HP_OBJECTIVE,it.health.toInt(),Optional.empty(), Optional.empty()))
+            }
+            else {
+                mcPlayer.connection.send(ClientboundResetScorePacket(it.name, INTERNAL_HP_OBJECTIVE))
             }
         }
     }

@@ -26,7 +26,7 @@ import org.bukkit.inventory.ItemStack
 
 object DasherClass: AnniClass(), Listener {
     override val name = "Dasher"
-    override val deathMessageName = "DSR"
+    override val deathMessageName = "DAS"
     override val icon = Items.PURPLE_DYE
     override val description = arrayOf(
         "アビリティを使用することで視点の先にテレポートができる。",
@@ -51,6 +51,18 @@ object DasherClass: AnniClass(), Listener {
                 }
             })
         }
+    }
+
+    override fun onUserTick(player: Player) {
+        if (!player.isSneaking || !isSelected(player) || player.inventory.itemInMainHand.getAnniId() != BLINK_ITEM_ID) return
+
+        val pos = player.world.rayTraceBlocks(player.eyeLocation,player.location.direction,30.0, FluidCollisionMode.NEVER,true)?.hitBlock ?: return
+        val block = if (canTeleport(pos)) Blocks.DIAMOND_BLOCK else Blocks.REDSTONE_BLOCK
+
+        val blockPos = BlockPos(pos.x,pos.y,pos.z)
+        player.toMC().connection.send(ClientboundBlockUpdatePacket(blockPos,block.defaultBlockState()))
+
+        previewPos.add(Pair(player, blockPos))
     }
 
     val previewPos = mutableListOf<Pair<Player, BlockPos>>()
@@ -99,18 +111,6 @@ object DasherClass: AnniClass(), Listener {
             }
 
             previewPos.clear()
-        }
-
-        Bukkit.getOnlinePlayers().forEach { player ->
-            if (!player.isSneaking || !isSelected(player) || player.inventory.itemInMainHand.getAnniId() != BLINK_ITEM_ID) return@forEach
-
-            val pos = player.world.rayTraceBlocks(player.eyeLocation,player.location.direction,30.0, FluidCollisionMode.NEVER,true)?.hitBlock ?: return@forEach
-            val block = if (canTeleport(pos)) Blocks.DIAMOND_BLOCK else Blocks.REDSTONE_BLOCK
-
-            val blockPos = BlockPos(pos.x,pos.y,pos.z)
-            player.toMC().connection.send(ClientboundBlockUpdatePacket(blockPos,block.defaultBlockState()))
-
-            previewPos.add(Pair(player, blockPos))
         }
     }
 

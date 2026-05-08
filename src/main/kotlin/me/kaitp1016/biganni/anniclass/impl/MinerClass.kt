@@ -28,7 +28,7 @@ import kotlin.random.Random
 object MinerClass: AnniClass(), Listener {
     override val icon = Items.STONE_PICKAXE
     override val name = "Miner"
-    override val deathMessageName = "MNR"
+    override val deathMessageName = "MIN"
     override val description = arrayOf(
         "この職業の時は常に鉱石の獲得量が2倍になる。",
         "アビリティを使用することで鉱石の獲得量が3倍になる。",

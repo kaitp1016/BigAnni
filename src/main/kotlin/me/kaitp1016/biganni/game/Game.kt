@@ -10,12 +10,14 @@ import me.kaitp1016.biganni.plugin
 import me.kaitp1016.biganni.utils.ItemUtils.isAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toBukkit
 import me.kaitp1016.biganni.utils.MCUtils.toMC
+import me.kaitp1016.biganni.utils.Scheduler
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextColor
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
 import net.minecraft.util.CommonColors
+import net.minecraft.world.phys.AABB
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
@@ -25,11 +27,13 @@ import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.damage.DamageSource
 import org.bukkit.damage.DamageType
+import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
+import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.*
@@ -53,8 +57,10 @@ object Game: Listener {
         isStarted = true
 
         teams.clear()
-        teams.add(AnniTeam("Blue", BlockPos(-118,-51,190),"§9",Location(Bukkit.getWorld(Key.key("sys","coastal")),-108.5, -38.0, 180.5, -135f, 0f)))
-        teams.add(AnniTeam("Red", BlockPos(118,-51,-188),"§c", Location(Bukkit.getWorld(Key.key("sys","coastal")),109.5, -38.0, -177.5, 45f, 0f)))
+
+        val world = Bukkit.getWorld(Key.key("sys","coastal"))
+        teams.add(AnniTeam("Blue", BlockPos(-118,-51,190),"§9",Location(world,-108.5, -38.0, 180.5, -135f, 0f),AABB(-70.0, -256.0, 138.0,-140.0, 312.0,217.0),Location(world,-117.0, -52.0, 187.0),Location(world,6.5,-47.0,127.5)))
+        teams.add(AnniTeam("Red", BlockPos(118,-51,-188),"§c", Location(world,109.5, -38.0, -177.5, 45f, 0f), AABB(77.0, -256.0, -133.0, 115.0, 312.0, -225.0),Location(world,118.0, -52.0, -185.0),Location(world,-5.5, -47.0, -124.5)))
 
         ScoreboardManager.reset()
         ScoreboardManager.setLine(0, Component.literal("§6apple.playit.plus"))
@@ -98,6 +104,10 @@ object Game: Listener {
                 Bukkit.getOnlinePlayers().forEach {
                     it.sendMessage("§a--- §e§lPhase $phase §r§a---")
                 }
+
+                if (phase == 3) {
+                    teams.forEach { it.spawnWitch() }
+                }
             }
         }
 
@@ -140,12 +150,10 @@ object Game: Listener {
 
         val pitch = Random.nextFloat() * 0.8f
 
-        player.playSound(player, Sound.BLOCK_ANVIL_PLACE,2f,pitch)
-
         Bukkit.getOnlinePlayers().forEach {
             if (team.health < 1) it.playSound(it, Sound.ENTITY_GENERIC_EXPLODE,2f,0f)
             else if (block.location.distance(it.location) < 30) it.playSound(it, Sound.BLOCK_ANVIL_PLACE,2f,pitch)
-            else if (it.toMC().team?.name.equals(team.name,ignoreCase = true)) it.playSound(it, Sound.BLOCK_NOTE_BLOCK_HARP,2f,2f)
+            else if (it.toMC().team?.name?.equals(team.name,ignoreCase = true) == true) it.playSound(it, Sound.BLOCK_NOTE_BLOCK_HARP,2f,2f)
         }
 
         updateNexusHealth(team)
@@ -240,9 +248,27 @@ object Game: Listener {
         }
     }
 
+    @EventHandler
+    fun onEntityDeath(event: EntityDeathEvent) {
+        val entity = event.entity
+        if (entity.type != EntityType.WITCH) return
+
+        val team = teams.find { it.witch == entity.uniqueId }
+        if (team == null) return
+
+        Scheduler.scheduleTask(300) {
+            team.spawnWitch()
+        }
+    }
+
     private fun getDeathReason(source: DamageSource): String {
         if (source.damageType == DamageType.ARROW) return "shot"
 
         return "killed"
+    }
+
+    fun getTeam(player: Player): AnniTeam? {
+        val teamName = player.toMC().team?.name
+        return teams.find { it.name.equals(teamName,true) }
     }
 }

@@ -29,7 +29,7 @@ import org.bukkit.inventory.ItemStack
 
 object RiftWalkerClass: AnniClass(), Listener {
     override val name = "Rift Walker"
-    override val deathMessageName = "RFW"
+    override val deathMessageName = "RIF"
     override val icon = Items.BLAZE_ROD
     override val description = arrayOf(
         "アビリティを使用することで、指定した味方にテレポートできる。",
@@ -76,6 +76,7 @@ object RiftWalkerClass: AnniClass(), Listener {
                     .location(rifter.location.clone().add(dx,0.0,dz))
                     .offset(0.0,2.0,0.0)
                     .count(20)
+                    .receivers(32,true)
                     .spawn()
             }
 

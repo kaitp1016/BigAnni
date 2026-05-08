@@ -29,7 +29,7 @@ import org.bukkit.potion.PotionEffectType
 
 object SwapperClass: AnniClass(), Listener {
     override val name = "Swapper"
-    override val deathMessageName = "SPR"
+    override val deathMessageName = "SWA"
     override val icon = Items.MUSIC_DISC_CAT
     override val description = arrayOf(
         "アビリティを使用すると視点先の敵と自身の位置を入れ替える。",

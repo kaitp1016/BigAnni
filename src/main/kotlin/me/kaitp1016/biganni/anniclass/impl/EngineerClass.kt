@@ -101,30 +101,27 @@ object EngineerClass: AnniClass(), Listener {
         super.onUnselect(player)
     }
 
+    override fun onUserTick(player: Player) {
+        if (!isSelected(player)) return
+
+        val item = player.inventory.itemInMainHand
+        if (item.getAnniId() != EVERTOOL_ITEM_ID) return
+
+        val block = player.rayTraceBlocks(5.0)?.hitBlock
+        val tool = getTool(block) ?: Material.BLAZE_ROD
+        if (tool == item.type) return
+
+        player.inventory.setItem(EquipmentSlot.HAND,item.withType(tool).apply {
+            editMeta { it.isUnbreakable = true }
+        })
+    }
+
     val blockTags = listOf(
         BlockTags.MINEABLE_WITH_PICKAXE to Material.STONE_PICKAXE,
         BlockTags.MINEABLE_WITH_AXE to Material.STONE_AXE,
         BlockTags.MINEABLE_WITH_HOE to Material.STONE_HOE,
         BlockTags.MINEABLE_WITH_SHOVEL to Material.STONE_SHOVEL,
     )
-
-    @EventHandler
-    fun onTick(event: ServerTickStartEvent) {
-        Bukkit.getOnlinePlayers().forEach { player ->
-            if (!isSelected(player)) return@forEach
-
-            val item = player.inventory.itemInMainHand
-            if (item.getAnniId() != EVERTOOL_ITEM_ID) return@forEach
-
-            val block = player.rayTraceBlocks(5.0)?.hitBlock
-            val tool = getTool(block) ?: Material.BLAZE_ROD
-            if (tool == item.type) return@forEach
-
-            player.inventory.setItem(EquipmentSlot.HAND,item.withType(tool).apply {
-                editMeta { it.isUnbreakable = true }
-            })
-        }
-    }
 
     enum class ExplosionType(val radius: Float,val fuseTick: Int) {
         DYNMITE(radius = 2.2f, fuseTick = 19),

@@ -23,7 +23,8 @@ import org.bukkit.inventory.ItemStack
 
 object DelayingBlock: Listener {
     const val DELAYING_BLOCK_ID = "anni_delaying_block"
-    const val DELAY_DISTANCE = 10
+    const val DELAY_EFFECT_DISTANCE = 5
+    const val DELAY_PLACE_DISTANCE = 10
 
     // IntはTeamColor
     val delayingBlocks = mutableMapOf<ServerLevel, HashMap<BlockPos, ServerPlayer>>()
@@ -39,6 +40,13 @@ object DelayingBlock: Listener {
         val pos = BlockPos(block.x,block.y,block.z)
 
         val blocksInLevel = delayingBlocks.getOrPut(level) { HashMap() }
+        val team = player.teamColor
+        if (blocksInLevel.any { it.value.teamColor == team && it.key.distManhattan(pos) < DELAY_PLACE_DISTANCE }) {
+            player.bukkitEntity.sendMessage("近くにDelaying Blockがあるため設置できません!")
+            event.isCancelled = true
+            return
+        }
+
         blocksInLevel[pos] = player
     }
 
@@ -71,7 +79,7 @@ object DelayingBlock: Listener {
             return
         }
 
-        if (!blocksInLevel.any { it.value.teamColor != team && it.key.distManhattan(pos) < DELAY_DISTANCE }) return
+        if (!blocksInLevel.any { it.value.teamColor != team && it.key.distManhattan(pos) < DELAY_EFFECT_DISTANCE }) return
 
         player.addEffect(MobEffectInstance(MobEffects.MINING_FATIGUE,140,1))
         player.bukkitEntity.playSound(player.bukkitEntity, Sound.ENTITY_ELDER_GUARDIAN_CURSE,1f,1f)

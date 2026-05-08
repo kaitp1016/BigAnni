@@ -55,25 +55,22 @@ object AcrobatClass: AnniClass(), Listener {
         super.onUnselect(player)
     }
 
-    @EventHandler
-    fun onPlayerTick(event: ServerTickStartEvent) {
-        Bukkit.getOnlinePlayers().forEach { player ->
-            if (!player.isFlying || !isSelected(player)) return@forEach
+    override fun onUserTick(player: Player) {
+        if (!player.isFlying) return
 
-            if (!cooldowns.any { it.player == player }) {
-                player.velocity = player.location.direction.clone().apply {
-                    add(Vector(0.0,0.2,0.0))
-                    normalize()
-                    y = max(y,0.6)
-                    multiply(1.75)
-                }
-
-                player.playSound(player , Sound.ENTITY_WITHER_SHOOT,1f,2f)
-                cooldowns.add(AcrobatCooldown(player,200))
+        if (!cooldowns.any { it.player == player }) {
+            player.velocity = player.location.direction.clone().apply {
+                add(Vector(0.0,0.2,0.0))
+                normalize()
+                y = max(y,0.6)
+                multiply(1.75)
             }
 
-            player.allowFlight = false
+            player.playSound(player , Sound.ENTITY_WITHER_SHOOT,1f,2f)
+            cooldowns.add(AcrobatCooldown(player,200))
         }
+
+        player.allowFlight = false
     }
 
     @EventHandler

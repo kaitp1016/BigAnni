@@ -38,7 +38,7 @@ import net.minecraft.world.item.ItemStack as MCItemStack
 
 object FarmerClass: AnniClass(), Listener {
     override val name = "Farmer"
-    override val deathMessageName = "FMR"
+    override val deathMessageName = "FAR"
     override val icon = Items.WHEAT_SEEDS
     override val description = arrayOf(
         "この職業で小麦を収穫すると自動で植えなおし、成長速度が加速する。",

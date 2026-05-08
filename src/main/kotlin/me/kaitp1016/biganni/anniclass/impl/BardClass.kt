@@ -48,7 +48,7 @@ import kotlin.math.sin
 
 object BardClass: AnniClass(), Listener {
     override val name = "Bard"
-    override val deathMessageName = "BRD"
+    override val deathMessageName = "BAR"
     override val icon = Items.JUKEBOX
     override val description = arrayOf(
         "ジュークボックスを設置すると周囲に選択したバフかデバフを与える。",

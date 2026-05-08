@@ -135,7 +135,12 @@ object EnchanterClass: AnniClass(), Listener {
                 val z = player.z + 0.5 + distance * sin(angle)
                 val y = player.y + 1.0
 
-                Particle.ENCHANT.builder().location(world, x, y, z).receivers(32, true).count(0).offset(0.0, 0.0, 0.0).spawn()
+                Particle.ENCHANT.builder()
+                    .location(world, x, y, z)
+                    .receivers(32, true)
+                    .count(0)
+                    .offset(0.0, 0.0, 0.0)
+                    .spawn()
             }
         }
     }

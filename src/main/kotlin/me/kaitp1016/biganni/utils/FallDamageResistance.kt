@@ -26,7 +26,7 @@ object FallDamageResistance: Listener {
                 false
             }) return
 
-        player.getAttribute(Attribute.FALL_DAMAGE_MULTIPLIER)?.addTransientModifier(AttributeModifier(FALL_DAMAGE_RESISTANCE_KEY, -10000.0, AttributeModifier.Operation.ADD_NUMBER))
+        player.getAttribute(Attribute.FALL_DAMAGE_MULTIPLIER)?.addTransientModifier(AttributeModifier(FALL_DAMAGE_RESISTANCE_KEY, -1000.0, AttributeModifier.Operation.ADD_NUMBER))
         resistancePlayers.add(ResistancePlayer(player, tick))
     }
 

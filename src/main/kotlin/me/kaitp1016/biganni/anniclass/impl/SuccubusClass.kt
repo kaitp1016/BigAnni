@@ -130,21 +130,16 @@ object SuccubusClass: AnniClass(), Listener {
         player.setCooldown(DRAIN_COOLDOWN_GROUP, DRAIN_COOLDOWN)
     }
 
-    @EventHandler
-    fun onTick(event: ServerTickStartEvent) {
-        Bukkit.getOnlinePlayers().forEach { player ->
-            if (!isSelected(player)) return@forEach
+    override fun onUserTick(player: Player) {
+        val mcPlayer = player.toMC()
+        val team = mcPlayer.teamColor
 
-            val mcPlayer = player.toMC()
-            val team = mcPlayer.teamColor
-
-            player.world.getNearbyPlayers(player.location,12.0).forEach {
-                if (it.toMC().teamColor != team) {
-                    mcPlayer.connection.send(ClientboundSetScorePacket(it.name,INTERNAL_HP_OBJECTIVE,it.health.toInt(),Optional.empty(), Optional.empty()))
-                }
-                else {
-                    mcPlayer.connection.send(ClientboundResetScorePacket(it.name,INTERNAL_HP_OBJECTIVE))
-                }
+        player.world.getNearbyPlayers(player.location,12.0).forEach {
+            if (it.toMC().teamColor != team) {
+                mcPlayer.connection.send(ClientboundSetScorePacket(it.name,INTERNAL_HP_OBJECTIVE,it.health.toInt(),Optional.empty(), Optional.empty()))
+            }
+            else {
+                mcPlayer.connection.send(ClientboundResetScorePacket(it.name,INTERNAL_HP_OBJECTIVE))
             }
         }
     }

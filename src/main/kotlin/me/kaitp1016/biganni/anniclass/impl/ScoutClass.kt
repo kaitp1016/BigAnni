@@ -17,6 +17,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerFishEvent
 import org.bukkit.inventory.ItemStack
+import org.bukkit.potion.PotionEffectType
 
 object ScoutClass: AnniClass(), Listener {
     override val name = "Scout"
@@ -66,7 +67,7 @@ object ScoutClass: AnniClass(), Listener {
         val item = event.player.inventory.getItem(hand)
         if (item.getAnniId() != GRAPPLING_HOOK_ID) return
 
-        if (cooldowns.any { it.player == player }) {
+        if (cooldowns.any { it.player == player } || player.hasPotionEffect(PotionEffectType.SLOWNESS)) {
             event.isCancelled = true
             return
         }
