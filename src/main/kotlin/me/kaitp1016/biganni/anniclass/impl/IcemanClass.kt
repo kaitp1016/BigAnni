@@ -86,10 +86,6 @@ object IcemanClass: AnniClass(), Listener {
     }
 
     @EventHandler
-    fun onMove(event: ServerTickStartEvent) {
-    }
-
-    @EventHandler
     fun onTick(event: ServerTickStartEvent) {
         Bukkit.getOnlinePlayers().forEach { player ->
             if (!enabledPlayers.contains(player) || !isSelected(player)) return@forEach

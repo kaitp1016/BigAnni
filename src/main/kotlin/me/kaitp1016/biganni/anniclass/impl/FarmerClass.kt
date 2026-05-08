@@ -120,7 +120,7 @@ object FarmerClass: AnniClass(), Listener {
             val team = player.toMC().teamColor
 
             world.getNearbyPlayers(player.location,13.0).forEach { target ->
-                if (target.toMC().teamColor == team) return@forEach
+                if (target.toMC().teamColor == team || BerserkerClass.isUsingAbility(target)) return@forEach
 
                 target.addPotionEffect(PotionEffect(PotionEffectType.HUNGER,600,79))
                 target.playSound(target, Sound.ENTITY_SKELETON_HORSE_DEATH,1f,1f)

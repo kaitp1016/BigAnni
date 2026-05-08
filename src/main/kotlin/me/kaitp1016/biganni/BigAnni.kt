@@ -33,6 +33,7 @@ class BigAnni : JavaPlugin() {
             DelayingBlock,
             WeaknessModifier,
             FarmlandModifier,
+            KnockbackModifier,
             FallDamageResistance,
             FullyInvisible,
             AnniClassHandler,

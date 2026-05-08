@@ -15,6 +15,8 @@ import net.minecraft.tags.ItemTags
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.item.Items
 import org.bukkit.Material
+import org.bukkit.attribute.Attribute
+import org.bukkit.attribute.AttributeModifier
 import org.bukkit.damage.DamageType
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Item
@@ -23,6 +25,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
 
 object LumberjackClass: AnniClass(), Listener {
@@ -44,6 +47,10 @@ object LumberjackClass: AnniClass(), Listener {
             it.removeIf { it.type == Material.WOODEN_AXE }
             it.add(ItemStack(Material.STONE_AXE).uniqueClassItem().soulbound().apply {
                 addEnchantment(Enchantment.EFFICIENCY, 1)
+
+                editMeta {
+                    it.addAttributeModifier(Attribute.ATTACK_DAMAGE, AttributeModifier(AXE_ATTRIBUTE_MODIFIER_KEY,3.5, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.MAINHAND))
+                }
             })
 
             it.add(ItemStack(Material.BRICKS).apply {

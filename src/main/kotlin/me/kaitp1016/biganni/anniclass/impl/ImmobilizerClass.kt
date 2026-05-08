@@ -79,7 +79,7 @@ object ImmobilizerClass: AnniClass(), Listener {
         if (event.action == Action.RIGHT_CLICK_BLOCK || event.action == Action.RIGHT_CLICK_AIR) {
             val team = player.toMC().teamColor
 
-            val targets = player.world.getNearbyPlayers(player.location,5.0).filter { target -> (target.toMC().teamColor != team && targetCooldown.none { it.player == it }) || player == target }
+            val targets = player.world.getNearbyPlayers(player.location,5.0).filter { target -> (target.toMC().teamColor != team && targetCooldown.none { it.player == it } && !BerserkerClass.isUsingAbility(target)) || player == target }
             if (targets.size == 1) return
 
             targets.forEach { target ->
@@ -106,7 +106,7 @@ object ImmobilizerClass: AnniClass(), Listener {
         if (event.action == Action.LEFT_CLICK_BLOCK || event.action == Action.LEFT_CLICK_AIR) {
             val team = player.toMC().teamColor
 
-            val targets = player.world.getNearbyPlayers(player.location,5.0).filter { it.toMC().teamColor != team }
+            val targets = player.world.getNearbyPlayers(player.location,5.0).filter { it.toMC().teamColor != team && !BerserkerClass.isUsingAbility(it) }
             if (targets.isEmpty()) return
 
             targets.forEach { target ->

@@ -82,8 +82,10 @@ object RespawnBlocks: Listener {
 
             if (respawnData.isOre) {
                 val fortune = player.inventory.itemInMainHand.enchantments[Enchantment.FORTUNE] ?: 0
-                amount += (Random.nextFloat() * fortune).toInt() * amount + fortune / 2 * amount
+                if (material != Material.RAW_GOLD) amount += (Random.nextFloat() * fortune).toInt() * amount + fortune / 2 * amount
                 amount *= MinerClass.getMultiply(player)
+            }
+            if (respawnData.isWood) {
                 amount *= LumberjackClass.getMultiply(player)
             }
 

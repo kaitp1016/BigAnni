@@ -138,7 +138,7 @@ object BardClass: AnniClass(), Listener {
                 box.level.getEntitiesOfClass(ServerPlayer::class.java,aabb) { centerPos.distanceTo(it.position()) < BUFF_BOX_RANGE }
                     .forEach { target ->
                         val isTeammate = target.teamColor == team
-                        if (isTeammate == buff.isBuff) {
+                        if (isTeammate == buff.isBuff && (buff.isBuff || !BerserkerClass.isUsingAbility(target.bukkitEntity))) {
                             target.addEffect(MobEffectInstance(buff.effect,60,0))
                         }
                     }
