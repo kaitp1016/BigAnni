@@ -102,8 +102,6 @@ object EngineerClass: AnniClass(), Listener {
     }
 
     override fun onUserTick(player: Player) {
-        if (!isSelected(player)) return
-
         val item = player.inventory.itemInMainHand
         if (item.getAnniId() != EVERTOOL_ITEM_ID) return
 

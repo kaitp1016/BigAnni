@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "me.kaitp1016"
-version = "1.1.8"
+version = "1.2.0"
 
 repositories {
     mavenCentral()

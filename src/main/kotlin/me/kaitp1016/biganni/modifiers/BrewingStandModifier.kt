@@ -1,12 +1,7 @@
 package me.kaitp1016.biganni.modifiers
 
-import io.papermc.paper.inventory.BrewingSimpleContainerData
 import me.kaitp1016.biganni.ItemKeys
-import me.kaitp1016.biganni.utils.ItemUtils.addLore
 import me.kaitp1016.biganni.utils.MCUtils.toMC
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
-import net.kyori.adventure.text.format.TextDecoration
 import net.minecraft.core.BlockPos
 import net.minecraft.world.level.block.entity.BrewingStandBlockEntity
 import org.bukkit.Material
@@ -28,6 +23,8 @@ object BrewingStandModifier: Listener {
             this.editMeta {
                 it.persistentDataContainer.set(ItemKeys.SOULBOUND, PersistentDataType.BOOLEAN, true)
             }
+
+            this.amount = 2
         }
     }
 

@@ -15,6 +15,8 @@ import net.minecraft.tags.ItemTags
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.item.Items
 import org.bukkit.Material
+import org.bukkit.Sound
+import org.bukkit.SoundCategory
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.damage.DamageType
@@ -82,6 +84,8 @@ object LumberjackClass: AnniClass(), Listener {
         if (item.getAnniId() != BRUTE_FORCE_ITEM_ID || player.hasCooldown(item)) return
 
         bruteForces.add(BruteForceAbility(player, BRUTE_FORCE_TIME))
+        player.playSound(player, Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, SoundCategory.MASTER,1f,0f,6L)
+
         player.setCooldown(BRUTE_FORCE_COOLDOWN_GROUP, BRUTE_FORCE_COOLDOWN)
     }
 
@@ -109,6 +113,9 @@ object LumberjackClass: AnniClass(), Listener {
         armorSlots.forEach {
             target.getItemBySlot(it).hurtAndBreak(damage, target, it)
         }
+
+        event.damage += 1.0
+        entity.world.playSound(entity.location, Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR,1f,1f)
     }
 
     fun getMultiply(player: Player): Int {
