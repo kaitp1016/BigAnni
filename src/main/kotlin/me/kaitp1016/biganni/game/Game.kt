@@ -108,6 +108,28 @@ object Game: Listener {
                 if (phase == 3) {
                     teams.forEach { it.spawnWitch() }
                 }
+
+                if (phase == 4) {
+                    BossManager.spawn()
+
+                    val world = Bukkit.getWorld(Key.key("sys","coastal"))!!
+
+                    repeat(9) {
+                        // 95 -48 3
+                        val x = 95 + it % 3
+                        val y = -48
+                        val z = 3 + it / 3
+                        world.setBlockData(x,y,z,Material.END_PORTAL.createBlockData())
+                    }
+
+                    repeat(9) {
+                        //-97 -48 -3
+                        val x = -97 + it % 3
+                        val y = -48
+                        val z = -3 + it / 3
+                        world.setBlockData(x,y,z,Material.END_PORTAL.createBlockData())
+                    }
+                }
             }
         }
 
@@ -161,14 +183,29 @@ object Game: Listener {
         if (team.health < 1) {
             block.world.setBlockData(block.location, Material.BEDROCK.createBlockData())
         }
+        else {
+            block.world.setBlockData(block.location, Material.AIR.createBlockData())
+
+            Scheduler.scheduleTask(8) {
+                block.world.setBlockData(block.location, Material.END_STONE.createBlockData())
+            }
+        }
     }
 
     @EventHandler
     fun onPortal(event: PlayerPortalEvent) {
-        if (event.cause != PlayerTeleportEvent.TeleportCause.NETHER_PORTAL) return
+        if (!isStarted) return
 
-        val player = event.player
-        AnniClassSelector(player.toMC()).open()
+        if (event.cause == PlayerTeleportEvent.TeleportCause.NETHER_PORTAL) {
+            val player = event.player
+            AnniClassSelector(player.toMC()).open()
+            event.isCancelled = true
+        }
+        if (event.cause == PlayerTeleportEvent.TeleportCause.END_PORTAL) {
+            val player = event.player
+            player.teleport(BossManager.BOSS_LOCATION)
+            event.isCancelled = true
+        }
     }
 
     @EventHandler
@@ -256,7 +293,7 @@ object Game: Listener {
         val team = teams.find { it.witch == entity.uniqueId }
         if (team == null) return
 
-        Scheduler.scheduleTask(300) {
+        Scheduler.scheduleTask(600) {
             team.spawnWitch()
         }
     }

@@ -152,5 +152,9 @@ object DefenderClass: AnniClass(), Listener {
                 }
             }
         }
+
+        override fun shouldBeSaved(): Boolean {
+            return false
+        }
     }
 }

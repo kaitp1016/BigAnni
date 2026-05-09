@@ -28,7 +28,7 @@ class AnniTeam {
         this.nexus = nexus
         this.color = color
         this.spawn = spawn
-        this.health = 150
+        this.health = 75
         this.baseArea = baseArea
         this.nexusWarp = nexusWarp
         this.witchLocation = witchLocation
@@ -38,6 +38,8 @@ class AnniTeam {
         val level = witchLocation.world.toMC()
         val witch = net.minecraft.world.entity.monster.Witch(EntityType.WITCH, level).apply {
             this.setPos(witchLocation.x,witchLocation.y,witchLocation.z)
+            this.checkDespawn()
+            this.persistenceRequired = true
         }
 
         level.addFreshEntity(witch)

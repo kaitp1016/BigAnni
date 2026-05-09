@@ -3,6 +3,7 @@ package me.kaitp1016.biganni
 import me.kaitp1016.biganni.anniclass.AnniClassHandler
 import me.kaitp1016.biganni.events.EventManager
 import me.kaitp1016.biganni.features.*
+import me.kaitp1016.biganni.game.BossManager
 import me.kaitp1016.biganni.game.Game
 import me.kaitp1016.biganni.modifiers.*
 import me.kaitp1016.biganni.packetgui.PacketGuiManager
@@ -40,6 +41,7 @@ class BigAnni : JavaPlugin() {
             PacketGuiManager,
             EventManager,
             Game,
+            BossManager,
             Scheduler,
         ).forEach { plugin.server.pluginManager.registerEvents(it,plugin) }
     }

@@ -189,5 +189,9 @@ object ScorpioClass: AnniClass(), Listener {
         override fun isInWater(): Boolean {
             return false
         }
+
+        override fun shouldBeSaved(): Boolean {
+            return false
+        }
     }
 }
