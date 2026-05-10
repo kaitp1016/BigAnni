@@ -108,8 +108,7 @@ object ArcherClass: AnniClass(), Listener {
         if (!isSelected(player)) return
 
         val item = event.item ?: return
-
-        if (item.type == Material.BOW && event.action == Action.LEFT_CLICK_AIR || event.action == Action.LEFT_CLICK_BLOCK) {
+        if (item.type == Material.BOW && (event.action == Action.LEFT_CLICK_AIR || event.action == Action.LEFT_CLICK_BLOCK)) {
             val ability = selectedAbility.getOrPut(player) { AbilityType.entries.first() }.next()
             selectedAbility[player] = ability
 
@@ -176,7 +175,7 @@ object ArcherClass: AnniClass(), Listener {
                             repeat(amount) {
                                 val angle = 360f / amount * it * PI / 180f
                                 val x = entity.x + distance * cos(angle)
-                                val z = entity.z + 0.5 + distance * sin(angle)
+                                val z = entity.z + distance * sin(angle)
                                 val y = entity.y + 1.0
 
                                 Particle.END_ROD.builder().location(world, x, y, z).receivers(32, true).count(0).offset(0.0, 0.0, 0.0).spawn()

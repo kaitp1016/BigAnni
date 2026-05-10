@@ -132,7 +132,7 @@ object EnchanterClass: AnniClass(), Listener {
             repeat(amount) {
                 val angle = 360f / amount * it * PI / 180f
                 val x = player.x + distance * cos(angle)
-                val z = player.z + 0.5 + distance * sin(angle)
+                val z = player.z + distance * sin(angle)
                 val y = player.y + 1.0
 
                 Particle.ENCHANT.builder()
