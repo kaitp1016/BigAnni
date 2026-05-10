@@ -99,16 +99,15 @@ object ScoutClass: AnniClass(), Listener {
     @EventHandler
     fun onDamage(event: EntityDamageEvent) {
         val source = event.damageSource
-        val causingEntity = source.causingEntity
-        if (causingEntity !is Player) return
-
-        if (isSelected(causingEntity)) {
-            addCooldown(causingEntity)
-        }
 
         val entity = event.entity
         if (entity is Player && isSelected(entity)) {
             addCooldown(entity)
+        }
+
+        val causingEntity = source.causingEntity
+        if (causingEntity is Player && isSelected(causingEntity)) {
+            addCooldown(causingEntity)
         }
     }
 

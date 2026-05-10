@@ -57,6 +57,8 @@ object BossManager: Listener {
         level.addFreshEntity(wither)
 
         boss = wither.uuid
+
+        Bukkit.broadcast(Component.text("ボスがスポーンしました!"))
     }
 
     @EventHandler

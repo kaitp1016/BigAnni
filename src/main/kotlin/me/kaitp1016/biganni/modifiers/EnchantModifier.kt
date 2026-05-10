@@ -10,8 +10,10 @@ import org.bukkit.event.enchantment.EnchantItemEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
+import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.inventory.EnchantingInventory
 import org.bukkit.inventory.ItemStack
+import kotlin.random.Random
 
 object EnchantModifier: Listener {
     @EventHandler
@@ -56,5 +58,10 @@ object EnchantModifier: Listener {
                 event.enchanter.level -= 2
             }
         }
+    }
+
+    @EventHandler
+    fun onJoin(event: PlayerJoinEvent) {
+        event.player.enchantmentSeed = Random.nextInt()
     }
 }
