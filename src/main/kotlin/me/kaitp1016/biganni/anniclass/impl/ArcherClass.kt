@@ -9,6 +9,8 @@ import net.kyori.adventure.key.Key
 import net.minecraft.core.component.DataComponents
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.effect.MobEffectInstance
+import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.projectile.Projectile
@@ -34,7 +36,7 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.potion.PotionType
-import java.util.logging.Level
+import java.util.Optional
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -178,7 +180,12 @@ object ArcherClass: AnniClass(), Listener {
                                 val z = entity.z + distance * sin(angle)
                                 val y = entity.y + 1.0
 
-                                Particle.END_ROD.builder().location(world, x, y, z).receivers(32, true).count(0).offset(0.0, 0.0, 0.0).spawn()
+                                Particle.END_ROD.builder()
+                                    .location(world, x, y, z)
+                                    .receivers(32, true)
+                                    .count(0)
+                                    .offset(0.0, 0.0, 0.0)
+                                    .spawn()
                             }
                         }
 
@@ -201,7 +208,7 @@ object ArcherClass: AnniClass(), Listener {
                 }
                 if (ability == AbilityType.POISON_SHOT) {
                     val potion = ThrownSplashPotion(level(),player, net.minecraft.world.item.ItemStack(Items.SPLASH_POTION).apply {
-                        set(DataComponents.POTION_CONTENTS, PotionContents(Potions.POISON))
+                        set(DataComponents.POTION_CONTENTS, PotionContents(Optional.empty(),Optional.empty(),listOf(MobEffectInstance(MobEffects.POISON,200,0)),Optional.empty()))
                         lerpMotion(Vec3(0.0,0.3,0.0))
                     })
 
@@ -213,6 +220,10 @@ object ArcherClass: AnniClass(), Listener {
             }
 
             super.onHit(hitResult)
+        }
+
+        override fun shouldBeSaved(): Boolean {
+            return false
         }
     }
 }

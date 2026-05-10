@@ -198,12 +198,21 @@ object Game: Listener {
 
         if (event.cause == PlayerTeleportEvent.TeleportCause.NETHER_PORTAL) {
             val player = event.player
+            val team = getTeam(player)
+            if (team != null) player.teleport(team.spawn)
             AnniClassSelector(player.toMC()).open()
             event.isCancelled = true
         }
         if (event.cause == PlayerTeleportEvent.TeleportCause.END_PORTAL) {
             val player = event.player
             player.teleport(BossManager.BOSS_LOCATION)
+            event.isCancelled = true
+        }
+        if (event.cause == PlayerTeleportEvent.TeleportCause.END_GATEWAY) {
+            val player = event.player
+            val team = getTeam(player)
+            if (team != null) player.teleport(team.spawn)
+
             event.isCancelled = true
         }
     }

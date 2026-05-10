@@ -22,6 +22,12 @@ object ItemUtils {
         }
     }
 
+    fun ItemStack.removeAnniItem() = apply {
+        this.editMeta {
+            it.persistentDataContainer.remove(ItemKeys.ANNI_ITEM)
+        }
+    }
+
     fun ItemStack.isAnniItem(): Boolean {
         return persistentDataContainer.has(ItemKeys.ANNI_ITEM)
     }
