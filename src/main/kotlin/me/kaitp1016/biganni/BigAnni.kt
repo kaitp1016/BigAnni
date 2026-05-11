@@ -1,5 +1,6 @@
 package me.kaitp1016.biganni
 
+import com.google.gson.GsonBuilder
 import me.kaitp1016.biganni.anniclass.AnniClassHandler
 import me.kaitp1016.biganni.events.EventManager
 import me.kaitp1016.biganni.features.*
@@ -56,3 +57,6 @@ lateinit var plugin: JavaPlugin
     private set
 
 val mc = MinecraftServer.getServer()
+val gson = GsonBuilder().apply {
+    setPrettyPrinting()
+}.create()!!

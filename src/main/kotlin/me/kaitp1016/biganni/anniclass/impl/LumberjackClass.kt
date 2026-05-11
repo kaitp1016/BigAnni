@@ -78,15 +78,16 @@ object LumberjackClass: AnniClass(), Listener {
     @EventHandler
     fun onInteract(event: PlayerInteractEvent) {
         val player = event.player
-        if (!isSelected(player)) return
+        if (event.isCancelled || !isSelected(player)) return
 
         val item = event.item ?: return
         if (item.getAnniId() != BRUTE_FORCE_ITEM_ID || player.hasCooldown(item)) return
 
         bruteForces.add(BruteForceAbility(player, BRUTE_FORCE_TIME))
         player.playSound(player, Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, SoundCategory.MASTER,1f,0f,6L)
-
         player.setCooldown(BRUTE_FORCE_COOLDOWN_GROUP, BRUTE_FORCE_COOLDOWN)
+
+        event.isCancelled = true
     }
 
     @EventHandler

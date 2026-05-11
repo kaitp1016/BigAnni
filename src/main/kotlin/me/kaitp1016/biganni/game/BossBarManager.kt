@@ -23,6 +23,6 @@ object BossBarManager {
     fun onTick() {
         if (!Game.isStarted) return
 
-        bossbar.progress = Game.phaseTime.toDouble() / Game.PHASE_TIME
+        bossbar.progress = Game.phaseTime.toDouble() / Game.map.phaseTime
     }
 }

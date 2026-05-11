@@ -42,16 +42,16 @@ import java.util.*
 
 object BossManager: Listener {
     const val BOSS_BUFF_ITEM_ID = "boss_buff"
-    val BOSS_LOCATION = Location(Bukkit.getWorld(Key.key("sys", "coastal")), 10000.0, 0.0, 0.0)
 
     var boss: UUID? = null
 
     fun spawn() {
-        val world = BOSS_LOCATION.world
+        val bossLocation = Game.map.bossLocation
+        val world = bossLocation.world
         val level = world.toMC()
 
         val wither = Boss(level).apply {
-            this.setPos(BOSS_LOCATION.x,BOSS_LOCATION.y,BOSS_LOCATION.z)
+            this.setPos(bossLocation.x,bossLocation.y,bossLocation.z)
         }
 
         level.addFreshEntity(wither)

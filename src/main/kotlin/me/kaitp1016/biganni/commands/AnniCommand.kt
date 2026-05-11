@@ -3,17 +3,25 @@ package me.kaitp1016.biganni.commands
 import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
+import com.mojang.brigadier.context.CommandContext
+import com.mojang.brigadier.suggestion.SuggestionProvider
+import com.mojang.brigadier.suggestion.Suggestions
+import com.mojang.brigadier.suggestion.SuggestionsBuilder
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.command.brigadier.Commands
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes
 import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver
+import me.kaitp1016.biganni.config.Config
 import me.kaitp1016.biganni.features.DelayingBlock
 import me.kaitp1016.biganni.game.BossManager
 import me.kaitp1016.biganni.game.Game
 import me.kaitp1016.biganni.packetgui.impl.AnniClassSelector
 import me.kaitp1016.biganni.utils.MCUtils.toMC
+import net.minecraft.commands.SharedSuggestionProvider
+import net.minecraft.commands.synchronization.SuggestionProviders
 import net.minecraft.server.level.ServerPlayer
 import org.bukkit.entity.Player
+import java.util.concurrent.CompletableFuture
 
 object AnniCommand {
     fun register(): LiteralArgumentBuilder<CommandSourceStack> {
@@ -68,6 +76,24 @@ object AnniCommand {
         }).then(Commands.literal("spawnboss").executes {
             BossManager.spawn()
             return@executes 1
-        })
+        }).then(Commands.literal("setmap").then(Commands.argument("map", StringArgumentType.greedyString()) .executes {
+            val mapName = StringArgumentType.getString(it,"map")
+            val map = Config.getMap(mapName)
+            if (map != null) {
+                Game.map = map
+                it.source.sender.sendMessage("マップを ${map.name} にしました!")
+            }
+            else {
+                it.source.sender.sendMessage("マップが見つかりませんでした!")
+            }
+
+            return@executes 1
+        }.suggests(MapSuggestion)))
+    }
+
+    object MapSuggestion: SuggestionProvider<CommandSourceStack> {
+        override fun getSuggestions(context: CommandContext<CommandSourceStack>, builder: SuggestionsBuilder): CompletableFuture<Suggestions> {
+            return SharedSuggestionProvider.suggest(Config.getMapNames(),builder)
+        }
     }
 }
