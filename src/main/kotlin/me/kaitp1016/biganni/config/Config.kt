@@ -36,7 +36,7 @@ object Config {
         }
     }
 
-    data class MapConfig(val name: String, val phaseTime: Int, val bossPortals: List<LevelBlockPos>, val bossLocation: Location,val teams: List<TeamConfig>) {
+    data class MapConfig(val name: String, val phaseTime: Int, val bossPortals: List<LevelBlockPos>, val bossLocation: Location,val teams: List<TeamConfig>,val blockedClasses:List<String>) {
         companion object {
             fun fromJson(json: JsonObject): MapConfig {
                 val name = json.get("name").asString
@@ -44,8 +44,9 @@ object Config {
                 val bossPortals = parseLevelBlockPoses(json.get("bossPortals").asJsonArray)
                 val bossLocation = parseLocation(json.get("bossLocation").asJsonObject)
                 val teams = parseTeams(json.get("teams").asJsonArray)
+                val blockedClasses = json.get("blockedClasses").asJsonArray.map { it.asString }
 
-                return MapConfig(name,phaseTime,bossPortals,bossLocation,teams)
+                return MapConfig(name,phaseTime,bossPortals,bossLocation,teams,blockedClasses)
             }
 
             fun default(): MapConfig {
@@ -54,11 +55,12 @@ object Config {
                 val world = Bukkit.getWorld(Key.key("sys:coastal"))!!
                 val bossPortals = listOf(LevelBlockPos(world,95, -48, 3), LevelBlockPos(world,-97, -48 ,-3))
                 val bossLocation = Location(world, 10000.0, 0.0, 0.0)
+                val blockedClasses = listOf<String>()
                 val teams = listOf(
                     TeamConfig("Blue", LevelBlockPos(world,-118,-51,190),75,Location(world,-108.5, -38.0, 180.5, -135f, 0f),"§9",AABB(-70.0, -256.0, 138.0,-140.0, 312.0,217.0),Location(world,-117.0, -52.0, 187.0),Location(world,6.5,-47.0,127.5)))
                     TeamConfig("Red", LevelBlockPos(world,118,-51,-188),75, Location(world,109.5, -38.0, -177.5, 45f, 0f),"§c", AABB(77.0, -256.0, -133.0, 115.0, 312.0, -225.0),Location(world,118.0, -52.0, -185.0),Location(world,-5.5, -47.0, -124.5))
 
-                return MapConfig(name,phaseTime,bossPortals,bossLocation,teams)
+                return MapConfig(name,phaseTime,bossPortals,bossLocation,teams,blockedClasses)
             }
         }
     }

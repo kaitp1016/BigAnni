@@ -2,6 +2,7 @@ package me.kaitp1016.biganni.packetgui.impl
 
 import me.kaitp1016.biganni.anniclass.AnniClassManager.selectAnniClass
 import me.kaitp1016.biganni.anniclass.AnniClasses
+import me.kaitp1016.biganni.game.Game
 import me.kaitp1016.biganni.mc
 import me.kaitp1016.biganni.packetgui.AbstractPacketGui
 import me.kaitp1016.biganni.packetgui.ChestPacketGui
@@ -35,6 +36,12 @@ class   AnniClassSelector: ChestPacketGui {
 
         mc.execute {
             val player = player.bukkitEntity
+            if (Game.map.blockedClasses.any { anniClass.name == it }) {
+                player.sendMessage("このクラスは使用できません!")
+                update(false)
+                return@execute
+            }
+
             player.selectAnniClass(anniClass)
 
             player.openInventory(Bukkit.createInventory(player,27, net.kyori.adventure.text.Component.text("§o§rClass Item")).also { inv ->
