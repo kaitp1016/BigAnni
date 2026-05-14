@@ -33,6 +33,7 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import kotlin.coroutines.coroutineContext
 import kotlin.random.Random
 import net.minecraft.world.item.ItemStack as MCItemStack
 
@@ -124,6 +125,7 @@ object FarmerClass: AnniClass(), Listener {
 
                 target.addPotionEffect(PotionEffect(PotionEffectType.HUNGER,600,79))
                 target.playSound(target, Sound.ENTITY_SKELETON_HORSE_DEATH,1f,1f)
+                target.sendMessage(Component.text("You are now starving due to ").color(NamedTextColor.DARK_GREEN).append(target.teamDisplayName().append(Component.text("'s ").append(Component.text("famine ability!").color(NamedTextColor.DARK_GREEN)))))
                 faminePlayers.add(target)
             }
 

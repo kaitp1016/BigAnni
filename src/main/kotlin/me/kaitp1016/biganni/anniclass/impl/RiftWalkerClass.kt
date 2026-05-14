@@ -93,6 +93,8 @@ object RiftWalkerClass: AnniClass(), Listener {
                 it.sendMessage(Component.text("Rift to ").color(NamedTextColor.GOLD).append(target.teamDisplayName().append(Component.text(" opens in ${time / 20}").color(NamedTextColor.GOLD))))
             }
 
+            target.sendMessage(Component.text("${rifter.name}'s rift to you arrives in ${time / 20}!").color((NamedTextColor.GOLD)))
+
             return false
         }
     }
@@ -146,6 +148,7 @@ object RiftWalkerClass: AnniClass(), Listener {
 
                 rifts.add(Rift(rifter,target))
                 rifter.setCooldown(OPEN_RIFT_COOLDOWN_GROUP,OPEN_RIFT_COOLDOWN)
+                target.sendMessage(Component.text("${player.plainTextName} is attempting to rift to you!").color((NamedTextColor.GREEN)))
 
                 close()
             }

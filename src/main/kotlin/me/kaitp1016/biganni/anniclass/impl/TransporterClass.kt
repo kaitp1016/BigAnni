@@ -20,6 +20,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
+import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
@@ -214,6 +215,16 @@ object TransporterClass: AnniClass(), Listener {
         portals.forEach { portal ->
             portal.first.tick()
             portal.secound?.tick()
+        }
+    }
+
+    @EventHandler
+    fun onBreak(event: BlockBreakEvent) {
+        val block = event.block
+        val pos = BlockPos(block.x,block.y,block.z)
+
+        if (portals.any { portal -> portal.first.pos == pos || portal.secound?.pos == pos }) {
+            event.isCancelled = true
         }
     }
 

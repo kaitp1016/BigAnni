@@ -18,8 +18,6 @@ import me.kaitp1016.biganni.game.Game
 import me.kaitp1016.biganni.packetgui.impl.AnniClassSelector
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.minecraft.commands.SharedSuggestionProvider
-import net.minecraft.commands.synchronization.SuggestionProviders
-import net.minecraft.server.level.ServerPlayer
 import org.bukkit.entity.Player
 import java.util.concurrent.CompletableFuture
 

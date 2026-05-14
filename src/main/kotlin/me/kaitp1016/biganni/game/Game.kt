@@ -155,11 +155,14 @@ object Game: Listener {
         team.health -= damage
 
         val pitch = Random.nextFloat() * 0.8f
+        val actionbar = player.teamDisplayName().append(BukkitComponent.text(" has damaged the").color(NamedTextColor.GRAY).append(BukkitComponent.text(" ${team.color}${team.name} team's nexus!")))
 
         Bukkit.getOnlinePlayers().forEach {
             if (team.health < 1) it.playSound(it, Sound.ENTITY_GENERIC_EXPLODE,2f,0f)
             else if (block.world == it.world && block.location.distance(it.location) < 30) it.playSound(it, Sound.BLOCK_ANVIL_PLACE,2f,pitch)
             else if (it.toMC().team?.name?.equals(team.name,ignoreCase = true) == true) it.playSound(it, Sound.BLOCK_NOTE_BLOCK_HARP,2f,2f)
+
+            it.sendActionBar(actionbar)
         }
 
         updateNexusHealth(team)
