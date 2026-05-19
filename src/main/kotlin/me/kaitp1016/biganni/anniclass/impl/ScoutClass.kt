@@ -21,7 +21,7 @@ import org.bukkit.potion.PotionEffectType
 
 object ScoutClass: AnniClass(), Listener {
     override val name = "Scout"
-    override val deathMessageName = "SCO"
+    override val shortName = "SCO"
     override val icon = Items.FISHING_ROD
     override val description = arrayOf(
         "グラップリングフックが初期装備に含まれている。",

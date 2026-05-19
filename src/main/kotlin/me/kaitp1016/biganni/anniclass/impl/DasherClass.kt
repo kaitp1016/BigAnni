@@ -13,7 +13,6 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.core.BlockPos
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket
-import net.minecraft.tags.BlockTags
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.Blocks
 import org.bukkit.*
@@ -27,11 +26,10 @@ import org.bukkit.inventory.ItemStack
 
 object DasherClass: AnniClass(), Listener {
     override val name = "Dasher"
-    override val deathMessageName = "DAS"
+    override val shortName = "DAS"
     override val icon = Items.PURPLE_DYE
     override val description = arrayOf(
-        "アビリティを使用することで視点の先にテレポートができる。",
-        "アビリティを使用するためにはスニークする必要がある。"
+        "スニーク中にアビリティを使用すると視点の先にテレポートができる。",
     )
 
     const val BLINK_ITEM_ID = "dasher_blink"

@@ -1,6 +1,5 @@
 package me.kaitp1016.biganni.anniclass.impl
 
-import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.UseCooldown
 import io.papermc.paper.event.player.PrePlayerAttackEntityEvent
@@ -36,12 +35,12 @@ import java.util.Optional
 
 object HealerClass: AnniClass(), Listener {
     override val name = "Healer"
-    override val deathMessageName = "HEA"
+    override val shortName = "HEA"
     override val icon = Items.GOLDEN_APPLE
     override val description = arrayOf(
-        "味方のHPが常に見える。",
+        "味方の体力が常に見える。",
         "左クリックでアビリティを使用すると単体の味方を大幅に回復できる。",
-        "右クリックでアビリティを使用すると周りにいるの味方を回復できる。",
+        "右クリックでアビリティを使用すると周囲にいる味方を回復できる。",
     )
 
     const val BANDAGE_ITEM_ID = "healer_bandage"

@@ -11,13 +11,11 @@ import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.world.item.Items
-import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.block.Action
 import org.bukkit.event.enchantment.EnchantItemEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerExpChangeEvent
@@ -32,12 +30,11 @@ import kotlin.random.Random
 object EnchanterClass: AnniClass(), Listener {
     override val icon = Items.ENCHANTING_TABLE
     override val name = "Enchanter"
-    override val deathMessageName = "ENC"
+    override val shortName = "ENC"
     override val description = arrayOf(
-        "この職業の時は常に経験値の獲得量が2倍になる。",
-        "アビリティを使用することで経験値の獲得量が3倍になる。",
-        "エンチャントをしたときにランダムなひとつのエンチャントの",
-        "レベルが昇華する確率がある。",
+        "この職業の時は常に経験値の獲得量が増える。",
+        "アビリティを使用することで経験値の獲得量がさらに増える。",
+        "エンチャントをしたらランダムなエンチャントのレベルが確率で昇華する。",
     )
 
     const val INTENSIFIER_ITEM_ID = "enchanter_intensifier"

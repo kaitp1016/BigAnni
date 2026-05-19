@@ -10,9 +10,7 @@ import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
-import net.minecraft.tags.BlockTags
 import net.minecraft.world.item.Items
-import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.enchantments.Enchantment
@@ -28,10 +26,10 @@ import kotlin.random.Random
 object MinerClass: AnniClass(), Listener {
     override val icon = Items.STONE_PICKAXE
     override val name = "Miner"
-    override val deathMessageName = "MIN"
+    override val shortName = "MIN"
     override val description = arrayOf(
-        "この職業の時は常に鉱石の獲得量が2倍になる。",
-        "アビリティを使用することで鉱石の獲得量が3倍になる。",
+        "この職業の時は常に鉱石の獲得量が増える。",
+        "アビリティを使用することで鉱石の獲得量がさらに増える。",
         "鉱石を掘ったときに溶鉱炉を獲得し、アビリティを使用してる場合は石炭を確率で獲得する。",
     )
 
@@ -139,7 +137,7 @@ object MinerClass: AnniClass(), Listener {
         if (!isSelected(player)) return
 
         if (goldrushes.any { it.player == player }) {
-            if (Random.nextInt(0,4) == 0) {
+            if (Random.nextInt(0,2) == 0) {
                 player.give(ItemStack(Material.COAL))
             }
         }

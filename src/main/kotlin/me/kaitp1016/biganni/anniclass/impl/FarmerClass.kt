@@ -33,16 +33,15 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import kotlin.coroutines.coroutineContext
 import kotlin.random.Random
 import net.minecraft.world.item.ItemStack as MCItemStack
 
 object FarmerClass: AnniClass(), Listener {
     override val name = "Farmer"
-    override val deathMessageName = "FAR"
+    override val shortName = "FAR"
     override val icon = Items.WHEAT_SEEDS
     override val description = arrayOf(
-        "この職業で小麦を収穫すると自動で植えなおし、成長速度が加速する。",
+        "この職業で小麦を収穫すると自動で植え、成長速度が加速する。",
         "また、小麦を収穫するとレアなアイテムがドロップするようになる。",
         "Feastを使用することで自身と周りにいる味方の満腹度が回復する。",
         "Famineを使用することで周りにいる敵の満腹度が減少する。",

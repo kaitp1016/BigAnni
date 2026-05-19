@@ -18,7 +18,7 @@ import kotlin.random.Random
 object HandymanClass: AnniClass(), Listener {
     override val icon = Items.ANVIL
     override val name = "Handyman"
-    override val deathMessageName = "HDY"
+    override val shortName = "HDY"
     override val description = arrayOf(
         "ネクサスを削るごとに自身が所属してるチームのネクサスの体力を確率で修復する。",
         "フェーズが進むごとに修復できる確率が下がっていく。",

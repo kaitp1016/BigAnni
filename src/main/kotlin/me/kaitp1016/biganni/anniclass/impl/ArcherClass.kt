@@ -1,6 +1,5 @@
 package me.kaitp1016.biganni.anniclass.impl
 
-import com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent
 import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
 import me.kaitp1016.biganni.utils.MCUtils.toMC
@@ -18,7 +17,6 @@ import net.minecraft.world.entity.projectile.arrow.Arrow
 import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownSplashPotion
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.alchemy.PotionContents
-import net.minecraft.world.item.alchemy.Potions
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
 import org.bukkit.Material
@@ -36,7 +34,7 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.potion.PotionType
-import java.util.Optional
+import java.util.*
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -44,13 +42,11 @@ import kotlin.random.Random
 
 object ArcherClass: AnniClass(), Listener {
     override val name = "Archer"
-    override val deathMessageName = "ARC"
+    override val shortName = "ARC"
     override val icon = Items.BOW
     override val description = arrayOf(
-        "最初から弓と矢を持ち、矢が与えるダメージが常に1ダメージ分増える。",
+        "最初から弓と矢を持ち、矢が与えるダメージが常に増える。",
         "左クリックをするとアビリティを選択でき、それぞれのアビリティにはクールダウンがある。",
-        "Rain of Arrowsを使用すると、矢が着地した位置に矢の雨を降らす。",
-        "Poison Shotを使用すると、矢が着地した位置に毒のポーションを降らす。",
     )
 
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {

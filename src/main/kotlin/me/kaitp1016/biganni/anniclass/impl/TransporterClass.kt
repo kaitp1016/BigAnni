@@ -29,11 +29,11 @@ import kotlin.random.Random
 
 object TransporterClass: AnniClass(), Listener {
     override val name = "Transporter"
-    override val deathMessageName = "TRA"
+    override val shortName = "TRA"
     override val icon = Items.QUARTZ
     override val description = arrayOf(
-        "また、アビリティを使用することで、次にアビリティを使用した",
-        "位置にテレポートができるポータルを設置する。",
+        "アビリティを始点と終点で使用することで、ポータルを設置できる。",
+        "ポータルはスニークすることで通過することができ、味方も通過できる。"
     )
 
     const val PORTAL_MAKER_ID = "transporter_portal_maker"

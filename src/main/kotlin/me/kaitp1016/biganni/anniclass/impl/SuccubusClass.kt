@@ -1,6 +1,5 @@
 package me.kaitp1016.biganni.anniclass.impl
 
-import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.UseCooldown
 import me.kaitp1016.biganni.PLUGIN_ID
@@ -35,12 +34,12 @@ import java.util.*
 
 object SuccubusClass: AnniClass(), Listener {
     override val name = "Succubus"
-    override val deathMessageName = "SUC"
+    override val shortName = "SUC"
     override val icon = Items.RED_DYE
     override val description = arrayOf(
-        "敵のHPが常に表示される。",
-        "アビリティを使用すると敵のHPが30%未満なら即死させる。",
-        "それ以外なら敵の体力分だけ貫通ダメージを受ける。"
+        "敵の体力が常に表示される。",
+        "アビリティを使用すると敵のHPが30%を下回るのなら即死させる。",
+        "それ以外なら自身が敵の残りの体力分だけの貫通ダメージを受ける。"
     )
 
     const val DRAIN_ITEM_ID = "succubus_drain_item"

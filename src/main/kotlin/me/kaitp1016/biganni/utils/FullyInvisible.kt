@@ -2,7 +2,6 @@ package me.kaitp1016.biganni.utils
 
 import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import com.mojang.datafixers.util.Pair
-import me.kaitp1016.biganni.anniclass.impl.AssassinClass
 import me.kaitp1016.biganni.events.impl.PacketSendEvent
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket

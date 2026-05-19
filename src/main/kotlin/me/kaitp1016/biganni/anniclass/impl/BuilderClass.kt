@@ -22,7 +22,7 @@ import kotlin.random.Random
 
 object BuilderClass: AnniClass(), Listener {
     override val name = "Builder"
-    override val deathMessageName = "BUI"
+    override val shortName = "BUI"
     override val icon = Items.BRICK
     override val description = arrayOf(
         "アビリティを使用することで建築資材が手に入る。",

@@ -36,7 +36,6 @@ import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.damage.DamageSource
 import org.bukkit.damage.DamageType
-import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -49,7 +48,7 @@ import kotlin.random.Random
 
 object WizardClass: AnniClass(), Listener {
     override val name = "Wizard"
-    override val deathMessageName = "WZR"
+    override val shortName = "WZR"
     override val icon = Items.STICK
     override val description = arrayOf(
         "Spellbookを使用すると魔法を選択できる。",

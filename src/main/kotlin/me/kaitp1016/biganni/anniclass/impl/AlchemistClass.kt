@@ -49,10 +49,10 @@ import kotlin.random.Random
 
 object AlchemistClass: AnniClass(), Listener {
     override val name = "Alchemist"
-    override val deathMessageName = "ALC"
+    override val shortName = "ALC"
     override val icon = Items.BREWING_STAND
     override val description = arrayOf(
-        "2倍の速度で醸造ができる醸造台が初期装備に含まれている。",
+        "高速で醸造ができる醸造台が初期装備に含まれている。",
         "大釜を使用することで強化されたポーションを作ることができる。",
         "アビリティを使用すると確率でランダムなポーションの素材が手に入る。",
     )

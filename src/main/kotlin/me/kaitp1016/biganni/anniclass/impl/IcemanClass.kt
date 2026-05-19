@@ -12,7 +12,6 @@ import net.minecraft.core.BlockPos
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Blocks
-import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
@@ -24,7 +23,7 @@ import org.bukkit.inventory.ItemStack
 object IcemanClass: AnniClass(), Listener {
     override val icon = Items.ICE
     override val name = "Iceman"
-    override val deathMessageName = "ICM"
+    override val shortName = "ICM"
     override val description = arrayOf(
         "この職業の時、自身の周りの水が凍るようになる。",
         "アビリティを使用することで能力を切り替えることができる。",

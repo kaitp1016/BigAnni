@@ -21,7 +21,6 @@ import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.damage.DamageType
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.entity.Item
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -33,9 +32,11 @@ import org.bukkit.inventory.ItemStack
 object LumberjackClass: AnniClass(), Listener {
     override val icon = Items.STONE_AXE
     override val name = "Lumberjack"
-    override val deathMessageName = "LUM"
+    override val shortName = "LUM"
     override val description = arrayOf(
-        "原木を掘った時に2倍の原木を入手できる。", "斧で殴った時に常に0.5ハート分のダメージが増える。", "アビリティを使用すると、斧で殴った時に敵の防具の耐久値を減らすことができる。"
+        "斧の近接ダメージが常に増える。",
+        "原木を掘った時に追加で原木を入手できる。",
+        "アビリティの効果中に斧で殴ることで敵の防具の耐久値を減らすことができる。"
     )
 
     const val BRUTE_FORCE_ITEM_ID = "lumberjack_brute_force"

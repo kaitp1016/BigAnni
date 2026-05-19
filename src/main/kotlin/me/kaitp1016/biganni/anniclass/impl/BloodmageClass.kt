@@ -37,11 +37,11 @@ import org.bukkit.potion.PotionEffectType
 object BloodmageClass: AnniClass(), Listener {
     override val icon = Items.FERMENTED_SPIDER_EYE
     override val name = "Bloodmage"
-    override val deathMessageName = "BMG"
+    override val shortName = "BMG"
     override val description = arrayOf(
         "攻撃をしたときに毒の効果を与える確率がある。",
-        "Corruptを使用すると周囲の敵の最大体力を減らし、ウィザーを与える。",
-        "Bloodcursed Terraformを使用すると周囲のブロックを変え、その範囲にいる敵にデバフを与える",
+        "Corruptを使用すると周囲の敵の最大体力を減らし、ウィザーの効果を与える。",
+        "Bloodcursed Terraformを使用すると周囲のブロックを変え、その範囲にいる敵にデバフを与える。",
     )
 
     const val CORRUPT_ITEM_ID = "bloodmage_corrupt"
@@ -54,6 +54,9 @@ object BloodmageClass: AnniClass(), Listener {
 
     const val TERRAFORM_DISTANCE = 16
     const val TERRAFORM_EFFECT_TICK = 600
+
+    const val CURRUPT_TIME = 200
+    const val CURSE_COOLDOWN = 200
 
     val terraformBlocks = mapOf(
         Material.DIRT to Material.NETHERRACK,
@@ -155,7 +158,7 @@ object BloodmageClass: AnniClass(), Listener {
                 player.addPotionEffect(PotionEffect(PotionEffectType.BLINDNESS,200,0))
                 player.addPotionEffect(PotionEffect(PotionEffectType.HUNGER,200,2))
 
-                curseCooldown.add(CurseCooldown(player,200))
+                curseCooldown.add(CurseCooldown(player,CURSE_COOLDOWN))
             }
 
             return false
@@ -187,7 +190,7 @@ object BloodmageClass: AnniClass(), Listener {
 
                 attribute.addTransientModifier(AttributeModifier(CORRUPT_ATTRIBUTE_KEY, -4.0, AttributeModifier.Operation.ADD_NUMBER))
 
-                Scheduler.scheduleTask(200) {
+                Scheduler.scheduleTask(CURRUPT_TIME) {
                     attribute.removeModifier(CORRUPT_ATTRIBUTE_KEY)
                 }
 

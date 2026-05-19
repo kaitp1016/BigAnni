@@ -29,13 +29,13 @@ import org.bukkit.potion.PotionEffectType
 
 object DefenderClass: AnniClass(), Listener {
     override val name = "Defender"
-    override val deathMessageName = "DEF"
+    override val shortName = "DEF"
     override val icon = Items.PRISMARINE_SHARD
     override val description = arrayOf(
         "アビリティを使用することでアラートを設置できる。",
         "自身が設置したアラートに敵が触れると音が鳴る。",
         "アビリティを使用するとネクサスにワープできる。",
-        "拠点にいる時は常に再生1が付与される。"
+        "拠点にいる時は常に再生が付与される。"
     )
 
     const val ALERT_ITEM_ID = "defender_alert_item"

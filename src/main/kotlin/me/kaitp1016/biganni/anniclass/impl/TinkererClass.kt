@@ -20,14 +20,13 @@ import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import kotlin.math.floor
 
 object TinkererClass: AnniClass(), Listener {
     override val name = "Tinkerer"
-    override val deathMessageName = "TIN"
+    override val shortName = "TIN"
     override val icon = Items.REDSTONE_BLOCK
     override val description = arrayOf(
-        "鉱石ブロックを設置するとエフェクトを獲得するブロックになる。",
+        "一部の鉱石ブロックを設置すると乗ることでバフを獲得するブロックになる。",
         "耐久力が減っていない剣を本1個とクラフトすると、エンチャントを本に移せる。",
     )
 

@@ -1,38 +1,6 @@
 package me.kaitp1016.biganni.anniclass
 
-import me.kaitp1016.biganni.anniclass.impl.AcrobatClass
-import me.kaitp1016.biganni.anniclass.impl.AlchemistClass
-import me.kaitp1016.biganni.anniclass.impl.ArcherClass
-import me.kaitp1016.biganni.anniclass.impl.AssassinClass
-import me.kaitp1016.biganni.anniclass.impl.BardClass
-import me.kaitp1016.biganni.anniclass.impl.BerserkerClass
-import me.kaitp1016.biganni.anniclass.impl.BloodmageClass
-import me.kaitp1016.biganni.anniclass.impl.BuilderClass
-import me.kaitp1016.biganni.anniclass.impl.ChargerClass
-import me.kaitp1016.biganni.anniclass.impl.CivilianClass
-import me.kaitp1016.biganni.anniclass.impl.DasherClass
-import me.kaitp1016.biganni.anniclass.impl.DefenderClass
-import me.kaitp1016.biganni.anniclass.impl.EnchanterClass
-import me.kaitp1016.biganni.anniclass.impl.EngineerClass
-import me.kaitp1016.biganni.anniclass.impl.FarmerClass
-import me.kaitp1016.biganni.anniclass.impl.HandymanClass
-import me.kaitp1016.biganni.anniclass.impl.HealerClass
-import me.kaitp1016.biganni.anniclass.impl.IcemanClass
-import me.kaitp1016.biganni.anniclass.impl.ImmobilizerClass
-import me.kaitp1016.biganni.anniclass.impl.LumberjackClass
-import me.kaitp1016.biganni.anniclass.impl.MercenaryClass
-import me.kaitp1016.biganni.anniclass.impl.MinerClass
-import me.kaitp1016.biganni.anniclass.impl.RiftWalkerClass
-import me.kaitp1016.biganni.anniclass.impl.ScorpioClass
-import me.kaitp1016.biganni.anniclass.impl.ScoutClass
-import me.kaitp1016.biganni.anniclass.impl.SniperClass
-import me.kaitp1016.biganni.anniclass.impl.SuccubusClass
-import me.kaitp1016.biganni.anniclass.impl.SwapperClass
-import me.kaitp1016.biganni.anniclass.impl.ThorClass
-import me.kaitp1016.biganni.anniclass.impl.TinkererClass
-import me.kaitp1016.biganni.anniclass.impl.TransporterClass
-import me.kaitp1016.biganni.anniclass.impl.WarriorClass
-import me.kaitp1016.biganni.anniclass.impl.WizardClass
+import me.kaitp1016.biganni.anniclass.impl.*
 
 object AnniClasses {
     val ALL_CLASSES = mutableListOf<AnniClass>()

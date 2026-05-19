@@ -1,6 +1,5 @@
 package me.kaitp1016.biganni.anniclass.impl
 
-import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.UseCooldown
 import me.kaitp1016.biganni.PLUGIN_ID
@@ -26,7 +25,6 @@ import net.minecraft.world.level.ExplosionDamageCalculator
 import net.minecraft.world.level.Level.ExplosionInteraction
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.material.FluidState
-import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.block.Block
@@ -36,7 +34,6 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
-import org.bukkit.event.entity.EntityInteractEvent
 import org.bukkit.event.entity.EntityRemoveEvent
 import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.event.player.PlayerInteractEvent
@@ -47,7 +44,7 @@ import java.util.function.IntPredicate
 
 object EngineerClass: AnniClass(), Listener {
     override val name = "Enginner"
-    override val deathMessageName = "ENG"
+    override val shortName = "ENG"
     override val icon = Items.TNT
     override val description = arrayOf(
         "アビリティを使用すると爆弾を設置し、敵が設置したブロックを破壊できる。",

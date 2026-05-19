@@ -269,12 +269,12 @@ object Game: Listener {
         val killer = source.causingEntity as? Player
 
         if (killer == null) {
-            event.deathMessage(player.teamDisplayName().append(BukkitComponent.text("(${playerClass.deathMessageName})").append(BukkitComponent.text(" died.").color(NamedTextColor.GRAY))))
+            event.deathMessage(player.teamDisplayName().append(BukkitComponent.text("(${playerClass.shortName})").append(BukkitComponent.text(" died.").color(NamedTextColor.GRAY))))
         }
         else {
             val reason = getDeathReason(source)
             val killerClass = killer.getAnniClass() ?: return
-            event.deathMessage(killer.teamDisplayName().append(BukkitComponent.text("(${killerClass.deathMessageName})").append(BukkitComponent.text(" $reason ").color(NamedTextColor.GRAY).append(BukkitComponent.empty().color(NamedTextColor.WHITE).append(player.teamDisplayName().append(BukkitComponent.text("(${playerClass.deathMessageName})")))))))
+            event.deathMessage(killer.teamDisplayName().append(BukkitComponent.text("(${killerClass.shortName})").append(BukkitComponent.text(" $reason ").color(NamedTextColor.GRAY).append(BukkitComponent.empty().color(NamedTextColor.WHITE).append(player.teamDisplayName().append(BukkitComponent.text("(${playerClass.shortName})")))))))
         }
     }
 

@@ -4,21 +4,16 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.UseCooldown
 import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
-import me.kaitp1016.biganni.plugin
 import me.kaitp1016.biganni.utils.FallDamageResistance
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
-import me.kaitp1016.biganni.utils.Scheduler
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.world.item.Items
 import org.bukkit.Material
-import org.bukkit.NamespacedKey
 import org.bukkit.Sound
-import org.bukkit.attribute.Attribute
-import org.bukkit.attribute.AttributeModifier
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -29,7 +24,7 @@ import org.bukkit.potion.PotionEffectType
 
 object SwapperClass: AnniClass(), Listener {
     override val name = "Swapper"
-    override val deathMessageName = "SWA"
+    override val shortName = "SWA"
     override val icon = Items.MUSIC_DISC_CAT
     override val description = arrayOf(
         "アビリティを使用すると視点先の敵と自身の位置を入れ替える。",

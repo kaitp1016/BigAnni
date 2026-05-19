@@ -4,7 +4,6 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.UseCooldown
 import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
-import me.kaitp1016.biganni.plugin
 import me.kaitp1016.biganni.utils.FallDamageResistance
 import me.kaitp1016.biganni.utils.FullyInvisible
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
@@ -14,10 +13,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.world.item.Items
 import org.bukkit.Material
-import org.bukkit.NamespacedKey
 import org.bukkit.Sound
-import org.bukkit.attribute.Attribute
-import org.bukkit.attribute.AttributeModifier
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -29,10 +25,10 @@ import kotlin.math.max
 
 object AssassinClass: AnniClass(), Listener {
     override val name = "Assassin"
-    override val deathMessageName = "ASN"
+    override val shortName = "ASN"
     override val icon = Items.FEATHER
     override val description = arrayOf(
-        "アビリティを使用すると前に飛び、6秒間の透明化を獲得する。",
+        "アビリティを使用すると前に飛び、透明化を獲得する。",
         "この透明化は防具も透明化される。"
     )
 

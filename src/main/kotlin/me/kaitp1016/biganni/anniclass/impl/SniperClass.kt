@@ -31,11 +31,11 @@ import kotlin.random.Random
 
 object SniperClass: AnniClass(), Listener {
     override val name = "Snipper"
-    override val deathMessageName = "SNI"
+    override val shortName = "SNI"
     override val icon = Items.ARROW
     override val description = arrayOf(
-        "弓を左クリックすると特殊な弓になる。",
-        "この弓で発射された矢は、高速で発射され、重力の影響を受けない。",
+        "他の能力がない弓を左クリックすると特殊な弓になる。",
+        "この弓で発射された矢は高速で発射され、重力の影響を受けない。",
     )
 
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {

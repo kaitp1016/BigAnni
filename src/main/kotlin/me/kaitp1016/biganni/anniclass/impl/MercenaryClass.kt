@@ -17,28 +17,22 @@ import net.minecraft.world.entity.projectile.FireworkRocketEntity
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.FireworkExplosion
 import net.minecraft.world.item.component.Fireworks
-import org.bukkit.Bukkit
 import org.bukkit.Material
-import org.bukkit.Sound
-import org.bukkit.damage.DamageType
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
-import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.bukkit.event.player.PlayerInteractEntityEvent
-import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import kotlin.math.min
 
 object MercenaryClass: AnniClass(), Listener {
     override val icon = Items.SKELETON_SKULL
     override val name = "Mercenary"
-    override val deathMessageName = "MER"
+    override val shortName = "MER"
     override val description = arrayOf(
-        "能力を使用すると敵をマークすることができる。",
+        "アビリティを使用すると敵をマークすることができる。",
         "マークされたプレイヤーは発光し、受けるダメージが増える。",
     )
 

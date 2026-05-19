@@ -2,12 +2,8 @@ package me.kaitp1016.biganni.anniclass.impl
 
 import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import me.kaitp1016.biganni.anniclass.AnniClass
-import me.kaitp1016.biganni.events.impl.PacketReciveEvent
-import me.kaitp1016.biganni.mc
 import me.kaitp1016.biganni.plugin
-import net.minecraft.network.protocol.game.ServerboundPlayerAbilitiesPacket
 import net.minecraft.world.item.Items
-import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.Sound
@@ -22,7 +18,7 @@ import kotlin.math.max
 
 object AcrobatClass: AnniClass(), Listener {
     override val name = "Acrobat"
-    override val deathMessageName = "ACR"
+    override val shortName = "ACR"
     override val icon = Items.FEATHER
     override val description = arrayOf(
         "常に落下ダメージを食らわなくなる。",

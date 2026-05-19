@@ -33,7 +33,7 @@ import kotlin.math.min
 
 object ImmobilizerClass: AnniClass(), Listener {
     override val name = "Immobilizer"
-    override val deathMessageName = "IMM"
+    override val shortName = "IMM"
     override val icon = Items.SLIME_BALL
     override val description = arrayOf(
         "左クリックでアビリティを使用すると周りの敵の移動速度を低下できる。",

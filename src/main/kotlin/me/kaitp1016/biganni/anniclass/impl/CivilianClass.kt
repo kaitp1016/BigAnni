@@ -21,7 +21,7 @@ import org.bukkit.inventory.ItemStack
 object CivilianClass: AnniClass(), Listener {
     override val icon = Items.CRAFTING_TABLE
     override val name = "Civilian"
-    override val deathMessageName = "CIV"
+    override val shortName = "CIV"
     override val description = arrayOf(
         "アビリティを使用すると作業台が開く。",
     )
