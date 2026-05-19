@@ -7,8 +7,10 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.level.block.state.BlockState
 import org.bukkit.World
 import org.bukkit.block.Block
+import org.bukkit.block.data.BlockData
 import org.bukkit.craftbukkit.CraftWorld
 import org.bukkit.craftbukkit.block.CraftBlock
+import org.bukkit.craftbukkit.block.data.CraftBlockData
 import org.bukkit.craftbukkit.damage.CraftDamageSource
 import org.bukkit.craftbukkit.entity.CraftEntity
 import org.bukkit.craftbukkit.entity.CraftPlayer
@@ -41,6 +43,10 @@ object MCUtils {
 
     fun World.toMC(): ServerLevel {
         return (this as CraftWorld).handle
+    }
+
+    fun BlockData.toMC(): BlockState {
+        return (this as CraftBlockData).state
     }
 
     fun DamageSource.toMC(): MCDamageSource {

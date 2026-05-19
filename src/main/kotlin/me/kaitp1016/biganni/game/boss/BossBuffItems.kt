@@ -146,10 +146,10 @@ object BossBuffItems: Listener {
             val entity = event.entity
             if (entity !is Player || event.cause != EntityDamageEvent.DamageCause.FALL) return
 
-            val item = entity.inventory.getItem(EquipmentSlot.LEGS)
+            val item = entity.inventory.getItem(EquipmentSlot.FEET)
             if (item.getAnniId() != id) return
 
-            item.toMC()!!.hurtAndBreak(0,entity.toMC(), net.minecraft.world.entity.EquipmentSlot.FEET)
+            item.toMC()!!.hurtAndBreak(event.damage.toInt() + 1,entity.toMC(), net.minecraft.world.entity.EquipmentSlot.FEET)
             event.isCancelled = true
         }
     }

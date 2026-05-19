@@ -40,11 +40,7 @@ object RequiredTool: Listener {
             return
         }
 
-        if (block.`is`(BlockTags.LEAVES)) {
-            if (item?.`is`(ItemTags.SWORDS) != true && item?.item != Items.SHEARS) {
-                event.isCancelled = true
-            }
-
+        if (item?.`is`(ItemTags.SWORDS) == true && block.`is`(BlockTags.SWORD_EFFICIENT)) {
             return
         }
 

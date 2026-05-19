@@ -120,7 +120,7 @@ object Game: Listener {
         }
 
         if (phase > 4) {
-            BossBarManager.setTitle("Phase 5 - §cDouble §fNexus Damage!")
+            BossBarManager.setTitle("Phase 5 - §c${if (map.doubleNexusDamage) "Double" else "Single"} §fNexus Damage!")
         }
         else {
             val min = phaseTime / 20 / 60
@@ -152,7 +152,7 @@ object Game: Listener {
 
         if (phase < 2 || team.name.equals(player.toMC().team?.name,ignoreCase = true)) return
 
-        val damage = if (phase < MAX_PHASE) 1 else 2
+        val damage = if (phase >= MAX_PHASE && map.doubleNexusDamage) 2 else 1
         team.health -= damage
 
         val pitch = Random.nextFloat() * 0.8f
@@ -278,7 +278,7 @@ object Game: Listener {
     @EventHandler
     fun onRemoveEntity(event: EntityRemoveEvent) {
         val entity = event.entity
-        if (entity.type != EntityType.WITCH) return
+        if (entity.type != EntityType.WITCH || event.cause == EntityRemoveEvent.Cause.UNLOAD) return
 
         val team = teams.find { it.witch == entity.uniqueId }
         if (team == null) return

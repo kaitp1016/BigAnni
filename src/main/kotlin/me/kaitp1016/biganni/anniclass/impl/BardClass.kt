@@ -197,7 +197,7 @@ object BardClass: AnniClass(), Listener {
     }
 
     class BuffSelectorGui: ChestPacketGui {
-        override val name = "biff selector"
+        override val name = "buff selector"
         override val displayName = net.minecraft.network.chat.Component.literal("Buff Selector")
 
         val box: Buffbox

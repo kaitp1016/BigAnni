@@ -76,18 +76,19 @@ object ThorClass: AnniClass(), Listener {
 
         val team = player.toMC().teamColor
 
-        player.world.getNearbyPlayers(player.location,5.0).forEach { target ->
-            if (target.toMC().teamColor != team) {
-                val source = DamageSource.builder(DamageType.MAGIC).withDirectEntity(player).withCausingEntity(player).build()
-                target.damage(5.0, source)
+        val targets = player.world.getNearbyPlayers(player.location,5.0).filter { it.toMC().teamColor != team }
+        if (targets.isEmpty()) return
 
-                val level = target.world.toMC()
-                level.addFreshEntity(LightningBolt(EntityType.LIGHTNING_BOLT, level).apply {
-                    visualOnly = true
-                    flashes = 1
-                    setPos(target.x, target.y, target.z)
-                })
-            }
+        targets.forEach { target ->
+            val source = DamageSource.builder(DamageType.MAGIC).withDirectEntity(player).withCausingEntity(player).build()
+            target.damage(5.0, source)
+
+            val level = target.world.toMC()
+            level.addFreshEntity(LightningBolt(EntityType.LIGHTNING_BOLT, level).apply {
+                visualOnly = true
+                flashes = 1
+                setPos(target.x, target.y, target.z)
+            })
         }
 
         player.addPotionEffect(PotionEffect(PotionEffectType.RESISTANCE,400,0))

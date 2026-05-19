@@ -1,17 +1,13 @@
 package me.kaitp1016.biganni.game
 
-import me.kaitp1016.biganni.plugin
 import me.kaitp1016.biganni.utils.LevelBlockPos
 import me.kaitp1016.biganni.utils.MCUtils.toMC
-import net.minecraft.core.BlockPos
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.LightningBolt
+import net.minecraft.world.entity.monster.Witch
 import net.minecraft.world.phys.AABB
-import org.bukkit.Bukkit
 import org.bukkit.Location
-import org.bukkit.NamespacedKey
-import org.bukkit.entity.Witch
-import org.bukkit.persistence.PersistentDataType
-import java.util.UUID
+import java.util.*
 
 class AnniTeam {
     val name: String
@@ -37,12 +33,20 @@ class AnniTeam {
 
     fun spawnWitch() {
         val level = witchLocation.world.toMC()
-        val witch = net.minecraft.world.entity.monster.Witch(EntityType.WITCH, level).apply {
+
+        val witch = Witch(EntityType.WITCH, level).apply {
             this.setPos(witchLocation.x,witchLocation.y,witchLocation.z)
             this.persistenceRequired = true
         }
 
         level.addFreshEntity(witch)
+
+        level.addFreshEntity(LightningBolt(EntityType.LIGHTNING_BOLT, level).apply {
+            visualOnly = true
+            flashes = 1
+            this.setPos(witchLocation.x,witchLocation.y,witchLocation.z)
+        })
+
         this.witch = witch.uuid
     }
 }

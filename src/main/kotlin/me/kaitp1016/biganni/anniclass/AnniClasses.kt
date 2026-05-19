@@ -6,6 +6,7 @@ import me.kaitp1016.biganni.anniclass.impl.ArcherClass
 import me.kaitp1016.biganni.anniclass.impl.AssassinClass
 import me.kaitp1016.biganni.anniclass.impl.BardClass
 import me.kaitp1016.biganni.anniclass.impl.BerserkerClass
+import me.kaitp1016.biganni.anniclass.impl.BloodmageClass
 import me.kaitp1016.biganni.anniclass.impl.BuilderClass
 import me.kaitp1016.biganni.anniclass.impl.ChargerClass
 import me.kaitp1016.biganni.anniclass.impl.CivilianClass
@@ -29,6 +30,7 @@ import me.kaitp1016.biganni.anniclass.impl.ThorClass
 import me.kaitp1016.biganni.anniclass.impl.TinkererClass
 import me.kaitp1016.biganni.anniclass.impl.TransporterClass
 import me.kaitp1016.biganni.anniclass.impl.WarriorClass
+import me.kaitp1016.biganni.anniclass.impl.WizardClass
 
 object AnniClasses {
     val ALL_CLASSES = mutableListOf<AnniClass>()
@@ -63,6 +65,8 @@ object AnniClasses {
     val LUMBERJACK = register("lumberjack", LumberjackClass)
     val ARCHER = register("archer", ArcherClass)
     val SNIPER = register("sniper", SniperClass)
+    val WIZARD = register("wizard", WizardClass)
+    val BLOODMAGE = register("bloodmage", BloodmageClass)
 
     fun <T: AnniClass> register(id: String, anniClass: T): T {
         ALL_CLASSES.add(anniClass)

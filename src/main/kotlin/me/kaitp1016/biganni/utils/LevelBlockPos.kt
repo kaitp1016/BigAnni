@@ -26,4 +26,17 @@ class LevelBlockPos {
         this.y = y
         this.z = z
     }
+
+    override fun equals(other: Any?): Boolean {
+        return other is LevelBlockPos && other.x == this.x && other.y == this.y && other.z == this.z
+    }
+
+    override fun hashCode(): Int {
+        var result = x
+        result = 31 * result + y
+        result = 31 * result + z
+        result = 31 * result + world.hashCode()
+        result = 31 * result + level.hashCode()
+        return result
+    }
 }
