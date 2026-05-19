@@ -20,6 +20,7 @@ import org.bukkit.*
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
@@ -102,7 +103,7 @@ object DasherClass: AnniClass(), Listener {
         player.setCooldown(BLINK_COOLDOWN_GROUP,cooldown)
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     fun onTick(event: ServerTickStartEvent) {
         if (previewPos.isNotEmpty()) {
             previewPos.forEach { (player,pos) ->

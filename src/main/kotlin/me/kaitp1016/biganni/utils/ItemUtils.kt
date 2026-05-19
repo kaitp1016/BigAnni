@@ -1,6 +1,7 @@
 package me.kaitp1016.biganni.utils
 
 import me.kaitp1016.biganni.ItemKeys
+import me.kaitp1016.biganni.utils.MCUtils.toBukkit
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -12,6 +13,13 @@ object ItemUtils {
     fun ItemStack.addLore(component: Component) = apply {
         val lines = lore() ?: mutableListOf()
         lines.add(component)
+
+        lore(lines)
+    }
+
+    fun ItemStack.addLore(component: net.minecraft.network.chat.Component) = apply {
+        val lines = lore() ?: mutableListOf()
+        lines.add(component.toBukkit())
 
         lore(lines)
     }
@@ -37,6 +45,8 @@ object ItemUtils {
     }
 
     fun ItemStack.soulbound() = apply {
+        if (persistentDataContainer.get(ItemKeys.SOULBOUND, PersistentDataType.BOOLEAN) == true) return@apply
+
         this.editMeta {
             it.persistentDataContainer.set(ItemKeys.SOULBOUND, PersistentDataType.BOOLEAN, true)
         }

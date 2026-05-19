@@ -93,6 +93,8 @@ object TransporterClass: AnniClass(), Listener {
 
                 teleportPlayers.add(player)
                 player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT,1f,1f)
+
+                owner.sendMessage("${player.name} used your portal.")
             }
         }
 

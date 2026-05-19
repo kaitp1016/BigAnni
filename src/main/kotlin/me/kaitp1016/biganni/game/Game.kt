@@ -4,6 +4,7 @@ import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import io.papermc.paper.event.player.AsyncChatEvent
 import me.kaitp1016.biganni.anniclass.AnniClassManager.getAnniClass
 import me.kaitp1016.biganni.config.Config
+import me.kaitp1016.biganni.game.boss.BossManager
 import me.kaitp1016.biganni.mc
 import me.kaitp1016.biganni.packetgui.impl.AnniClassSelector
 import me.kaitp1016.biganni.plugin

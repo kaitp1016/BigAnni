@@ -34,7 +34,7 @@ object SniperClass: AnniClass(), Listener {
     override val deathMessageName = "SNI"
     override val icon = Items.ARROW
     override val description = arrayOf(
-        "ほぼすべての弓が左クリックすると特殊な弓になる。",
+        "弓を左クリックすると特殊な弓になる。",
         "この弓で発射された矢は、高速で発射され、重力の影響を受けない。",
     )
 
