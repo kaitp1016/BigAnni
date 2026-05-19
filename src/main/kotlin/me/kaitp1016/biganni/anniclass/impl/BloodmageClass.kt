@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.state.BlockState
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
+import org.bukkit.Sound
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.damage.DamageType
@@ -56,7 +57,6 @@ object BloodmageClass: AnniClass(), Listener {
 
     val terraformBlocks = mapOf(
         Material.DIRT to Material.NETHERRACK,
-        Material.STONE to Material.NETHERRACK,
         Material.GRASS_BLOCK to Material.CRIMSON_NYLIUM,
         Material.SHORT_GRASS to Material.CRIMSON_ROOTS,
         Material.STONE to Material.NETHERRACK,
@@ -167,7 +167,7 @@ object BloodmageClass: AnniClass(), Listener {
     @EventHandler
     fun onInteract(event: PlayerInteractEvent) {
         val player = event.player
-        if (!isSelected(player)) return
+        if (!isSelected(player) || event.isCancelled) return
 
         val item = event.item ?: return
         if (player.hasCooldown(item)) return
@@ -178,21 +178,24 @@ object BloodmageClass: AnniClass(), Listener {
             event.isCancelled = true
             val team = player.toMC().teamColor
 
-            val targets = player.world.getNearbyPlayers(player.location, 5.0).filter { it.toMC().teamColor != team }
+            val targets = player.world.getNearbyPlayers(player.location, 2.5).filter { it.toMC().teamColor != team }
             if (targets.isEmpty()) return
 
             targets.forEach { target ->
                 val attribute = target.getAttribute(Attribute.MAX_HEALTH)
-                if (attribute == null || attribute.getModifier(CORRUPT_ATTRIBUTE_KEY) == null) return@forEach
+                if (attribute == null || attribute.getModifier(CORRUPT_ATTRIBUTE_KEY) != null) return@forEach
 
                 attribute.addTransientModifier(AttributeModifier(CORRUPT_ATTRIBUTE_KEY, -4.0, AttributeModifier.Operation.ADD_NUMBER))
 
                 Scheduler.scheduleTask(200) {
                     attribute.removeModifier(CORRUPT_ATTRIBUTE_KEY)
                 }
+
+                target.playSound(target, Sound.ENTITY_WITHER_DEATH,1f,1f)
             }
 
             player.setCooldown(CORRUPT_COOLDOWN_GROUP, CORRUPT_COOLDOWN)
+            player.world.playSound(player.location, Sound.ENTITY_WITHER_DEATH,1f,1f)
         }
 
         if (anniId == BLOODCURSED_TERRAFORM_ITEM_ID) {

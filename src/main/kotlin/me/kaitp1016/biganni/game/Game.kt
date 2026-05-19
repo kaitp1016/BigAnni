@@ -3,6 +3,7 @@ package me.kaitp1016.biganni.game
 import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import io.papermc.paper.event.player.AsyncChatEvent
 import me.kaitp1016.biganni.anniclass.AnniClassManager.getAnniClass
+import me.kaitp1016.biganni.anniclass.impl.HandymanClass
 import me.kaitp1016.biganni.config.Config
 import me.kaitp1016.biganni.game.boss.BossManager
 import me.kaitp1016.biganni.mc
@@ -156,7 +157,7 @@ object Game: Listener {
         team.health -= damage
 
         val pitch = Random.nextFloat() * 0.8f
-        val actionbar = player.teamDisplayName().append(BukkitComponent.text(" has damaged the").color(NamedTextColor.GRAY).append(BukkitComponent.text(" ${team.color}${team.name} team's nexus!")))
+        val actionbar = player.teamDisplayName().append(BukkitComponent.text(" damaged the").color(NamedTextColor.GRAY).append(BukkitComponent.text(" ${team.color}${team.name} team's nexus!")))
 
         Bukkit.getOnlinePlayers().forEach {
             if (team.health < 1) it.playSound(it, Sound.ENTITY_GENERIC_EXPLODE,2f,0f)
@@ -178,6 +179,8 @@ object Game: Listener {
                 block.world.setBlockData(block.location, Material.END_STONE.createBlockData())
             }
         }
+
+        HandymanClass.onMineNexus(player)
     }
 
     @EventHandler

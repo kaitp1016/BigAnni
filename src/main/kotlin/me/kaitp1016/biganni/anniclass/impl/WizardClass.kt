@@ -7,6 +7,7 @@ import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
 import me.kaitp1016.biganni.mc
 import me.kaitp1016.biganni.packetgui.ChestPacketGui
+import me.kaitp1016.biganni.utils.FallDamageResistance
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
@@ -51,7 +52,7 @@ object WizardClass: AnniClass(), Listener {
     override val deathMessageName = "WZR"
     override val icon = Items.STICK
     override val description = arrayOf(
-        "Spellbookを使用すると魔法を選択でき、",
+        "Spellbookを使用すると魔法を選択できる。",
         "Wandを使用することで選択した魔法を使用できる。",
     )
 
@@ -211,8 +212,10 @@ object WizardClass: AnniClass(), Listener {
                 }
                 SpellType.WHRLWIND -> {
                     targets.forEach { target ->
-                        val knockback = bukkit.location.clone().subtract(target.location).toVector().normalize().multiply(1.75)
+                        val knockback = bukkit.location.clone().subtract(target.location).toVector().normalize()
                         target.velocity = knockback
+
+                        FallDamageResistance.add(target,75)
                     }
                 }
             }
