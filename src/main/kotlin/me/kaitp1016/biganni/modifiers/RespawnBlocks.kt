@@ -42,7 +42,7 @@ object RespawnBlocks: Listener {
         Material.JUNGLE_LOG to RespawnableBlock(Material.JUNGLE_LOG,Material.AIR,1000,0..0,listOf(Material.JUNGLE_LOG to 1..1),isWood = true),
 
         // その他
-        Material.GRAVEL to RespawnableBlock(Material.GRAVEL,Material.COBBLESTONE,500,1..3,listOf(Material.BONE to -5..3,Material.STRING to -5..3,Material.FLINT to -5..3,Material.FEATHER to -5..3,)),
+        Material.GRAVEL to RespawnableBlock(Material.GRAVEL,Material.COBBLESTONE,500,1..3,listOf(Material.BONE to -5..3,Material.STRING to -5..3,Material.FLINT to -5..3,Material.FEATHER to -5..3,Material.ARROW to -19..3,)),
         Material.MELON to RespawnableBlock(Material.MELON,Material.AIR,400,1..3,listOf(Material.MELON_SLICE to 1..4,)),
         )
 

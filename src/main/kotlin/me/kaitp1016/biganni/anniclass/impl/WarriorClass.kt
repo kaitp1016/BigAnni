@@ -41,9 +41,6 @@ object WarriorClass: AnniClass(), Listener {
 
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {
         return super.getDefaultItems(player).also {
-            it.removeIf { it.type == Material.WOODEN_SWORD }
-            it.add(ItemStack(Material.GOLDEN_SWORD).uniqueClassItem().soulbound())
-
             it.add(ItemStack(Material.BLAZE_POWDER).apply {
                 uniqueClassItem()
                 soulbound()

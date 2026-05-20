@@ -17,6 +17,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.Sound
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
+import org.bukkit.damage.DamageType
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -100,6 +101,7 @@ object BerserkerClass: AnniClass(), Listener {
         if (isSelected(killer)) {
             val attribute = killer.getAttribute(Attribute.MAX_HEALTH)!!
             val amount = min(20.0,(attribute.getModifier(BERSERKER_HEALTH_PASSIVE_KEY)?.amount?.plus(1) ?: 1.0))
+            if (event.damageSource.damageType == DamageType.ARROW && amount > 10) return
 
             attribute.removeModifier(BERSERKER_HEALTH_PASSIVE_KEY)
             attribute.addTransientModifier(AttributeModifier(BERSERKER_HEALTH_PASSIVE_KEY,amount, AttributeModifier.Operation.ADD_NUMBER))

@@ -66,6 +66,8 @@ object BuilderClass: AnniClass(), Listener {
             setItem(Random.nextInt(0,26),ItemStack(Material.BRICKS).also { it.amount = Random.nextInt(10,64) })
             setItem(Random.nextInt(0,26),ItemStack(Material.GLASS).also { it.amount = Random.nextInt(10,64) })
             setItem(Random.nextInt(0,26),ItemStack(Material.OAK_FENCE).also { it.amount = Random.nextInt(10,64) })
+            setItem(Random.nextInt(0,26),ItemStack(Material.IRON_BARS).also { it.amount = Random.nextInt(10,64) })
+            setItem(Random.nextInt(0,26),ItemStack(Material.TORCH).also { it.amount = Random.nextInt(10,64) })
             if (Random.nextInt(0,3) == 0) setItem(Random.nextInt(0,26), DelayingBlock.createItem())
         })
 

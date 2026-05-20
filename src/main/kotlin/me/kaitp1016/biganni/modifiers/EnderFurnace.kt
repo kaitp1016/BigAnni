@@ -9,12 +9,10 @@ import net.minecraft.network.chat.Component
 import net.minecraft.util.CommonColors
 import net.minecraft.util.Mth
 import net.minecraft.world.MenuProvider
-import net.minecraft.world.SimpleMenuProvider
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.BlastFurnaceMenu
-import net.minecraft.world.inventory.ContainerData
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.crafting.AbstractCookingRecipe
@@ -35,7 +33,7 @@ import org.bukkit.event.inventory.FurnaceSmeltEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.CookingRecipe
-import java.util.UUID
+import java.util.*
 import kotlin.math.min
 
 object EnderFurnace: Listener {
@@ -90,7 +88,7 @@ object EnderFurnace: Listener {
             val ingredient = items[0]
             val hasIngredient = !ingredient.isEmpty
             val hasFuel = !fuel.isEmpty
-            if (hasFuel && hasIngredient) {
+            if ((isLit || hasFuel) && hasIngredient) {
                 if (hasIngredient) {
                     val input = SingleRecipeInput(ingredient)
                     val recipe = quickCheckEnder.getRecipeFor(input, mc.overworld()).orElse(null)
@@ -112,7 +110,7 @@ object EnderFurnace: Listener {
 
                             if (isLit) {
                                 if (cookingTimer == 0) {
-                                    cookingTotalTime = getTotalCookTime(mc.overworld(), this, recipeType, cookSpeedMultiplier)
+                                    cookingTotalTime = (getTotalCookTime(mc.overworld(), this, recipeType, cookSpeedMultiplier) / 1.75).toInt()
                                 }
 
                                 ++cookingTimer

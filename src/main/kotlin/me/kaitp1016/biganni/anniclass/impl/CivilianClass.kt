@@ -6,17 +6,16 @@ import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.world.item.Items
-import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.MenuType
 
 object CivilianClass: AnniClass(), Listener {
     override val icon = Items.CRAFTING_TABLE
@@ -61,6 +60,6 @@ object CivilianClass: AnniClass(), Listener {
         val item = event.item ?: return
         if (item.getAnniId() != CRAFT_O_MATIC_ITEM_ID || player.hasCooldown(item)) return
 
-        player.openInventory(Bukkit.createInventory(player, InventoryType.WORKBENCH))
+        player.openInventory(MenuType.CRAFTING.builder().build(player))
     }
 }

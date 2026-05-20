@@ -12,9 +12,9 @@ import org.bukkit.attribute.AttributeModifier
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector
-import kotlin.math.max
 
 object AcrobatClass: AnniClass(), Listener {
     override val name = "Acrobat"
@@ -56,10 +56,9 @@ object AcrobatClass: AnniClass(), Listener {
 
         if (!cooldowns.any { it.player == player }) {
             player.velocity = player.location.direction.clone().apply {
-                add(Vector(0.0,0.2,0.0))
+                add(Vector(0.0,0.35,0.0))
                 normalize()
-                y = max(y,0.6)
-                multiply(1.75)
+                multiply(1.5)
             }
 
             player.playSound(player , Sound.ENTITY_ZOMBIE_INFECT,1f,2f)
@@ -82,5 +81,10 @@ object AcrobatClass: AnniClass(), Listener {
             }
             return@removeAll false
         }
+    }
+
+    @EventHandler
+    fun onJoin(event: PlayerJoinEvent) {
+        event.player.getAttribute(Attribute.FALL_DAMAGE_MULTIPLIER)?.removeModifier(AXE_ATTRIBUTE_MODIFIER_KEY)
     }
 }

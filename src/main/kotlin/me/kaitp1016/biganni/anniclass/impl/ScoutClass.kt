@@ -74,7 +74,7 @@ object ScoutClass: AnniClass(), Listener {
 
         val hook = event.hook
         val world = hook.world
-        if (!hook.isOnGround && !world.getBlockAt(hook.x.toInt(),hook.y.toIntCorrect(),hook.z.toInt()).isPassable && !world.getBlockAt(hook.x.toInt(),(hook.y - 1).toIntCorrect(),hook.z.toInt()).isPassable) {
+        if (!hook.isOnGround && world.getBlockAt(hook.x.toInt(),hook.y.toIntCorrect(),hook.z.toInt()).isPassable && world.getBlockAt(hook.x.toInt(),(hook.y - 1).toIntCorrect(),hook.z.toInt()).isPassable) {
             return
         }
 
@@ -100,14 +100,15 @@ object ScoutClass: AnniClass(), Listener {
     fun onDamage(event: EntityDamageEvent) {
         val source = event.damageSource
 
-        val entity = event.entity
-        if (entity is Player && isSelected(entity)) {
-            addCooldown(entity)
+        val entity = event.entity as? Player ?: return
+        val causingEntity = source.causingEntity as? Player ?: return
+
+        if (isSelected(causingEntity)) {
+            addCooldown(causingEntity)
         }
 
-        val causingEntity = source.causingEntity
-        if (causingEntity is Player && isSelected(causingEntity)) {
-            addCooldown(causingEntity)
+        if (isSelected(entity)) {
+            addCooldown(entity)
         }
     }
 

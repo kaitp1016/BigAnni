@@ -209,6 +209,9 @@ object FarmerClass: AnniClass(), Listener {
         if (Random.nextInt(0,70) == 45) {
             event.items.add(ItemEntity(level,block.x + 0.5,block.y + 0.5, block.z + 0.5,MCItemStack(Items.NETHER_WART)).bukkitEntity as Item)
         }
+        if (Random.nextInt(0,70) == 62) {
+            event.items.add(ItemEntity(level,block.x + 0.5,block.y + 0.5, block.z + 0.5,MCItemStack(Items.SOUL_SAND)).bukkitEntity as Item)
+        }
         if (Random.nextInt(0,150) == 32) {
             event.items.add(ItemEntity(level,block.x + 0.5,block.y + 0.5, block.z + 0.5,MCItemStack(Items.GHAST_TEAR)).bukkitEntity as Item)
         }

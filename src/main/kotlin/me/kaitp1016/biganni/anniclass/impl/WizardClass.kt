@@ -146,7 +146,6 @@ object WizardClass: AnniClass(), Listener {
         val thrower: ServerPlayer
         val bulletDirection: Direction
         val spell: SpellType
-        val speed = 0.2
 
         constructor(level: ServerLevel, thrower: ServerPlayer, spell: SpellType, direction: Direction):super(level,thrower, net.minecraft.world.item.ItemStack(spell.display)) {
             this.thrower = thrower
@@ -233,8 +232,6 @@ object WizardClass: AnniClass(), Listener {
         }
 
         override fun tick() {
-            this.position().add(speed, speed , speed)
-
             spell.particle.clone()
                 .location(bukkitEntity.location.clone().add(Random.nextDouble(-0.5,0.5),Random.nextDouble(-0.5,0.5),Random.nextDouble(-0.5,0.5)))
                 .receivers(32,true)

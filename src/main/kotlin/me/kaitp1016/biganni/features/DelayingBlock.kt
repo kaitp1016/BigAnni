@@ -73,7 +73,7 @@ object DelayingBlock: Listener {
             val level = player.level()
             level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState())
             level.addFreshEntity(ItemEntity(player.level(),block.x + 0.5,block.y + 0.5,block.z + 0.5, createItem().toMC()!!).apply {
-                pickupDelay = 10
+                setDefaultPickUpDelay()
             })
 
             return
@@ -81,8 +81,9 @@ object DelayingBlock: Listener {
 
         if (!blocksInLevel.any { it.value.teamColor != team && it.key.distManhattan(pos) < DELAY_EFFECT_DISTANCE }) return
 
+        val bukkitPlayer = player.bukkitEntity
         player.addEffect(MobEffectInstance(MobEffects.MINING_FATIGUE,140,1))
-        player.bukkitEntity.playSound(player.bukkitEntity, Sound.ENTITY_ELDER_GUARDIAN_CURSE,1f,1f)
+        bukkitPlayer.world.playSound(bukkitPlayer, Sound.ENTITY_ELDER_GUARDIAN_CURSE,1f,2f)
     }
 
     fun isDelayingBlock(level:ServerLevel,pos: BlockPos): Boolean {

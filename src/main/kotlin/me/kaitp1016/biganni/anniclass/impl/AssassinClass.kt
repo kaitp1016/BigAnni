@@ -21,7 +21,6 @@ import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector
-import kotlin.math.max
 
 object AssassinClass: AnniClass(), Listener {
     override val name = "Assassin"
@@ -67,9 +66,8 @@ object AssassinClass: AnniClass(), Listener {
         FullyInvisible.add(player,LEAP_INVISIBLE_TIME)
 
         player.velocity = player.location.direction.clone().apply {
-            add(Vector(0.0,0.2,0.0))
+            add(Vector(0.0,0.35,0.0))
             normalize()
-            y = max(y,0.6)
             multiply(1.5)
         }
 
