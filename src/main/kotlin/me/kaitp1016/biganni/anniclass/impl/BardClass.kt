@@ -38,6 +38,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
+import org.bukkit.event.block.BlockDropItemEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
@@ -181,6 +182,16 @@ object BardClass: AnniClass(), Listener {
 
             return
         }
+    }
+
+    @EventHandler
+    fun onBlockDropItem(event: BlockDropItemEvent) {
+        val block = event.block
+        val pos = BlockPos(block.x,block.y,block.z)
+        val level = block.world.toMC()
+        if (buffboxes.none { it.pos == pos && it.level == level }) return
+
+        event.items.clear()
     }
 
     fun createBardBox(): ItemStack {

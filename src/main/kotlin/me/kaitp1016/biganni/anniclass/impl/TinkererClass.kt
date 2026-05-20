@@ -1,7 +1,6 @@
 package me.kaitp1016.biganni.anniclass.impl
 
 import me.kaitp1016.biganni.anniclass.AnniClass
-import me.kaitp1016.biganni.plugin
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.minecraft.core.BlockPos
 import net.minecraft.tags.ItemTags
@@ -9,7 +8,6 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Blocks
 import org.bukkit.Material
-import org.bukkit.NamespacedKey
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -20,7 +18,6 @@ import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.inventory.PrepareItemCraftEvent
 import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.inventory.ItemStack
-import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
@@ -111,9 +108,7 @@ object TinkererClass: AnniClass(), Listener {
     }
 
     // 剣のエンチャントをはがす
-    val UNENCHANTING_TOOL_KEY = NamespacedKey(plugin,"tinkerer_unenchanting")
     val allowedTags = listOf(ItemTags.PICKAXES,ItemTags.SWORDS,ItemTags.HOES,ItemTags.SHOVELS,ItemTags.AXES)
-
 
     @EventHandler
     fun onPrepareCraft(event: PrepareItemCraftEvent) {
@@ -128,10 +123,6 @@ object TinkererClass: AnniClass(), Listener {
         val book = ItemStack(Material.ENCHANTED_BOOK).also { book ->
             tool.enchantments.forEach {
                 book.addUnsafeEnchantment(it.key,it.value)
-            }
-
-            book.editMeta {
-                it.persistentDataContainer.set(UNENCHANTING_TOOL_KEY, PersistentDataType.BOOLEAN, true)
             }
         }
 

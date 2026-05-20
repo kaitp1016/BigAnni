@@ -190,36 +190,46 @@ object FarmerClass: AnniClass(), Listener {
     fun onBlockDropItem(event: BlockDropItemEvent) {
         val block = event.blockState
         val player = event.player
-        if (block.type != Material.WHEAT || !isSelected(player)) return
+        if (!isSelected(player)) return
 
-        val data = block.blockData as? Ageable ?: return
-        if (data.age != data.maximumAge) return
 
-        val level = block.world.toMC()
+        if (block.type == Material.SHORT_GRASS) {
+            if (Random.nextInt(0,5) == 2) {
+                val level = block.world.toMC()
+                event.items.add(ItemEntity(level,block.x + 0.5,block.y + 0.5, block.z + 0.5,MCItemStack(Items.CARROT)).bukkitEntity as Item)
+            }
+        }
+        if (block.type == Material.WHEAT) {
+            val data = block.blockData as? Ageable ?: return
+            if (data.age != data.maximumAge) return
 
-        if (Random.nextInt(0,350) == 77) {
-            event.items.add(ItemEntity(level,block.x + 0.5,block.y + 0.5, block.z + 0.5,MCItemStack(Items.APPLE)).bukkitEntity as Item)
+            val level = block.world.toMC()
+
+            if (Random.nextInt(0,350) == 77) {
+                event.items.add(ItemEntity(level,block.x + 0.5,block.y + 0.5, block.z + 0.5,MCItemStack(Items.APPLE)).bukkitEntity as Item)
+            }
+            if (Random.nextInt(0,30) == 27) {
+                event.items.add(ItemEntity(level,block.x + 0.5,block.y + 0.5, block.z + 0.5,MCItemStack(Items.RAW_GOLD)).bukkitEntity as Item)
+            }
+            if (Random.nextInt(0,30) == 12) {
+                event.items.add(ItemEntity(level,block.x + 0.5,block.y + 0.5, block.z + 0.5,MCItemStack(Items.RAW_IRON)).bukkitEntity as Item)
+            }
+            if (Random.nextInt(0,70) == 45) {
+                event.items.add(ItemEntity(level,block.x + 0.5,block.y + 0.5, block.z + 0.5,MCItemStack(Items.NETHER_WART)).bukkitEntity as Item)
+            }
+            if (Random.nextInt(0,70) == 62) {
+                event.items.add(ItemEntity(level,block.x + 0.5,block.y + 0.5, block.z + 0.5,MCItemStack(Items.SOUL_SAND)).bukkitEntity as Item)
+            }
+            if (Random.nextInt(0,150) == 32) {
+                event.items.add(ItemEntity(level,block.x + 0.5,block.y + 0.5, block.z + 0.5,MCItemStack(Items.GHAST_TEAR)).bukkitEntity as Item)
+            }
+            if (Random.nextInt(0,150) == 53) {
+                event.items.add(ItemEntity(level,block.x + 0.5,block.y + 0.5, block.z + 0.5,MCItemStack(Items.BOOK)).bukkitEntity as Item)
+            }
+            if (Random.nextInt(0,200) == 132) {
+                event.items.add(ItemEntity(level,block.x + 0.5,block.y + 0.5, block.z + 0.5,MCItemStack(Items.IRON_HOE)).bukkitEntity as Item)
+            }
         }
-        if (Random.nextInt(0,30) == 27) {
-            event.items.add(ItemEntity(level,block.x + 0.5,block.y + 0.5, block.z + 0.5,MCItemStack(Items.RAW_GOLD)).bukkitEntity as Item)
-        }
-        if (Random.nextInt(0,30) == 12) {
-            event.items.add(ItemEntity(level,block.x + 0.5,block.y + 0.5, block.z + 0.5,MCItemStack(Items.RAW_IRON)).bukkitEntity as Item)
-        }
-        if (Random.nextInt(0,70) == 45) {
-            event.items.add(ItemEntity(level,block.x + 0.5,block.y + 0.5, block.z + 0.5,MCItemStack(Items.NETHER_WART)).bukkitEntity as Item)
-        }
-        if (Random.nextInt(0,70) == 62) {
-            event.items.add(ItemEntity(level,block.x + 0.5,block.y + 0.5, block.z + 0.5,MCItemStack(Items.SOUL_SAND)).bukkitEntity as Item)
-        }
-        if (Random.nextInt(0,150) == 32) {
-            event.items.add(ItemEntity(level,block.x + 0.5,block.y + 0.5, block.z + 0.5,MCItemStack(Items.GHAST_TEAR)).bukkitEntity as Item)
-        }
-        if (Random.nextInt(0,150) == 53) {
-            event.items.add(ItemEntity(level,block.x + 0.5,block.y + 0.5, block.z + 0.5,MCItemStack(Items.BOOK)).bukkitEntity as Item)
-        }
-        if (Random.nextInt(0,200) == 132) {
-            event.items.add(ItemEntity(level,block.x + 0.5,block.y + 0.5, block.z + 0.5,MCItemStack(Items.IRON_HOE)).bukkitEntity as Item)
-        }
+
     }
 }

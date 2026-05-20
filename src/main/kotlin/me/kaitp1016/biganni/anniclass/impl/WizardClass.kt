@@ -146,6 +146,7 @@ object WizardClass: AnniClass(), Listener {
         val thrower: ServerPlayer
         val bulletDirection: Direction
         val spell: SpellType
+        var tick = 0
 
         constructor(level: ServerLevel, thrower: ServerPlayer, spell: SpellType, direction: Direction):super(level,thrower, net.minecraft.world.item.ItemStack(spell.display)) {
             this.thrower = thrower
@@ -238,6 +239,11 @@ object WizardClass: AnniClass(), Listener {
                 .offset(0.0,0.0,0.0)
                 .count(0)
                 .spawn()
+
+            tick += 1
+            if (tick > 200) {
+                discard()
+            }
 
             super.tick()
         }
