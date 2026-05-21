@@ -53,7 +53,7 @@ object HandymanClass: AnniClass(), Listener {
             team.health += 1
             updateNexusHealth(team)
 
-            val message = Component.text("${player.name} §ehas repaired your nexus with the ${this.name} class")
+            val message = Component.text("${player.name} §erepaired your nexus with the ${this.name} class!")
 
             Bukkit.getOnlinePlayers().forEach { player ->
                 if (player.toMC().team?.name?.equals(team.name,true) == true) {

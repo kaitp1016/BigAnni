@@ -23,6 +23,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerInteractEntityEvent
+import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
@@ -65,7 +66,18 @@ object MercenaryClass: AnniClass(), Listener {
     val markCooldowns = mutableListOf<MarkCooldown>()
 
     @EventHandler
-    fun onInteract(event: PlayerInteractEntityEvent) {
+    fun onInteract(event: PlayerInteractEvent) {
+        val player = event.player
+        if (!isSelected(player) || !event.action.isRightClick) return
+
+        val item = event.item ?: return
+        if (item.getAnniId() != MARK_ITEM_ID) return
+
+        event.isCancelled = true
+    }
+
+    @EventHandler
+    fun onInteractEntity(event: PlayerInteractEntityEvent) {
         val player = event.player
         if (!isSelected(player)) return
 

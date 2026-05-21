@@ -71,6 +71,8 @@ object HunterClass: AnniClass(), Listener {
         super.onUnselect(player)
     }
 
+    // TODO ミサイル
+
     data class Trap(val player: Player, val pos: LevelBlockPos, val type: TrapType)
 
     enum class TrapType(val displayName: String, val display: Item,val block: BlockData) {
