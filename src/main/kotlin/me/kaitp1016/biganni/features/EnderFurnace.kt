@@ -1,4 +1,4 @@
-package me.kaitp1016.biganni.modifiers
+package me.kaitp1016.biganni.features
 
 import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import me.kaitp1016.biganni.mc
@@ -33,7 +33,7 @@ import org.bukkit.event.inventory.FurnaceSmeltEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.CookingRecipe
-import java.util.*
+import java.util.UUID
 import kotlin.math.min
 
 object EnderFurnace: Listener {
@@ -47,7 +47,7 @@ object EnderFurnace: Listener {
 
         val player = event.player.toMC()
         val level = player.level()
-        if ((level.getBlockEntity(BlockPos(block.x,block.y,block.z)) as? BlastFurnaceBlockEntity)?.name?.string?.contains("Ender Blast Furnace") != true) return
+        if ((level.getBlockEntity(BlockPos(block.x, block.y, block.z)) as? BlastFurnaceBlockEntity)?.name?.string?.contains("Ender Blast Furnace") != true) return
 
         val furnace = furnaces.getOrPut(player.uuid) { EnderBlastFurnaceBlockEntity() }
         player.openMenu(furnace)
@@ -154,7 +154,7 @@ object EnderFurnace: Listener {
 
 
         companion object {
-            fun canBurn(items:List<ItemStack>,maxStackSize:Int, burnResult:ItemStack): Boolean {
+            fun canBurn(items:List<ItemStack>, maxStackSize:Int, burnResult: ItemStack): Boolean {
                 val resultItemStack = items[2]
                 if (resultItemStack.isEmpty()) {
                     return true

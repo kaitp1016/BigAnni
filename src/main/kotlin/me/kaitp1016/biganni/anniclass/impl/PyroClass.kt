@@ -25,8 +25,10 @@ import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
+    import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import org.bukkit.potion.PotionType
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.max
@@ -48,6 +50,15 @@ object PyroClass: AnniClass(), Listener {
 
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {
         return super.getDefaultItems(player).also {
+            it.add(ItemStack(Material.POTION).apply {
+                uniqueClassItem()
+                soulbound()
+
+                editMeta {
+                    (it as PotionMeta).basePotionType = PotionType.HEALING
+                }
+            })
+
             it.add(ItemStack(Material.FIRE_CHARGE).apply {
                 uniqueClassItem()
                 soulbound()

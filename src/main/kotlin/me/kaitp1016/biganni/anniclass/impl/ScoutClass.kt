@@ -67,7 +67,7 @@ object ScoutClass: AnniClass(), Listener {
         val item = event.player.inventory.getItem(hand)
         if (item.getAnniId() != GRAPPLING_HOOK_ID) return
 
-        if (cooldowns.any { it.player == player } || player.hasPotionEffect(PotionEffectType.SLOWNESS)) {
+        if (cooldowns.any { it.player == player } || player.fireTicks > 0 || player.hasPotionEffect(PotionEffectType.SLOWNESS)) {
             event.isCancelled = true
             return
         }

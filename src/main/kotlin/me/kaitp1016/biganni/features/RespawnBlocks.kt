@@ -1,4 +1,4 @@
-package me.kaitp1016.biganni.modifiers
+package me.kaitp1016.biganni.features
 
 import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import me.kaitp1016.biganni.anniclass.impl.LumberjackClass
@@ -22,33 +22,33 @@ import org.bukkit.inventory.ItemStack
 import kotlin.random.Random
 
 object RespawnBlocks: Listener {
-    data class RespawnableBlock(val material: Material, val placeholder: Material, val respawnTime: Int, val experience: IntRange,val drops: List<Pair<Material, IntRange>>,val isOre: Boolean = false,val isWood:Boolean = false)
+    data class RespawnableBlock(val material: Material, val placeholder: Material, val respawnTime: Int, val experience: IntRange, val drops: List<Pair<Material, IntRange>>, val isOre: Boolean = false, val isWood:Boolean = false)
 
     val respawnableBlocks = hashMapOf(
         // 鉱石
-        Material.DIAMOND_ORE to RespawnableBlock(Material.DIAMOND_ORE,Material.COBBLESTONE,700,10..20,listOf(Material.DIAMOND to 1..1),isOre = true),
-        Material.COAL_ORE to RespawnableBlock(Material.COAL_ORE,Material.COBBLESTONE,350,3..6,listOf(Material.COAL to 1..1),isOre = true),
-        Material.IRON_ORE to RespawnableBlock(Material.IRON_ORE,Material.COBBLESTONE,450,4..8,listOf(Material.RAW_IRON to 1..1),isOre = true),
-        Material.LAPIS_ORE to RespawnableBlock(Material.LAPIS_ORE,Material.COBBLESTONE,600,5..15,listOf(Material.LAPIS_LAZULI to 3..7),isOre = true),
-        Material.GOLD_ORE to RespawnableBlock(Material.GOLD_ORE,Material.COBBLESTONE,600,6..10,listOf(Material.RAW_GOLD to 1..1),isOre = true),
-        Material.EMERALD_ORE to RespawnableBlock(Material.EMERALD_ORE,Material.COBBLESTONE,500,10..15,listOf(Material.EMERALD to 1..1),isOre = true),
-        Material.REDSTONE_ORE to RespawnableBlock(Material.REDSTONE_ORE,Material.COBBLESTONE,500,7..13,listOf(Material.REDSTONE to 3..7),isOre = true),
-        Material.COPPER_ORE to RespawnableBlock(Material.COPPER_ORE,Material.COBBLESTONE,400,3..5,listOf(Material.RAW_COPPER to 1..1),isOre = true),
+        Material.DIAMOND_ORE to RespawnableBlock(Material.DIAMOND_ORE, Material.COBBLESTONE,700,10..20,listOf(Material.DIAMOND to 1..1),isOre = true),
+        Material.COAL_ORE to RespawnableBlock(Material.COAL_ORE, Material.COBBLESTONE,350,3..6,listOf(Material.COAL to 1..1),isOre = true),
+        Material.IRON_ORE to RespawnableBlock(Material.IRON_ORE, Material.COBBLESTONE,450,4..8,listOf(Material.RAW_IRON to 1..1),isOre = true),
+        Material.LAPIS_ORE to RespawnableBlock(Material.LAPIS_ORE, Material.COBBLESTONE,600,5..15,listOf(Material.LAPIS_LAZULI to 3..7),isOre = true),
+        Material.GOLD_ORE to RespawnableBlock(Material.GOLD_ORE, Material.COBBLESTONE,600,6..10,listOf(Material.RAW_GOLD to 1..1),isOre = true),
+        Material.EMERALD_ORE to RespawnableBlock(Material.EMERALD_ORE, Material.COBBLESTONE,500,10..15,listOf(Material.EMERALD to 1..1),isOre = true),
+        Material.REDSTONE_ORE to RespawnableBlock(Material.REDSTONE_ORE, Material.COBBLESTONE,500,7..13,listOf(Material.REDSTONE to 3..7),isOre = true),
+        Material.COPPER_ORE to RespawnableBlock(Material.COPPER_ORE, Material.COBBLESTONE,400,3..5,listOf(Material.RAW_COPPER to 1..1),isOre = true),
 
         // 原木
-        Material.OAK_LOG to RespawnableBlock(Material.OAK_LOG,Material.AIR,1000,0..0,listOf(Material.OAK_LOG to 1..1),isWood = true),
-        Material.SPRUCE_LOG to RespawnableBlock(Material.SPRUCE_LOG,Material.AIR,1000,0..0,listOf(Material.SPRUCE_LOG to 1..1),isWood = true),
-        Material.ACACIA_LOG to RespawnableBlock(Material.ACACIA_LOG,Material.AIR,1000,0..0,listOf(Material.ACACIA_LOG to 1..1),isWood = true),
-        Material.JUNGLE_LOG to RespawnableBlock(Material.JUNGLE_LOG,Material.AIR,1000,0..0,listOf(Material.JUNGLE_LOG to 1..1),isWood = true),
+        Material.OAK_LOG to RespawnableBlock(Material.OAK_LOG, Material.AIR,1000,0..0,listOf(Material.OAK_LOG to 1..1),isWood = true),
+        Material.SPRUCE_LOG to RespawnableBlock(Material.SPRUCE_LOG, Material.AIR,1000,0..0,listOf(Material.SPRUCE_LOG to 1..1),isWood = true),
+        Material.ACACIA_LOG to RespawnableBlock(Material.ACACIA_LOG, Material.AIR,1000,0..0,listOf(Material.ACACIA_LOG to 1..1),isWood = true),
+        Material.JUNGLE_LOG to RespawnableBlock(Material.JUNGLE_LOG, Material.AIR,1000,0..0,listOf(Material.JUNGLE_LOG to 1..1),isWood = true),
 
         // その他
-        Material.GRAVEL to RespawnableBlock(Material.GRAVEL,Material.COBBLESTONE,500,1..3,listOf(Material.BONE to -5..3,Material.STRING to -5..3,Material.FLINT to -5..3,Material.FEATHER to -5..3,Material.ARROW to -19..3,)),
-        Material.MELON to RespawnableBlock(Material.MELON,Material.AIR,400,1..3,listOf(Material.MELON_SLICE to 1..4,)),
+        Material.GRAVEL to RespawnableBlock(Material.GRAVEL, Material.COBBLESTONE,500,1..3,listOf(Material.BONE to -5..3, Material.STRING to -5..3, Material.FLINT to -5..3, Material.FEATHER to -5..3, Material.ARROW to -19..3,)),
+        Material.MELON to RespawnableBlock(Material.MELON, Material.AIR,400,1..3,listOf(Material.MELON_SLICE to 1..4,)),
         )
 
-    data class RespawingBlock(val level: Level,val pos: BlockPos,val block: BlockState,var tick: Int)
+    data class RespawingBlock(val level: Level, val pos: BlockPos, val block: BlockState, var tick: Int)
 
-    val placedBlocks = hashSetOf<Pair<Level,BlockPos>>()
+    val placedBlocks = hashSetOf<Pair<Level, BlockPos>>()
     val respawingBlocks = mutableListOf<RespawingBlock>()
 
     @EventHandler
@@ -57,7 +57,7 @@ object RespawnBlocks: Listener {
         if (player.gameMode == GameMode.CREATIVE || event.isCancelled) return
 
         val block = event.block
-        val pos = BlockPos(block.x,block.y,block.z)
+        val pos = BlockPos(block.x, block.y, block.z)
 
         if (respawingBlocks.any { it.pos == pos }) {
             event.isCancelled = true
@@ -71,7 +71,7 @@ object RespawnBlocks: Listener {
         val exp = respawnData.experience.random()
 
         if (exp > 1) {
-            val event = PlayerExpChangeEvent(player,exp)
+            val event = PlayerExpChangeEvent(player, exp)
             plugin.server.pluginManager.callEvent(event)
 
             player.giveExp(event.amount,true)
@@ -82,7 +82,7 @@ object RespawnBlocks: Listener {
 
             if (respawnData.isOre) {
                 val fortune = player.inventory.itemInMainHand.enchantments[Enchantment.FORTUNE] ?: 0
-                if (material != Material.RAW_GOLD) amount += (Random.nextFloat() * fortune).toInt() * amount + fortune / 2 * amount
+                if (material != Material.RAW_GOLD) amount += (Random.Default.nextFloat() * fortune).toInt() * amount + fortune / 2 * amount
                 amount *= MinerClass.getMultiply(player)
             }
             if (respawnData.isWood) {
@@ -115,7 +115,7 @@ object RespawnBlocks: Listener {
         val block = event.block
         if (respawnableBlocks.contains(block.type)) {
             val level = block.world.toMC()
-            placedBlocks.add(level to BlockPos(block.x,block.y,block.z))
+            placedBlocks.add(level to BlockPos(block.x, block.y, block.z))
         }
     }
 

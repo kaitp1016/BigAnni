@@ -100,11 +100,13 @@ object BerserkerClass: AnniClass(), Listener {
         val killer = event.damageSource.causingEntity as? Player ?: return
         if (isSelected(killer)) {
             val attribute = killer.getAttribute(Attribute.MAX_HEALTH)!!
-            val amount = min(20.0,(attribute.getModifier(BERSERKER_HEALTH_PASSIVE_KEY)?.amount?.plus(1) ?: 1.0))
-            if (event.damageSource.damageType == DamageType.ARROW && amount > 10) return
+            var health = min(20.0,(attribute.getModifier(BERSERKER_HEALTH_PASSIVE_KEY)?.amount ?: 0.0))
+            health += if (health > 10) 0.5 else 1.0
+
+            if (health > 20 || (event.damageSource.damageType == DamageType.ARROW && health > 10)) return
 
             attribute.removeModifier(BERSERKER_HEALTH_PASSIVE_KEY)
-            attribute.addTransientModifier(AttributeModifier(BERSERKER_HEALTH_PASSIVE_KEY,amount, AttributeModifier.Operation.ADD_NUMBER))
+            attribute.addTransientModifier(AttributeModifier(BERSERKER_HEALTH_PASSIVE_KEY,health, AttributeModifier.Operation.ADD_NUMBER))
         }
     }
 

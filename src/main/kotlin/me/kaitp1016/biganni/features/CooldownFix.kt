@@ -1,4 +1,4 @@
-package me.kaitp1016.biganni.modifiers
+package me.kaitp1016.biganni.features
 
 import me.kaitp1016.biganni.events.impl.PacketReciveEvent
 import me.kaitp1016.biganni.utils.MCUtils.toMC
@@ -17,7 +17,7 @@ object CooldownFix: Listener {
         player.cooldowns.cooldowns.forEach { (group,cooldown) ->
             val time = cooldown.endTime - tick
             if (time > 1) {
-                player.connection.send(ClientboundCooldownPacket(group,time))
+                player.connection.send(ClientboundCooldownPacket(group, time))
             }
         }
     }

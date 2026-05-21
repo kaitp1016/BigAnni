@@ -1,4 +1,4 @@
-package me.kaitp1016.biganni.modifiers
+package me.kaitp1016.biganni.features
 
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.minecraft.tags.BlockTags

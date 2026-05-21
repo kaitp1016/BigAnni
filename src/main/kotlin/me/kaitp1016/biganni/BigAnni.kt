@@ -4,9 +4,9 @@ import com.google.gson.GsonBuilder
 import me.kaitp1016.biganni.anniclass.AnniClassHandler
 import me.kaitp1016.biganni.events.EventManager
 import me.kaitp1016.biganni.features.*
-import me.kaitp1016.biganni.game.boss.BossManager
 import me.kaitp1016.biganni.game.Game
 import me.kaitp1016.biganni.game.boss.BossBuffItems
+import me.kaitp1016.biganni.game.boss.BossManager
 import me.kaitp1016.biganni.modifiers.*
 import me.kaitp1016.biganni.packetgui.PacketGuiManager
 import me.kaitp1016.biganni.utils.FallDamageResistance
@@ -34,6 +34,7 @@ class BigAnni : JavaPlugin() {
             EnderFurnace,
             InvisibleModifier,
             DelayingBlock,
+            ServerLink,
             WeaknessModifier,
             FarmlandModifier,
             KnockbackModifier,
