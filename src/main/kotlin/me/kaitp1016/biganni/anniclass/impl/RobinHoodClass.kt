@@ -174,6 +174,10 @@ object RobinHoodClass: AnniClass(), Listener {
 
         }
 
+        override fun equipBodyArmor(player: net.minecraft.world.entity.player.Player, itemStack: net.minecraft.world.item.ItemStack) {
+
+        }
+
         override fun isAffectedByPotions(): Boolean {
             return false
         }
