@@ -10,6 +10,7 @@ import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
+import net.minecraft.tags.BlockTags
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LightningBolt
 import net.minecraft.world.item.Items
@@ -21,6 +22,7 @@ import org.bukkit.damage.DamageType
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.block.BlockBreakEvent
@@ -96,9 +98,12 @@ object ThorClass: AnniClass(), Listener {
         player.setCooldown(HAMMER_COOLDOWN_GROUP,HAMMER_COOLDOWN)
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     fun onBreak(event: BlockBreakEvent) {
         if (!isSelected(event.player) || event.player.inventory.itemInMainHand.getAnniId() != HAMMER_ITEM_ID) return
+
+        val block = event.block
+        if (!block.toMC().`is`(BlockTags.MINEABLE_WITH_AXE)) return
 
         event.isCancelled = true
     }

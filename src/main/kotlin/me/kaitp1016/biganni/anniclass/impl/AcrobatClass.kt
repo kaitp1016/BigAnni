@@ -85,6 +85,6 @@ object AcrobatClass: AnniClass(), Listener {
 
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
-        event.player.getAttribute(Attribute.FALL_DAMAGE_MULTIPLIER)?.removeModifier(AXE_ATTRIBUTE_MODIFIER_KEY)
+        event.player.getAttribute(Attribute.FALL_DAMAGE_MULTIPLIER)?.removeModifier(ACROBAT_FALL_DAMAGE_RESITANCE)
     }
 }

@@ -82,16 +82,18 @@ object ChargerClass: AnniClass(), Listener {
         val item = event.item ?: return
         if (item.getAnniId() != FEARFUL_ITEM_ID || player.hasCooldown(item)) return
 
-        player.playSound(player.location, Sound.ENTITY_GHAST_WARN,2f,0.8f)
-
         val team = player.toMC().teamColor
-        player.world.getNearbyPlayers(player.location,6.0).forEach { target ->
-            if (target.toMC().teamColor == team || BerserkerClass.isUsingAbility(target)) return@forEach
 
+        val targets = player.world.getNearbyPlayers(player.location,6.0).filter { target -> target.toMC().teamColor != team && !BerserkerClass.isUsingAbility(target) }
+        if (targets.isEmpty()) return
 
+        targets.forEach { target ->
             target.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS,FEARFUL_TIME,0))
+            target.playSound(target, Sound.ENTITY_GHAST_WARN,2f,0.8f)
+
         }
 
+        player.playSound(player.location, Sound.ENTITY_GHAST_WARN,2f,0.8f)
         player.setCooldown(FEARFUL_COOLDOWN_GROUP,FEARFUL_COOLDOWN)
     }
 
