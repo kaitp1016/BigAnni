@@ -1,7 +1,9 @@
 package me.kaitp1016.biganni.utils
 
 import me.kaitp1016.biganni.utils.MCUtils.toMC
+import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.level.block.state.BlockState
 import org.bukkit.World
 
 class LevelBlockPos {
@@ -25,6 +27,14 @@ class LevelBlockPos {
         this.x = x
         this.y = y
         this.z = z
+    }
+
+    fun getBlock(): BlockState {
+        return level.getBlockState(BlockPos(x,y,z))
+    }
+
+    fun toBlockPos(): BlockPos {
+        return BlockPos(x,y,z)
     }
 
     override fun equals(other: Any?): Boolean {

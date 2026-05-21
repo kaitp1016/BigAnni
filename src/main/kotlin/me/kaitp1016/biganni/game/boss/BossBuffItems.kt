@@ -134,7 +134,7 @@ object BossBuffItems: Listener {
 
                 set(DataComponents.ITEM_NAME, Component.literal("§6Boots of Extingushment"))
             }.bukkitStack.apply {
-                addLore(Component.literal("§7優美 I").withStyle(Style.EMPTY.withItalic(false)))
+                addLore(Component.literal("§7優雅 I").withStyle(Style.EMPTY.withItalic(false)))
                 soulbound()
                 setAnniItem(id)
             }.toMC()!!

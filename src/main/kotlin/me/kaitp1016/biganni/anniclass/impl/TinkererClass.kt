@@ -77,6 +77,8 @@ object TinkererClass: AnniClass(), Listener {
 
     @EventHandler
     fun onMove(event: PlayerMoveEvent) {
+        if (pads.isEmpty()) return
+
         val from = event.from
         val to = event.to
         if (from.x.toInt() == to.x.toInt() && from.y.toInt() == to.y.toInt() && from.z.toInt() == to.z.toInt()) return
@@ -92,6 +94,8 @@ object TinkererClass: AnniClass(), Listener {
 
     @EventHandler
     fun onBreak(event: BlockBreakEvent) {
+        if (pads.isEmpty()) return
+
         val block = event.block
         val level = block.world.toMC()
         val pos = BlockPos(block.x,block.y,block.z)
