@@ -28,6 +28,7 @@ abstract class AnniClass {
     abstract val shortName: String
     abstract val icon: Item
     abstract val description: Array<String>
+    open val isUnique: Boolean = false
 
     open fun register() {
         if (this is Listener) {

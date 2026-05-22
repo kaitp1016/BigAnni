@@ -124,6 +124,7 @@ object SpyClass: AnniClass(), Listener {
 
         level.addFreshEntity(PlayerMannequin(level,mcPlayer).apply {
             setPos(mcPlayer.position())
+            absSnapRotationTo(mcPlayer.yRot,mcPlayer.xRot)
         })
 
         FullyInvisible.add(player, 120)
@@ -135,8 +136,6 @@ object SpyClass: AnniClass(), Listener {
         constructor(level: ServerLevel,player: ServerPlayer):super(level) {
             this.profile = player.profile
             this.customName = player.name
-            this.yRot = player.yRot
-            this.xRot = player.xRot
 
             equipment.setAll(player.inventory.equipment)
         }
