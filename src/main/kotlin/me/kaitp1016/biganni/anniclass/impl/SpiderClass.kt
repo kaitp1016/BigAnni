@@ -30,13 +30,14 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockDropItemEvent
 import org.bukkit.event.entity.EntityRemoveEvent
+import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 import kotlin.math.PI
 import net.minecraft.world.item.ItemStack as MCItemStack
 
 object SpiderClass: AnniClass(), Listener {
-    override val icon = Items.VINE
+    override val icon = Items.COBWEB
     override val name = "Spider"
     override val shortName = "SPI"
     override val description = arrayOf(
@@ -159,6 +160,21 @@ object SpiderClass: AnniClass(), Listener {
 
         if (placedWebs.removeIf { it.pos == pos && it.level == level }) {
             event.items.clear()
+        }
+    }
+
+    @EventHandler
+    fun onDeath(event: PlayerDeathEvent) {
+        val player = event.player
+        if (!isSelected(player)) return
+
+        val webs = placedWebs.filter { it.player == player }
+        placedWebs.removeAll(webs)
+
+        webs.forEach {
+            if (it.level.getBlockState(it.pos).block == Blocks.COBWEB) {
+                it.level.setBlockAndUpdate(it.pos,Blocks.AIR.defaultBlockState())
+            }
         }
     }
 

@@ -14,7 +14,7 @@ object AnniClasses {
     val ENCHANTER = register("enchanter", EnchanterClass)
     val BUILDER = register("builder", BuilderClass)
     val DASHER = register("dasher", DasherClass)
-    val ICEMAN = register("iceman", IcemanClass)
+    val ICEMAN = register("iceman", NeptuneClass)
     val BERSERKER = register("berserker", BerserkerClass)
     val HEALER = register("healer", HealerClass)
     val TINKERER = register("tinkerer", TinkererClass)

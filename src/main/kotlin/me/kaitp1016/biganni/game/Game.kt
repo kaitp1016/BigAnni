@@ -15,6 +15,7 @@ import me.kaitp1016.biganni.utils.Scheduler
 import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.network.chat.Component
 import net.minecraft.util.CommonColors
+import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.monster.Witch
 import net.minecraft.world.level.Level
 import org.bukkit.Bukkit
@@ -153,7 +154,7 @@ object Game: Listener {
 
         event.isCancelled = true
 
-        if (phase < 2 || team.name.equals(player.toMC().team?.name,ignoreCase = true)) return
+        if (phase < 2 || team.name.equals(player.toMC().team?.name, ignoreCase = true)) return
 
         val damage = if (phase >= MAX_PHASE && map.doubleNexusDamage) 2 else 1
         team.health -= damage
@@ -162,9 +163,9 @@ object Game: Listener {
         val actionbar = player.teamDisplayName().append(BukkitComponent.text(" damaged the").color(NamedTextColor.GRAY).append(BukkitComponent.text(" ${team.color}${team.name} team's nexus!")))
 
         Bukkit.getOnlinePlayers().forEach {
-            if (team.health < 1) it.playSound(it, Sound.ENTITY_GENERIC_EXPLODE,2f,0f)
-            else if (block.world == it.world && block.location.distance(it.location) < 30) it.playSound(it, Sound.BLOCK_ANVIL_PLACE,2f,pitch)
-            else if (it.toMC().team?.name?.equals(team.name,ignoreCase = true) == true) it.playSound(it, Sound.BLOCK_NOTE_BLOCK_HARP,2f,2f)
+            if (team.health < 1) it.playSound(it, Sound.ENTITY_GENERIC_EXPLODE, 2f, 0f)
+            else if (block.world == it.world && block.location.distance(it.location) < 30) it.playSound(it, Sound.BLOCK_ANVIL_PLACE, 2f, pitch)
+            else if (it.toMC().team?.name?.equals(team.name, ignoreCase = true) == true) it.playSound(it, Sound.BLOCK_NOTE_BLOCK_HARP, 2f, 2f)
 
             it.sendActionBar(actionbar)
         }
@@ -173,8 +174,7 @@ object Game: Listener {
 
         if (team.health < 1) {
             block.world.setBlockData(block.location, Material.BEDROCK.createBlockData())
-        }
-        else {
+        } else {
             block.world.setBlockData(block.location, Material.AIR.createBlockData())
 
             Scheduler.scheduleTask(8) {
@@ -183,6 +183,9 @@ object Game: Listener {
         }
 
         HandymanClass.onMineNexus(player)
+
+        val mcPlayer = player.toMC()
+        mcPlayer.mainHandItem.hurtAndBreak(1, mcPlayer, EquipmentSlot.MAINHAND)
     }
 
     @EventHandler

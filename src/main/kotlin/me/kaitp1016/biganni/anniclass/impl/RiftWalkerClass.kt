@@ -82,7 +82,7 @@ object RiftWalkerClass: AnniClass(), Listener {
             }
 
             if (time <= 0) {
-                val players = world.getNearbyPlayers(position, 3.0, 3.0).filter { it == rifter || (it.toMC().teamColor == rifter.toMC().teamColor && it.isSneaking) }.sortedBy { if (it == rifter) 0.0 else it.location.distance(position) }.take(4)
+                val players = world.getNearbyPlayers(position, 5.0, 5.0).filter { it == rifter || (it.toMC().teamColor == rifter.toMC().teamColor && it.isSneaking) }.sortedBy { if (it == rifter) 0.0 else it.location.distance(position) }.take(4)
                 players.forEach {
                     it.teleport(target)
                 }
@@ -90,7 +90,7 @@ object RiftWalkerClass: AnniClass(), Listener {
                 return true
             }
 
-            world.getNearbyPlayers(rifter.location, 3.0, 3.0).filter { it.toMC().teamColor == rifter.toMC().teamColor }.sortedBy { it.location.distance(rifter.location) }.forEach {
+            world.getNearbyPlayers(rifter.location, 5.0, 5.0).filter { it.toMC().teamColor == rifter.toMC().teamColor }.sortedBy { it.location.distance(rifter.location) }.forEach {
                 it.sendMessage(Component.text("Rift to ").color(NamedTextColor.GOLD).append(target.teamDisplayName().append(Component.text(" opens in ${time / 20}").color(NamedTextColor.GOLD))))
             }
 
