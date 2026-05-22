@@ -38,7 +38,7 @@ object NeptuneClass: AnniClass(), Listener {
         "トライデントは2個の形態を切り替えることができる。",
     )
 
-    const val TOGGLE_GROUND_FREEZE_ITEM_ID = "iceman_toggle_frost_walker"
+    const val TOGGLE_GROUND_FREEZE_ITEM_ID = "neptune_toggle_frost_walker"
     const val TIDEBRINGER_ITEM_ID = "neptune_tidebringer"
     const val TIDEBRINGER_COOLDOWN = 400
     val TIDEBRINGE_COOLDOWN_GROUP = Key.key(PLUGIN_ID,"neptune_tidebringer")
@@ -165,8 +165,12 @@ object NeptuneClass: AnniClass(), Listener {
                     level.setBlockAndUpdate(pos, Blocks.MAGMA_BLOCK.defaultBlockState())
                     frozenBlocks.add(FrozenBlock(level, pos,Blocks.MAGMA_BLOCK,Blocks.LAVA))
                 }
-                else if (block.block == Blocks.MAGMA_BLOCK || block.block == Blocks.FROSTED_ICE) {
+                if (block.block == Blocks.MAGMA_BLOCK || block.block == Blocks.FROSTED_ICE) {
                     frozenBlocks.find { it.pos == pos }?.tick = 20
+
+                    if (block.block == Blocks.FROSTED_ICE) {
+                        level.setBlockAndUpdate(pos,Blocks.FROSTED_ICE.defaultBlockState())
+                    }
                 }
             }
         }
