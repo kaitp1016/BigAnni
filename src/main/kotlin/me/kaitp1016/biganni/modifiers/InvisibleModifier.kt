@@ -26,7 +26,7 @@ object InvisibleModifier: Listener {
         }
 
         player.removePotionEffect(PotionEffectType.INVISIBILITY)
-        player.playSound(player.location, Sound.ENTITY_ZOMBIE_VILLAGER_CONVERTED,1f,1f)
+        player.world.playSound(player.location, Sound.ENTITY_ZOMBIE_VILLAGER_CONVERTED,1f,1f)
     }
 
     @EventHandler
@@ -40,6 +40,6 @@ object InvisibleModifier: Listener {
         }
 
         player.removePotionEffect(PotionEffectType.INVISIBILITY)
-        player.playSound(player.location, Sound.ENTITY_ZOMBIE_VILLAGER_CONVERTED,1f,1f)
+        player.world.playSound(player.location, Sound.ENTITY_ZOMBIE_VILLAGER_CONVERTED,1f,1f)
     }
 }

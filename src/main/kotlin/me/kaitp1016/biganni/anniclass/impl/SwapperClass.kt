@@ -72,8 +72,8 @@ object SwapperClass: AnniClass(), Listener {
         player.teleport(target.location)
         target.teleport(selfLocation)
 
-        player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT,1f,1f)
-        target.playSound(target, Sound.ENTITY_ENDERMAN_TELEPORT,1f,1f)
+        world.playSound(player.location, Sound.ENTITY_ENDERMAN_TELEPORT,1f,1f)
+        world.playSound(target.location, Sound.ENTITY_ENDERMAN_TELEPORT,1f,1f)
 
         target.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION,100,1))
         target.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS,60,0))

@@ -15,6 +15,8 @@ import me.kaitp1016.biganni.utils.Scheduler
 import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.network.chat.Component
 import net.minecraft.util.CommonColors
+import net.minecraft.world.entity.monster.Witch
+import net.minecraft.world.level.Level
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
@@ -281,7 +283,7 @@ object Game: Listener {
     @EventHandler
     fun onRemoveEntity(event: EntityRemoveEvent) {
         val entity = event.entity
-        if (entity.type != EntityType.WITCH || event.cause == EntityRemoveEvent.Cause.UNLOAD) return
+        if (entity.type != EntityType.WITCH) return
 
         val team = teams.find { it.witch == entity.uniqueId }
         if (team == null) return
@@ -295,6 +297,14 @@ object Game: Listener {
         if (source.damageType == DamageType.ARROW) return "shot"
 
         return "killed"
+    }
+
+    class GameWitch: Witch {
+        constructor(level: Level):super(net.minecraft.world.entity.EntityType.WITCH,level)
+
+        override fun shouldBeSaved(): Boolean {
+            return false
+        }
     }
 
     fun getTeam(player: Player): AnniTeam? {

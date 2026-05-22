@@ -95,7 +95,7 @@ object DasherClass: AnniClass(), Listener {
 
         val location = Location(pos.world,pos.x + 0.5,pos.y + 1.0,pos.z + 0.5,player.yaw,player.pitch)
         player.teleport(location)
-        player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT,1f,1f)
+        player.world.playSound(player.location, Sound.ENTITY_ENDERMAN_TELEPORT,1f,1f)
 
         item.setData(DataComponentTypes.USE_COOLDOWN, UseCooldown.useCooldown(cooldown / 20f).cooldownGroup(BLINK_COOLDOWN_GROUP).build())
         player.setCooldown(BLINK_COOLDOWN_GROUP,cooldown)

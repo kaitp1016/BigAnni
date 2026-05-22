@@ -61,7 +61,7 @@ object AcrobatClass: AnniClass(), Listener {
                 multiply(1.5)
             }
 
-            player.playSound(player , Sound.ENTITY_ZOMBIE_INFECT,1f,2f)
+            player.world.playSound(player.location, Sound.ENTITY_ZOMBIE_INFECT,1f,2f)
             cooldowns.add(AcrobatCooldown(player,200))
         }
 

@@ -88,8 +88,9 @@ object TinkererClass: AnniClass(), Listener {
         val level = player.level()
 
         val pad = pads.find { it.pos == pos && level == it.level } ?: return
-        event.player.addPotionEffect(pad.type.effect)
-        event.player.playSound(event.player, Sound.ENTITY_BLAZE_AMBIENT,1f,1f)
+        val bukkitPlayer = event.player
+        bukkitPlayer.addPotionEffect(pad.type.effect)
+        bukkitPlayer.world.playSound(bukkitPlayer.location, Sound.ENTITY_BLAZE_AMBIENT,1f,1f)
     }
 
     @EventHandler

@@ -4,7 +4,6 @@ import me.kaitp1016.biganni.utils.LevelBlockPos
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LightningBolt
-import net.minecraft.world.entity.monster.Witch
 import net.minecraft.world.phys.AABB
 import org.bukkit.Location
 import java.util.*
@@ -34,7 +33,7 @@ class AnniTeam {
     fun spawnWitch() {
         val level = witchLocation.world.toMC()
 
-        val witch = Witch(EntityType.WITCH, level).apply {
+        val witch = Game.GameWitch(level).apply {
             this.setPos(witchLocation.x,witchLocation.y,witchLocation.z)
             this.persistenceRequired = true
         }

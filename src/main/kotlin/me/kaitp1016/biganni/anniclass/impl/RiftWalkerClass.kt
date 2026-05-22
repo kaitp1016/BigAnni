@@ -19,6 +19,7 @@ import net.minecraft.network.protocol.game.ServerboundContainerClickPacket
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.ItemLore
+import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.entity.Player
@@ -62,7 +63,7 @@ object RiftWalkerClass: AnniClass(), Listener {
         rifts.removeIf { it.rifter == player }
     }
 
-    data class Rift(val rifter: Player,val target: Player) {
+    data class Rift(val rifter: Player,val target: Player,val position: Location) {
         var time: Int = 201
 
         fun tick(): Boolean {
@@ -70,10 +71,10 @@ object RiftWalkerClass: AnniClass(), Listener {
 
             if (time % 20 != 0) return false
 
-            val world = rifter.world
+            val world = position.world
             arrayOf(3.0 to 3.0,-3.0 to 3.0,-3.0 to -3.0, 3.0 to -3.0,5.0 to 0.0,-5.0 to 0.0,0.0 to 5.0,0.0 to -5.0).forEach { (dx,dz) ->
                 Particle.HAPPY_VILLAGER.builder()
-                    .location(rifter.location.clone().add(dx,0.0,dz))
+                    .location(position.clone().add(dx,0.0,dz))
                     .offset(0.0,2.0,0.0)
                     .count(20)
                     .receivers(32,true)
@@ -81,7 +82,7 @@ object RiftWalkerClass: AnniClass(), Listener {
             }
 
             if (time <= 0) {
-                val players = world.getNearbyPlayers(rifter.location, 3.0, 3.0).filter { it == rifter || (it.toMC().teamColor == rifter.toMC().teamColor && it.isSneaking) }.sortedBy { it.location.distance(rifter.location) }.take(4)
+                val players = world.getNearbyPlayers(position, 3.0, 3.0).filter { it == rifter || (it.toMC().teamColor == rifter.toMC().teamColor && it.isSneaking) }.sortedBy { if (it == rifter) 0.0 else it.location.distance(position) }.take(4)
                 players.forEach {
                     it.teleport(target)
                 }
@@ -145,8 +146,9 @@ object RiftWalkerClass: AnniClass(), Listener {
 
                 val target = players.getOrNull(packet.slotNum.toInt())?.bukkitEntity ?: return@execute
                 val rifter = this.player.bukkitEntity
+                val position = rifter.location
 
-                rifts.add(Rift(rifter,target))
+                rifts.add(Rift(rifter,target,position))
                 rifter.setCooldown(OPEN_RIFT_COOLDOWN_GROUP,OPEN_RIFT_COOLDOWN)
                 target.sendMessage(Component.text("${player.plainTextName} is attempting to rift to you!").color((NamedTextColor.GREEN)))
 

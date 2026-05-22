@@ -53,7 +53,7 @@ object LauncherPad: Listener {
         }
 
         FallDamageResistance.add(bukkitPlayer, 200)
-        bukkitPlayer.playSound(bukkitPlayer, Sound.ENTITY_WITHER_SHOOT, 1f, 2f)
+        bukkitPlayer.world.playSound(bukkitPlayer.location, Sound.ENTITY_WITHER_SHOOT, 1f, 2f)
 
         cooldowns.add(LauncherPadCooldown(bukkitPlayer,LAUNCHER_PAD_COOLDOWN))
     }

@@ -85,7 +85,7 @@ object LumberjackClass: AnniClass(), Listener {
         if (item.getAnniId() != BRUTE_FORCE_ITEM_ID || player.hasCooldown(item)) return
 
         bruteForces.add(BruteForceAbility(player, BRUTE_FORCE_TIME))
-        player.playSound(player, Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, SoundCategory.MASTER,1f,0f,6L)
+        player.world.playSound(player.location, Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, SoundCategory.MASTER,1f,0f,6L)
         player.setCooldown(BRUTE_FORCE_COOLDOWN_GROUP, BRUTE_FORCE_COOLDOWN)
 
         event.isCancelled = true
