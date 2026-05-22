@@ -45,6 +45,7 @@ object AnniClasses {
     val SPIDER = register("spider", SpiderClass)
     val NINJA = register("ninja", NinjaClass)
     val SPY = register("spy", SpyClass)
+    val VAMPIRE = register("vampire", VampireClass)
 
     fun <T: AnniClass> register(id: String, anniClass: T): T {
         ALL_CLASSES.add(anniClass)
