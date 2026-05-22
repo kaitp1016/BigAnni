@@ -32,7 +32,7 @@ object VampireClass: AnniClass(), Listener {
     override val shortName = "VMP"
     override val description = arrayOf(
         "この職業の時は常に攻撃力が増える。",
-        "敵を殴ることで確率で体力を吸収する。",
+        "敵を殴ることで確率で体力を回復する。",
         "Blood Senseを使用することで、周囲の敵を発光させる。",
         "Insidisious Dispatchを使用することで、自身に背を向けてる敵にテレポートできる。"
     )
