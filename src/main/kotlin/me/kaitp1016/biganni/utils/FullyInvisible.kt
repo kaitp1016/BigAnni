@@ -23,7 +23,7 @@ object FullyInvisible: Listener {
     data class InvisiblePlayer(val player: MCPlayer, val entityId: Int, var time: Int)
     val invisiblePlayers = mutableListOf<InvisiblePlayer>()
 
-    fun add(player: Player,tick: Int) {
+    fun add(player: Player, tick: Int) {
         player.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY,max(tick,player.getPotionEffect(PotionEffectType.INVISIBILITY)?.duration ?: 0),0))
         invisiblePlayers.add(InvisiblePlayer(player.toMC(),player.entityId,tick))
 
@@ -34,6 +34,27 @@ object FullyInvisible: Listener {
         mcPlayer.`moonrise$getTrackedEntity`()?.seenBy?.forEach {
             it.send(packet)
         }
+    }
+
+    fun add(player: Player) {
+        player.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY,PotionEffect.INFINITE_DURATION,0))
+        invisiblePlayers.add(InvisiblePlayer(player.toMC(),player.entityId, Int.MAX_VALUE))
+
+        val mcPlayer = player.toMC()
+        val slots = invisibleSlots.map { slot -> Pair(slot, net.minecraft.world.item.ItemStack.EMPTY) }
+        val packet = ClientboundSetEquipmentPacket(player.entityId,slots)
+
+        mcPlayer.`moonrise$getTrackedEntity`()?.seenBy?.forEach {
+            it.send(packet)
+        }
+    }
+
+    fun remove(player: Player) {
+        val entityId = player.entityId
+        if (invisiblePlayers.none { it.entityId == entityId }) return
+
+        player.removePotionEffect(PotionEffectType.INVISIBILITY)
+        revealInvisible(player.toMC())
     }
 
     @EventHandler
