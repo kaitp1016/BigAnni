@@ -27,7 +27,7 @@ import org.bukkit.inventory.ItemStack
 object DasherClass: AnniClass(), Listener {
     override val name = "Dasher"
     override val shortName = "DAS"
-    override val icon = Items.PURPLE_DYE
+    override val icon = Items.ENDER_PEARL
     override val description = arrayOf(
         "スニーク中にアビリティを使用すると視点の先にテレポートができる。",
     )

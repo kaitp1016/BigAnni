@@ -25,7 +25,7 @@ import org.bukkit.util.Vector
 object AssassinClass: AnniClass(), Listener {
     override val name = "Assassin"
     override val shortName = "ASN"
-    override val icon = Items.FEATHER
+    override val icon = Items.GOLDEN_CARROT
     override val description = arrayOf(
         "アビリティを使用すると前に飛び、透明化を獲得する。",
         "この透明化は防具も透明化される。"

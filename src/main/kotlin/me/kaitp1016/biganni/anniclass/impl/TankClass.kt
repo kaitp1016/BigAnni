@@ -35,7 +35,7 @@ object TankClass: AnniClass(), Listener {
     override val description = arrayOf(
         "盾を構えてる間は自身へのダメージを無効化し、",
         "周囲の味方の矢から受けるダメージを無効化する。",
-        "アビリティを使用すると前に突進し、当たった敵にダメージを与える。"
+        "アビリティを使用すると前に突進し、ダメージを与える。"
     )
 
     const val THE_SHIELD_ID = "tank_the_shield"
@@ -96,14 +96,14 @@ object TankClass: AnniClass(), Listener {
         val mcPlayer = player.toMC()
         val useItem = mcPlayer.useItem
         if (useItem.bukkitStack.getAnniId() == THE_SHIELD_ID) {
-            if (mcPlayer.ticksUsingItem > 60) {
+            if (mcPlayer.ticksUsingItem > 100) {
                 state.hasDoubleDamage = true
             }
         }
         else {
             state.regenTick++
 
-            if (state.regenTick > 60 && state.stamina < MAX_STAMINA) {
+            if (state.regenTick > 120 && state.stamina < MAX_STAMINA) {
                 state.stamina = min(state.stamina + 3, MAX_STAMINA)
                 state.regenTick = 0
                 player.sendMessage("§7Stamina level: §6${state.stamina}")
@@ -150,6 +150,7 @@ object TankClass: AnniClass(), Listener {
         if (damager is Player && isSelected(damager)) {
             if (states[player]?.hasDoubleDamage == true) {
                 event.damage *= 2
+                states[player]?.hasDoubleDamage = false
             }
         }
     }
@@ -173,6 +174,7 @@ object TankClass: AnniClass(), Listener {
                 world.getNearbyPlayers(player.location,0.5).forEach {
                     if (it.toMC().teamColor != team) {
                         it.damage(2.5, player)
+                        it.addPotionEffect(PotionEffect(PotionEffectType.BLINDNESS,100,0))
                     }
                 }
             }

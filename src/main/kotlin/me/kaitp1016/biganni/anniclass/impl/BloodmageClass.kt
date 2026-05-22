@@ -41,7 +41,7 @@ object BloodmageClass: AnniClass(), Listener {
     override val description = arrayOf(
         "攻撃をしたときに確率で毒の効果を与える。",
         "Corruptを使用すると周囲の敵の最大体力を減らし、ウィザーの効果を与える。",
-        "Bloodcursed Terraformを使用すると周囲のブロックを変え、その範囲にいる敵にデバフを与える。",
+        "Bloodcursed Terraformを使用すると周囲のブロックを変え、敵にデバフを与える。",
     )
 
     const val CORRUPT_ITEM_ID = "bloodmage_corrupt"

@@ -34,7 +34,7 @@ object BerserkerClass: AnniClass(), Listener {
     override val icon = Items.NETHERITE_INGOT
     override val description = arrayOf(
         "プレイヤーを殺すごとに体力が増え、上限がある。",
-        "アビリティを使用することで移動速度が上昇し、効果中は一部の効果を受けなくなる。",
+        "アビリティを使用することで移動速度が上昇し、一部の効果を受けなくなる。",
     )
 
     const val BERSERKER_ITEM_ID = "berserker_berserker"

@@ -29,8 +29,6 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.TooltipDisplay
 import net.minecraft.world.level.block.Blocks
-import net.minecraft.world.level.gameevent.GameEvent
-import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.HitResult
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -156,13 +154,7 @@ object WizardClass: AnniClass(), Listener {
             isNoGravity = true
         }
 
-        override fun onHitEntity(hitResult: EntityHitResult) {
-            val target = hitResult.entity
-            if (target !is ServerPlayer) return
-
-            val team = thrower.teamColor
-            if (team == target.teamColor) return
-
+        override fun onHit(hitResult: HitResult) {
             val bukkit = bukkitEntity
 
             spell.particle.clone()
@@ -173,6 +165,7 @@ object WizardClass: AnniClass(), Listener {
                 .spawn()
 
             val world = bukkit.world
+            val team = thrower.teamColor
             val targets = world.getNearbyPlayers(bukkit.location,spell.distance * 2,spell.distance * 2,spell.distance * 2).filter { it.toMC().teamColor != team }
 
             when(spell) {
@@ -220,16 +213,6 @@ object WizardClass: AnniClass(), Listener {
             }
 
             discard(EntityRemoveEvent.Cause.PLUGIN)
-        }
-
-        override fun onHit(hitResult: HitResult) {
-            if (hitResult is EntityHitResult) {
-                this.onHitEntity(hitResult)
-                this.level().gameEvent(GameEvent.PROJECTILE_LAND, hitResult.location, GameEvent.Context.of(this, null))
-                return
-            }
-
-            super.onHit(hitResult)
         }
 
         override fun tick() {

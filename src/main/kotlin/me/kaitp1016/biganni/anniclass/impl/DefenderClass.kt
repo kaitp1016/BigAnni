@@ -30,7 +30,7 @@ import org.bukkit.potion.PotionEffectType
 object DefenderClass: AnniClass(), Listener {
     override val name = "Defender"
     override val shortName = "DEF"
-    override val icon = Items.PRISMARINE_SHARD
+    override val icon = Items.CHAINMAIL_CHESTPLATE
     override val description = arrayOf(
         "アビリティを使用することでアラートを設置できる。",
         "自身が設置したアラートに敵が触れると音が鳴る。",

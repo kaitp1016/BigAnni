@@ -36,7 +36,7 @@ import java.util.Optional
 object HealerClass: AnniClass(), Listener {
     override val name = "Healer"
     override val shortName = "HEA"
-    override val icon = Items.GOLDEN_APPLE
+    override val icon = Items.POPPED_CHORUS_FRUIT
     override val description = arrayOf(
         "味方の体力が常に見える。",
         "左クリックでアビリティを使用すると単体の味方を大幅に回復できる。",

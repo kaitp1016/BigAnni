@@ -1,5 +1,6 @@
 package me.kaitp1016.biganni.packetgui.impl
 
+import me.kaitp1016.biganni.anniclass.AnniClass
 import me.kaitp1016.biganni.anniclass.AnniClassManager.selectAnniClass
 import me.kaitp1016.biganni.anniclass.AnniClasses
 import me.kaitp1016.biganni.game.Game
@@ -13,15 +14,26 @@ import net.minecraft.network.protocol.game.ServerboundContainerClickPacket
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.util.CommonColors
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.ItemLore
 import org.bukkit.Bukkit
 
 class AnniClassSelector: ChestPacketGui {
-    override val displayName = Component.literal("Class Selector")
+    override val displayName = Component.literal("Select a Class:")
     override val name = "Class Selector"
 
-    constructor(player: ServerPlayer,parent: AbstractPacketGui? = null): super(player,54) {
-        AnniClasses.ALL_CLASSES.forEachIndexed { index, anniClass ->
+    val classes: List<AnniClass>
+
+    constructor(player: ServerPlayer,parent: AbstractPacketGui? = null): super(player,45) {
+        this.classes = AnniClasses.ALL_CLASSES.sortedBy { it.name }
+
+        repeat(size) {
+            items[it] = ItemStack(Items.GRAY_STAINED_GLASS_PANE).apply {
+                this.set(DataComponents.ITEM_NAME, Component.empty())
+            }
+        }
+
+        classes.forEachIndexed { index, anniClass ->
             val lore = anniClass.description.map { Component.literal(it).withStyle(Style.EMPTY.withItalic(false)).withColor(CommonColors.WHITE) }
             setItem(index, ItemStack(anniClass.icon).apply {
                 set(DataComponents.ITEM_NAME, Component.literal(anniClass.name).withColor(CommonColors.WHITE))
@@ -32,7 +44,11 @@ class AnniClassSelector: ChestPacketGui {
 
     override fun onClick(packet: ServerboundContainerClickPacket) {
         val slot = packet.slotNum.toInt()
-        val anniClass = AnniClasses.ALL_CLASSES.getOrNull(slot) ?: return
+        val anniClass = classes.getOrNull(slot)
+        if (anniClass == null) {
+            update(false)
+            return
+        }
 
         mc.execute {
             val player = player.bukkitEntity
