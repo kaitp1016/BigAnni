@@ -38,6 +38,8 @@ object SniperClass: AnniClass(), Listener {
         "この弓で発射された矢は高速で発射され、重力の影響を受けない。",
     )
 
+    // TODO 落下死の時にトーテム
+
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {
         return super.getDefaultItems(player).also {
             it.add(ItemStack(Material.BOW).apply {

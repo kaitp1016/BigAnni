@@ -51,6 +51,8 @@ object Config {
             }
 
             fun default(): MapConfig {
+                getMap("default")?.let { return it }
+
                 val name = "Coastal"
                 val phaseTime = 9600
                 val world = Bukkit.getWorld(Key.key("sys:coastal"))!!
@@ -63,7 +65,7 @@ object Config {
                 )
                 val doubleNexusDamage = true
 
-                return MapConfig(name,phaseTime,bossPortals,bossLocation,teams,blockedClasses,true)
+                return MapConfig(name,phaseTime,bossPortals,bossLocation,teams,blockedClasses, doubleNexusDamage)
             }
         }
     }

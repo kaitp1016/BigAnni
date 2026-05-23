@@ -96,10 +96,10 @@ object AnniCommand {
 
             return@executes 1
         }.suggests(MapSuggestion))).then(Commands.literal("openweaponshop").executes {
-            WeaeponShopGui((it.source.sender as Player).toMC()).open()
+            WeaeponShopGui((it.source.executor as Player).toMC()).open()
             return@executes 1
         }).then(Commands.literal("openbrewingshop").executes {
-            BrewingShopGui((it.source.sender as Player).toMC()).open()
+            BrewingShopGui((it.source.executor as Player).toMC()).open()
             return@executes 1
         })
     }

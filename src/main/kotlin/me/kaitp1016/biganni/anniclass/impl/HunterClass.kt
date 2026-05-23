@@ -28,6 +28,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.Items
 import org.bukkit.Material
 import org.bukkit.Particle
+import org.bukkit.Sound
 import org.bukkit.block.data.BlockData
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -129,12 +130,15 @@ object HunterClass: AnniClass(), Listener {
                 player.lerpMotion(player.position().subtract(pos.center).normalize().multiply(3.0,1.0,3.0))
                 val source = DamageSource(mc.registryAccess().get(DamageTypes.PLAYER_EXPLOSION).get(),trap.player.toMC())
 
+                player.bukkitEntity.playSound(player.bukkitEntity.location, Sound.ENTITY_GENERIC_EXPLODE,1f,1f)
                 player.hurtServer(level,source,10f)
             }
             TrapType.DECAY -> {
                 player.addEffect(MobEffectInstance(MobEffects.WITHER,160,1))
+                player.bukkitEntity.playSound(player.bukkitEntity.location, Sound.ENTITY_WITHER_SHOOT,1f,1f)
             }
             TrapType.LEVITATION -> {
+                player.bukkitEntity.playSound(player.bukkitEntity.location, Sound.ENTITY_FIREWORK_ROCKET_TWINKLE,1f,1f)
                 player.addEffect(MobEffectInstance(MobEffects.LEVITATION,200,1))
                 player.addEffect(MobEffectInstance(MobEffects.SLOWNESS,200,10))
             }
@@ -217,7 +221,6 @@ object HunterClass: AnniClass(), Listener {
                 traps.removeAll { it.player == bukkitPlayer }
 
                 val level = pos.level
-                val world = level.world
 
                 repeat(size * size) {
                     val x = pos.x + it % size

@@ -26,7 +26,6 @@ import net.minecraft.world.entity.projectile.Projectile.ProjectileFactory
 import net.minecraft.world.entity.projectile.throwableitemprojectile.Snowball
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
@@ -158,6 +157,7 @@ object NinjaClass: AnniClass(), Listener {
             val snowball = Projectile.spawnProjectileFromRotationDelayed(ProjectileFactory { level: ServerLevel, mob: LivingEntity, item: MCItemStack -> ThrowShuriken(mcPlayer, level, mob,isRightClick) }, level, mcItem, mcPlayer, -5.0f, 1.5f, 1.0f)
             if (!snowball.attemptSpawn()) return
 
+            player.world.playSound(player.location, Sound.ENTITY_ITEM_FRAME_REMOVE_ITEM,1f,1f)
             player.setCooldown(SHURIKEN_COOLDOWN_GROUP,SHURIKEN_COOLDOWN)
             item.amount--
         }
@@ -172,6 +172,7 @@ object NinjaClass: AnniClass(), Listener {
             val snowball = Projectile.spawnProjectileFromRotationDelayed(ProjectileFactory { level: ServerLevel, mob: LivingEntity, item: MCItemStack -> SmokeBomb(mcPlayer, level, mob) }, level, mcItem, mcPlayer, -5.0f, power, 1.0f)
             if (!snowball.attemptSpawn()) return
 
+            player.world.playSound(player.location, Sound.BLOCK_LAVA_EXTINGUISH,1f,1f)
             player.setCooldown(SMOKE_BOMB_COOLDOWN_GROUP,SMOKE_BOMB_COOLDOWN)
         }
     }

@@ -13,6 +13,7 @@ import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.world.item.Items
 import org.bukkit.Material
 import org.bukkit.Particle
+import org.bukkit.Sound
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.damage.DamageSource
@@ -116,7 +117,11 @@ object PyroClass: AnniClass(), Listener {
                     target.fireTicks = 120
                 }
             }
+
+            target.world.playSound(target.location, Sound.ENTITY_BLAZE_SHOOT,1f,1f)
         }
+
+        player.world.playSound(player.location, Sound.ENTITY_BLAZE_SHOOT,1f,1f)
 
         val distance = 5.0
         val amount = 32
@@ -152,11 +157,13 @@ object PyroClass: AnniClass(), Listener {
             if (Random.nextInt(0,5) == 2) {
                 val target = event.entity
                 target.fireTicks = max(target.fireTicks,60)
+                target.world.playSound(target.location, Sound.ENTITY_BLAZE_SHOOT,1f,1f)
             }
         }
         if (source.damageType == DamageType.ARROW) {
             val target = event.entity
             target.fireTicks = max(target.fireTicks,400)
+            target.world.playSound(target.location, Sound.ENTITY_BLAZE_SHOOT,1f,1f)
         }
     }
 }

@@ -19,6 +19,7 @@ import net.minecraft.world.entity.decoration.Mannequin
 import net.minecraft.world.item.Items
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -97,6 +98,7 @@ object SpyClass: AnniClass(), Listener {
                 FullyInvisible.add(player)
                 state.isInvisible = true
                 state.invisbleStart = player.location
+                player.world.playSound(player.location, Sound.ENTITY_ENDERMAN_TELEPORT,1f,1f)
             }
         }
         else {

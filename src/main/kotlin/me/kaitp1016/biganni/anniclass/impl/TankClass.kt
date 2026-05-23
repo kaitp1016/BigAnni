@@ -16,6 +16,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.world.item.Items
 import org.bukkit.Material
+import org.bukkit.Sound
 import org.bukkit.damage.DamageType
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -127,6 +128,7 @@ object TankClass: AnniClass(), Listener {
                 val mcPlayer = it.toMC()
                 return@any mcPlayer.teamColor == team && it.toMC().useItem.bukkitStack.getAnniId() == THE_SHIELD_ID && states.getOrPut(player) { ShieldState() }.stamina > 0
             }) {
+                player.world.playSound(player.location, Sound.ENTITY_ARROW_HIT,2f,2f)
                 event.isCancelled = true
             }
         }
@@ -145,6 +147,7 @@ object TankClass: AnniClass(), Listener {
                     if (state.stamina < 1) {
                         player.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS,60,10))
                         player.addPotionEffect(PotionEffect(PotionEffectType.NAUSEA,60,1))
+                        player.world.playSound(player.location, Sound.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR,1f,1f)
                         player.setCooldown(THE_SHIELD_COOLDOWN_GROUP,THE_SHIELD_COOLDOWN)
                     }
                 }
@@ -156,6 +159,7 @@ object TankClass: AnniClass(), Listener {
             if (states[player]?.hasDoubleDamage == true) {
                 event.damage *= 2
                 states[player]?.hasDoubleDamage = false
+                damager.world.playSound(damager.location, Sound.ENTITY_ENDER_DRAGON_AMBIENT,1f,1f)
             }
         }
     }

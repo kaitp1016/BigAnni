@@ -125,6 +125,7 @@ object VampireClass: AnniClass(), Listener {
             val chance = if (world.isDayTime) 15 else 30
             if (Random.nextInt(100) < chance) {
                 attacker.heal(1.0)
+                attacker.world.playSound(attacker.location, Sound.ENTITY_ZOMBIE_VILLAGER_CURE,1f,1f)
             }
         }
     }
