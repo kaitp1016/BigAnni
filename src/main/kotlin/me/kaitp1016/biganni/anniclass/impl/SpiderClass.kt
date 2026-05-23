@@ -41,7 +41,7 @@ object SpiderClass: AnniClass(), Listener {
     override val name = "Spider"
     override val shortName = "SPI"
     override val description = arrayOf(
-        "ツタを周囲の壁に設置することできる。",
+        "ツタを周囲の壁に設置することができる。",
         "アビリティを使用すると蜘蛛の巣を投げることできる。",
     )
 

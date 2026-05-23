@@ -30,7 +30,7 @@ object WarriorClass: AnniClass(), Listener {
     override val shortName = "WAR"
     override val description = arrayOf(
         "この職業の時は常に攻撃力が増える。",
-        "アビリティを追加することで追加で攻撃力が増え、移動速度が増える。",
+        "アビリティを使用すると追加で攻撃力が増え、移動速度が増える。",
     )
 
     const val FRENZY_ITEM_ID = "warrior_frenzy"

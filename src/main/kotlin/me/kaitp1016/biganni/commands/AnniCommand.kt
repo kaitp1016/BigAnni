@@ -13,6 +13,7 @@ import io.papermc.paper.command.brigadier.argument.ArgumentTypes
 import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver
 import me.kaitp1016.biganni.config.Config
 import me.kaitp1016.biganni.features.DelayingBlock
+import me.kaitp1016.biganni.features.TeamDoor
 import me.kaitp1016.biganni.game.boss.BossManager
 import me.kaitp1016.biganni.game.Game
 import me.kaitp1016.biganni.packetgui.impl.AnniClassSelector
@@ -70,6 +71,9 @@ object AnniCommand {
             return@executes 1
         }).then(Commands.literal("givedelayblock").executes {
             (it.source.sender as Player).give(DelayingBlock.createItem())
+            return@executes 1
+        }).then(Commands.literal("giveteamdoor").executes {
+            (it.source.sender as Player).give(TeamDoor.createItem())
             return@executes 1
         }).then(Commands.literal("givebosbuff").executes {
             (it.source.sender as Player).give(BossManager.createBossBuffItem())

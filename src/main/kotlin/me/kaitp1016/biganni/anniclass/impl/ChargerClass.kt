@@ -27,7 +27,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
 object ChargerClass: AnniClass(), Listener {
-    override val icon = Items.NETHERITE_SWORD
+    override val icon = Items.WIND_CHARGE
     override val name = "Charger"
     override val shortName = "CHA"
     override val isUnique = true

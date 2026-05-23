@@ -34,7 +34,7 @@ object VampireClass: AnniClass(), Listener {
         "この職業の時は常に攻撃力が増える。",
         "敵を殴ることで確率で体力を回復する。",
         "Blood Senseを使用することで、周囲の敵を発光させる。",
-        "Insidisious Dispatchを使用することで、自身に背を向けてる敵にテレポートできる。"
+        "Insidisious Dispatchを使用すると、自身に背を向けてる敵にテレポートできる。"
     )
 
     const val BLOOD_SENSE_ITEM_ID = "vampire_blood_sense"

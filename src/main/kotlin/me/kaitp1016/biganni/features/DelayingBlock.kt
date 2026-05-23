@@ -26,7 +26,6 @@ object DelayingBlock: Listener {
     const val DELAY_EFFECT_DISTANCE = 5
     const val DELAY_PLACE_DISTANCE = 10
 
-    // IntはTeamColor
     val delayingBlocks = mutableMapOf<ServerLevel, HashMap<BlockPos, ServerPlayer>>()
 
     @EventHandler(priority = EventPriority.HIGH)

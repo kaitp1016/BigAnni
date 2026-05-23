@@ -218,6 +218,8 @@ object Game: Listener {
         if (attackSpeed?.getModifier(ATTACK_SPEED_MODIFIER) == null) {
             attackSpeed?.addModifier(AttributeModifier(ATTACK_SPEED_MODIFIER,100000.0, AttributeModifier.Operation.ADD_NUMBER))
         }
+
+        attackSpeed?.baseValue = 4.0
     }
 
     @EventHandler
