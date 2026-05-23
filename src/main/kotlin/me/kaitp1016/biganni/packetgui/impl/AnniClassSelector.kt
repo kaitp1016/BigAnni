@@ -25,7 +25,7 @@ class AnniClassSelector: ChestPacketGui {
     val classes: List<AnniClass>
 
     constructor(player: ServerPlayer,parent: AbstractPacketGui? = null): super(player,45) {
-        this.classes = AnniClasses.ALL_CLASSES.filter { !it.isUnique }.sortedBy { it.name } + AnniClasses.ALL_CLASSES.filter { it.isUnique }
+        this.classes = AnniClasses.ALL_CLASSES.filter { !it.isUnique }.sortedBy { it.name } + AnniClasses.ALL_CLASSES.filter { it.isUnique }.sortedBy { it.name }
 
         repeat(size) {
             items[it] = ItemStack(Items.GRAY_STAINED_GLASS_PANE).apply {

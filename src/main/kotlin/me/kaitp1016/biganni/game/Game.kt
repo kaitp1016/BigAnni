@@ -41,6 +41,7 @@ import net.kyori.adventure.text.Component as BukkitComponent
 
 object Game: Listener {
     const val MAX_PHASE = 5
+    const val BLAZE_POWDER_USABLE_PHASE = 4
     val ATTACK_SPEED_MODIFIER = NamespacedKey(plugin,"anni_attack_speed_modifier")
 
     val teams = mutableListOf<AnniTeam>()
@@ -242,7 +243,7 @@ object Game: Listener {
     @EventHandler
     fun onClick(event: InventoryClickEvent) {
         val item = event.currentItem ?: return
-        if (isStarted && phase < 4 && item.type == Material.BLAZE_POWDER && !item.isAnniItem()) {
+        if (isStarted && phase < BLAZE_POWDER_USABLE_PHASE && item.type == Material.BLAZE_POWDER && !item.isAnniItem()) {
             event.isCancelled = true
             event.whoClicked.sendMessage("このアイテムはPhase 4まで使用できません!")
         }

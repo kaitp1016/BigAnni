@@ -31,7 +31,7 @@ import kotlin.math.min
 object BerserkerClass: AnniClass(), Listener {
     override val name = "Berserker"
     override val shortName = "BER"
-    override val icon = Items.NETHERITE_INGOT
+    override val icon = Items.CHAINMAIL_CHESTPLATE
     override val description = arrayOf(
         "プレイヤーを殺すごとに体力が増え、上限がある。",
         "アビリティを使用すると移動速度が上昇し、一部の効果を受けなくなる。",

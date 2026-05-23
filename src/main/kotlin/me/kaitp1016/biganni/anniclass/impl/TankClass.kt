@@ -22,6 +22,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
@@ -48,9 +49,9 @@ object TankClass: AnniClass(), Listener {
 
     const val MAX_STAMINA = 30
 
-    override fun getDefaultItems(player: Player): MutableList<ItemStack> {
-        return super.getDefaultItems(player).also {
-            it.add(ItemStack(Material.SHIELD).apply {
+    override fun getDefaultArmors(player: Player): MutableMap<EquipmentSlot, ItemStack> {
+        return super.getDefaultArmors(player).apply {
+            this[EquipmentSlot.OFF_HAND] = ItemStack(Material.SHIELD).apply {
                 uniqueClassItem()
                 soulbound()
                 setAnniItem(THE_SHIELD_ID)
@@ -62,8 +63,12 @@ object TankClass: AnniClass(), Listener {
                 editMeta {
                     it.itemName(Component.text("The Shield").color(NamedTextColor.GOLD))
                 }
-            })
+            }
+        }
+    }
 
+    override fun getDefaultItems(player: Player): MutableList<ItemStack> {
+        return super.getDefaultItems(player).also {
             it.add(ItemStack(Material.TURTLE_SCUTE).apply {
                 uniqueClassItem()
                 soulbound()

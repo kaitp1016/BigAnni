@@ -50,6 +50,10 @@ object TeamDoor: Listener {
             return
         }
 
+        event.isCancelled = true
+        item.amount--
+        event.hand
+
         val doorBlock = getTeamDoorBlock(player)
 
         Scheduler.scheduleTask(0) {
@@ -75,7 +79,7 @@ object TeamDoor: Listener {
         val direction = mcPlayer.position().subtract(pos.center).multiply(1.0, 0.0, 1.0).normalize()
         val isX = abs(direction.x) > abs(direction.z)
         val location = to.add(if (isX) direction.x * -1.5 else 0.0, 0.0, if (isX) 0.0 else direction.z * -1.5)
-        if (!location.block.isEmpty || !location.clone().add(0.0, 1.0, 0.0).block.isEmpty) return
+        if (!location.block.isPassable || !location.clone().add(0.0, 1.0, 0.0).block.isPassable) return
 
         player.teleport(location.toCenterLocation().add(0.0,-0.5,0.0))
         player.world.playSound(player.location, Sound.ENTITY_CHICKEN_EGG, 1f, 0f)
@@ -94,13 +98,7 @@ object TeamDoor: Listener {
 
             val miningBlock = blocksInLevel[pos]
             if (miningBlock != null) {
-                if (miningBlock != player && miningBlock.teamColor == player.teamColor) {
-                    event.isCancelled = true
-                    return
-                }
-
                 blocksInLevel.remove(pos)
-                event.isCancelled = true
 
                 val level = player.level()
                 level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState())
@@ -124,7 +122,7 @@ object TeamDoor: Listener {
         val miningBlock = blocksInLevel[pos] ?: blocksInLevel[pos.offset(0,-1,0)]
         if (miningBlock != null) {
             val player = event.player
-            player.addPotionEffect(PotionEffect(PotionEffectType.MINING_FATIGUE,200,19))
+            player.addPotionEffect(PotionEffect(PotionEffectType.MINING_FATIGUE,120,19))
             return
         }
     }
