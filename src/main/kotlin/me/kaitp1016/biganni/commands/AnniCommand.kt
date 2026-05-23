@@ -17,8 +17,8 @@ import me.kaitp1016.biganni.features.TeamDoor
 import me.kaitp1016.biganni.game.boss.BossManager
 import me.kaitp1016.biganni.game.Game
 import me.kaitp1016.biganni.packetgui.impl.AnniClassSelector
+import me.kaitp1016.biganni.packetgui.impl.WeaeponShopGui
 import me.kaitp1016.biganni.packetgui.impl.BrewingShopGui
-import me.kaitp1016.biganni.packetgui.impl.WeaponShopGui
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.minecraft.commands.SharedSuggestionProvider
 import org.bukkit.entity.Player
@@ -95,11 +95,11 @@ object AnniCommand {
             }
 
             return@executes 1
-        }.suggests(MapSuggestion))).then(Commands.literal("openbrewingshop").executes {
-            BrewingShopGui((it.source.sender as Player).toMC()).open()
+        }.suggests(MapSuggestion))).then(Commands.literal("openweaponshop").executes {
+            WeaeponShopGui((it.source.sender as Player).toMC()).open()
             return@executes 1
-        }).then(Commands.literal("openweaponshop").executes {
-            WeaponShopGui((it.source.sender as Player).toMC()).open()
+        }).then(Commands.literal("openbrewingshop").executes {
+            BrewingShopGui((it.source.sender as Player).toMC()).open()
             return@executes 1
         })
     }

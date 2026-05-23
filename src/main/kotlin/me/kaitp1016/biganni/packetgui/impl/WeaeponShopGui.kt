@@ -1,9 +1,11 @@
 package me.kaitp1016.biganni.packetgui.impl
 
-import me.kaitp1016.biganni.game.Game
+import me.kaitp1016.biganni.features.DelayingBlock
+import me.kaitp1016.biganni.features.TeamDoor
 import me.kaitp1016.biganni.mc
 import me.kaitp1016.biganni.packetgui.AbstractPacketGui
 import me.kaitp1016.biganni.packetgui.ChestPacketGui
+import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
@@ -15,26 +17,33 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.ItemLore
 import org.bukkit.Sound
 
-class WeaponShopGui: ChestPacketGui {
+class WeaeponShopGui: ChestPacketGui {
     override val displayName = Component.literal("Weapon Shop").withColor(0xFFAA00)
     override val name = "Weapon Shop"
 
     val shopItems = mapOf(
-        10 to (ItemStack(Items.BREWING_STAND) to 10),
-        12 to (ItemStack(Items.NETHER_WART) to 5),
-        12 to (ItemStack(Items.REDSTONE) to 3),
-        13 to (ItemStack(Items.FERMENTED_SPIDER_EYE) to 10),
-        14 to (ItemStack(Items.MAGMA_CREAM) to 8),
-        15 to (ItemStack(Items.SUGAR) to 10),
+        10 to (ItemStack(Items.IRON_HELMET) to 3),
+        19 to (ItemStack(Items.IRON_CHESTPLATE) to 5),
+        28 to (ItemStack(Items.IRON_LEGGINGS) to 5),
+        37 to (ItemStack(Items.IRON_BOOTS) to 3),
 
-        19 to (ItemStack(Items.GLASS_BOTTLE).also { it.count = 3 } to 1),
-        21 to (ItemStack(Items.GLISTERING_MELON_SLICE) to 8),
-        22 to (ItemStack(Items.GHAST_TEAR) to 20),
-        23 to (ItemStack(Items.GOLDEN_CARROT) to 10),
-        24 to (ItemStack(Items.SPIDER_EYE) to 4),
-    )
+        12 to (ItemStack(Items.IRON_SWORD) to 1),
+        30 to (ItemStack(Items.BOW) to 1),
+        39 to (ItemStack(Items.ARROW).also { it.count = 16 } to 1),
 
-    constructor(player: ServerPlayer,parent: AbstractPacketGui? = null): super(player,45) {
+        14 to (ItemStack(Items.COOKED_BEEF).also { it.count = 5 } to 10),
+        15 to (ItemStack(Items.CAKE) to 1),
+        16 to (ItemStack(Items.COBWEB) to 3),
+        23 to (ItemStack(Items.EXPERIENCE_BOTTLE).also { it.count = 3 } to 3),
+        24 to (ItemStack(Items.ENDER_PEARL) to 16),
+        25 to (ItemStack(Items.MILK_BUCKET) to 3),
+
+        41 to (TeamDoor.createItem().toMC()!! to 16),
+        42 to (ItemStack(Items.SPONGE) to 5),
+        43 to (DelayingBlock.createItem().toMC()!! to 16),
+        )
+
+    constructor(player: ServerPlayer,parent: AbstractPacketGui? = null): super(player,54) {
         repeat(size) {
             items[it] = ItemStack(Items.GRAY_STAINED_GLASS_PANE).apply {
                 this.set(DataComponents.ITEM_NAME, Component.empty())
@@ -46,12 +55,6 @@ class WeaponShopGui: ChestPacketGui {
                 set(DataComponents.LORE, ItemLore(listOf(Component.literal("§bCosts ${it.value.second} §6Gold Ingot").withStyle(Style.EMPTY.withItalic(false)).withColor(CommonColors.WHITE))))
             })
         }
-
-        if (!Game.isStarted || Game.phase >= Game.BLAZE_POWDER_USABLE_PHASE) {
-            setItem(BLAZE_POWDER_SLOT,ItemStack(Items.BLAZE_POWDER).apply {
-                set(DataComponents.LORE, ItemLore(listOf(Component.literal("§bCosts ${BLAZE_POWDER_COST} §6Gold Ingot").withStyle(Style.EMPTY.withItalic(false)).withColor(CommonColors.WHITE))))
-            })
-        }
     }
 
     override fun onClick(packet: ServerboundContainerClickPacket) {
@@ -59,13 +62,8 @@ class WeaponShopGui: ChestPacketGui {
 
         mc.execute {
             val slot = packet.slotNum.toInt()
-            if (slot == BLAZE_POWDER_SLOT) {
-                buy(ItemStack(Items.BLAZE_POWDER), BLAZE_POWDER_COST)
-                return@execute
-            }
-
             val item = shopItems[slot]
-            if (item != null) {
+            if (item != null){
                 buy(item.first, item.second)
             }
             return@execute
@@ -83,14 +81,11 @@ class WeaponShopGui: ChestPacketGui {
         }
 
         if (price > 0) return
-        player.bukkitEntity.give(item.bukkitStack)
+        player.bukkitEntity.give(item.copy().bukkitStack)
         player.bukkitEntity.playSound(player.bukkitEntity, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1f,1f)
 
-        player.closeContainer()
-    }
-
-    companion object {
-        const val BLAZE_POWDER_SLOT = 25
-        const val BLAZE_POWDER_COST = 32
+        repeat(36) {
+            player.connection.send(player.inventory.createInventoryUpdatePacket(it))
+        }
     }
 }
