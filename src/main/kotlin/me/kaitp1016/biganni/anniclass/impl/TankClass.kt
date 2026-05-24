@@ -150,6 +150,9 @@ object TankClass: AnniClass(), Listener {
                         player.world.playSound(player.location, Sound.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR,1f,1f)
                         player.setCooldown(THE_SHIELD_COOLDOWN_GROUP,THE_SHIELD_COOLDOWN)
                     }
+                    else {
+                        player.world.playSound(player.location, Sound.ITEM_SHIELD_BLOCK,1f,1f)
+                    }
                 }
             }
         }

@@ -160,7 +160,7 @@ object TransporterClass: AnniClass(), Listener {
                 destroy(portal)
             }
             else {
-                if (!canUse(world,pos) || clickedBlock.type == Material .NETHER_QUARTZ_ORE) {
+                if (!canUse(world,pos) || !clickedBlock.blockData.toMC().occlusionShape.`moonrise$isFullBlock`() || clickedBlock.blockData.toMC().hasBlockEntity() || clickedBlock.type == Material .NETHER_QUARTZ_ORE) {
                     player.sendMessage(Component.text("ここにはおけません!").color(NamedTextColor.RED))
                     return
                 }
@@ -181,7 +181,7 @@ object TransporterClass: AnniClass(), Listener {
             }
         }
 
-        if (!canUse(world,pos) || clickedBlock.type == Material.NETHER_QUARTZ_ORE) {
+        if (!canUse(world,pos) || !clickedBlock.blockData.toMC().occlusionShape.`moonrise$isFullBlock`() || clickedBlock.blockData.toMC().hasBlockEntity() || clickedBlock.type == Material .NETHER_QUARTZ_ORE) {
             player.sendMessage(Component.text("ここにはおけません!").color(NamedTextColor.RED))
             return
         }

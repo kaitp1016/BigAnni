@@ -21,6 +21,7 @@ import net.minecraft.world.level.Level
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
+import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
@@ -163,9 +164,12 @@ object Game: Listener {
         val pitch = Random.nextFloat() * 0.8f
         val actionbar = player.teamDisplayName().append(BukkitComponent.text(" damaged the").color(NamedTextColor.GRAY).append(BukkitComponent.text(" ${team.color}${team.name} team's nexus!")))
 
+        val world = block.world
+        val blockLocation = block.location
+
         Bukkit.getOnlinePlayers().forEach {
             if (team.health < 1) it.playSound(it, Sound.ENTITY_GENERIC_EXPLODE, 2f, 0f)
-            else if (block.world == it.world && block.location.distance(it.location) < 30) it.playSound(it, Sound.BLOCK_ANVIL_PLACE, 2f, pitch)
+            else if (world == it.world && blockLocation.toVector().distance(it.location.toVector()) < 30) it.playSound(it, Sound.BLOCK_ANVIL_PLACE, 2f, pitch)
             else if (it.toMC().team?.name?.equals(team.name, ignoreCase = true) == true) it.playSound(it, Sound.BLOCK_NOTE_BLOCK_HARP, 2f, 2f)
 
             it.sendActionBar(actionbar)
@@ -181,6 +185,18 @@ object Game: Listener {
             Scheduler.scheduleTask(8) {
                 block.world.setBlockData(block.location, Material.END_STONE.createBlockData())
             }
+        }
+
+        val particleLocation = blockLocation.toCenterLocation()
+
+        world.spawnParticle(Particle.LAVA,particleLocation,75,2.0,2.0,2.0)
+
+        repeat(10) {
+            world.spawnParticle(Particle.FIREWORK,particleLocation,0, Random.nextDouble(-1.5,1.5),Random.nextDouble(-1.5,1.5),Random.nextDouble(-1.5,1.5))
+        }
+
+        repeat(6) {
+            world.spawnParticle(Particle.FIREWORK,particleLocation,0, Random.nextDouble(-0.5,0.5),Random.nextDouble(-0.5,0.5),Random.nextDouble(-0.5,0.5))
         }
 
         HandymanClass.onMineNexus(player)
