@@ -84,6 +84,7 @@ object RobinHoodClass: AnniClass(), Listener {
     }
 
     override fun onUnselect(player: Player) {
+        horses[player]?.discard()
         horses.remove(player)
         super.onUnselect(player)
     }

@@ -88,7 +88,7 @@ object ImmobilizerClass: AnniClass(), Listener {
                 target.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS, effectTime, 10))
                 target.addPotionEffect(PotionEffect(PotionEffectType.MINING_FATIGUE, effectTime, 1))
                 target.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION, effectTime, 1))
-                target.addPotionEffect(PotionEffect(PotionEffectType.WEAKNESS, effectTime, 99))
+                target.addPotionEffect(PotionEffect(PotionEffectType.WEAKNESS, effectTime, 10))
                 target.getAttribute(Attribute.JUMP_STRENGTH)?.addTransientModifier(AttributeModifier(IMMOBILIZE_JUMP_REDUCE_KEY, -10.0, AttributeModifier.Operation.ADD_NUMBER))
                 FallDamageResistance.add(target, effectTime)
 

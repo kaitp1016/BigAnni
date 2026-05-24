@@ -30,7 +30,7 @@ import org.bukkit.inventory.ItemStack
 import kotlin.random.Random
 
 object SniperClass: AnniClass(), Listener {
-    override val name = "Snipper"
+    override val name = "Sniper"
     override val shortName = "SNI"
     override val icon = Items.ARROW
     override val description = arrayOf(

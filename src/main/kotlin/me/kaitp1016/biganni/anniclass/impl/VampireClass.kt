@@ -173,6 +173,10 @@ object VampireClass: AnniClass(), Listener {
             return true
         }
 
+        override fun isInvisibleTo(player: net.minecraft.world.entity.player.Player): Boolean {
+            return true
+        }
+
         override fun shouldBeSaved(): Boolean {
             return false
         }
