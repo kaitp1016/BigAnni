@@ -47,7 +47,7 @@ class BrewingShopGui: ChestPacketGui {
             })
         }
 
-        if (!Game.isStarted || Game.phase >= Game.BLAZE_POWDER_USABLE_PHASE) {
+        if (Game.canUseBlazePowder()) {
             setItem(BLAZE_POWDER_SLOT,ItemStack(Items.BLAZE_POWDER).apply {
                 set(DataComponents.LORE, ItemLore(listOf(Component.literal("§bCosts ${BLAZE_POWDER_COST} §6Gold Ingot").withStyle(Style.EMPTY.withItalic(false)).withColor(CommonColors.WHITE))))
             })
@@ -59,7 +59,7 @@ class BrewingShopGui: ChestPacketGui {
 
         mc.execute {
             val slot = packet.slotNum.toInt()
-            if (slot == BLAZE_POWDER_SLOT && (!Game.isStarted || Game.phase >= Game.BLAZE_POWDER_USABLE_PHASE)) {
+            if (slot == BLAZE_POWDER_SLOT && Game.canUseBlazePowder()) {
                 buy(ItemStack(Items.BLAZE_POWDER), BLAZE_POWDER_COST)
                 return@execute
             }

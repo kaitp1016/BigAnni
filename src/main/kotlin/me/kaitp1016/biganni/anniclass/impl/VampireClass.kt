@@ -11,6 +11,10 @@ import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.ambient.Bat
 import net.minecraft.world.item.Items
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -19,6 +23,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
+import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
@@ -127,6 +132,49 @@ object VampireClass: AnniClass(), Listener {
                 attacker.heal(1.0)
                 attacker.world.playSound(attacker.location, Sound.ENTITY_ZOMBIE_VILLAGER_CURE,1f,1f)
             }
+        }
+    }
+
+    @EventHandler
+    fun onDeath(event: PlayerDeathEvent) {
+        val player = event.player
+        if (!isSelected(player)) return
+
+        val mcPlayer = player.toMC()
+        val level = mcPlayer.level()
+        level.addFreshEntity(VampireBat(level,mcPlayer).apply {
+            setPos(player.x, player.y, player.z)
+        })
+    }
+
+    class VampireBat: Bat {
+        val player: ServerPlayer
+        var tick = 0
+
+        constructor(level: ServerLevel,player: ServerPlayer):super(EntityType.BAT,level) {
+            this.player = player
+            this.customName = player.name
+        }
+
+        override fun tick() {
+            super.tick()
+
+            tick++
+            if (tick > 200) {
+                discard()
+            }
+        }
+
+        override fun isAffectedByPotions(): Boolean {
+            return false
+        }
+
+        override fun isInvulnerable(): Boolean {
+            return true
+        }
+
+        override fun shouldBeSaved(): Boolean {
+            return false
         }
     }
 }

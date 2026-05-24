@@ -76,7 +76,7 @@ object AcrobatClass: AnniClass(), Listener {
             it.tick--
             if (it.tick < 1) {
                 it.player.allowFlight = true
-                it.player.playSound(it.player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1f,2f)
+                it.player.playSound(it.player, Sound.ENTITY_PLAYER_LEVELUP,1f,2f)
                 return@removeAll true
             }
             return@removeAll false

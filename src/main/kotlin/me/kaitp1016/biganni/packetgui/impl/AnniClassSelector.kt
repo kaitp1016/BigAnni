@@ -52,7 +52,7 @@ class AnniClassSelector: ChestPacketGui {
 
         mc.execute {
             val player = player.bukkitEntity
-            if (Game.map.blockedClasses.any { anniClass.name == it }) {
+            if (Game.map.blockedClasses.any { anniClass.name.equals(it, true) }) {
                 player.sendMessage("このクラスは使用できません!")
                 update(false)
                 return@execute

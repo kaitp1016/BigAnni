@@ -28,6 +28,8 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 
 object NeptuneClass: AnniClass(), Listener {
     override val icon = Items.TRIDENT
@@ -82,10 +84,18 @@ object NeptuneClass: AnniClass(), Listener {
     val enabledPlayers = mutableListOf<Player>()
     val frozenBlocks = mutableListOf<FrozenBlock>()
 
-    override fun onUnselect(player: Player) {
-        super.onUnselect(player)
-        enabledPlayers.remove(player)
+    override fun onSelect(player: Player) {
+        player.addPotionEffect(PotionEffect(PotionEffectType.WATER_BREATHING, PotionEffect.INFINITE_DURATION,0))
+        super.onSelect(player)
     }
+
+    override fun onUnselect(player: Player) {
+        player.removePotionEffect(PotionEffectType.WATER_BREATHING)
+        enabledPlayers.remove(player)
+
+        super.onUnselect(player)
+    }
+
 
     @EventHandler
     fun onInteract(event: PlayerInteractEvent) {

@@ -43,8 +43,8 @@ object FarmerClass: AnniClass(), Listener {
     override val description = arrayOf(
         "この職業で小麦を収穫すると自動で植え、成長速度が加速する。",
         "また、小麦を収穫するとレアなアイテムがドロップするようになる。",
-        "Feastを使用すると自身と周りにいる味方の満腹度が回復する。",
-        "Famineを使用すると周りにいる敵の満腹度が減少する。",
+        "Feastを使用すると自身と周りにいる味方の満腹度を回復する。",
+        "Famineを使用すると周りにいる敵の満腹度を減少させる。",
     )
 
     const val FEAST_ITEM_ID = "farmer_feast"

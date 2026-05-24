@@ -76,12 +76,12 @@ abstract class AnniClass {
     open fun getDefaultItems(player: Player): MutableList<ItemStack> {
         return mutableListOf(
             ItemStack(Material.WOODEN_SWORD).soulbound(),
-            ItemStack(Material.WOODEN_AXE).soulbound().apply {
+            ItemStack(Material.WOODEN_PICKAXE).soulbound(),
+                ItemStack(Material.WOODEN_AXE).soulbound().apply {
                 this.editMeta {
                     it.addAttributeModifier(Attribute.ATTACK_DAMAGE, AttributeModifier(AXE_ATTRIBUTE_MODIFIER_KEY,3.5, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.MAINHAND))
                 }
             },
-            ItemStack(Material.WOODEN_PICKAXE).soulbound(),
         )
     }
 

@@ -14,6 +14,7 @@ import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
@@ -107,10 +108,10 @@ object RespawnBlocks: Listener {
         event.isCancelled = true
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     fun onPlace(event: BlockPlaceEvent) {
         val player = event.player
-        if (player.gameMode == GameMode.CREATIVE) return
+        if (event.isCancelled || player.gameMode == GameMode.CREATIVE) return
 
         val block = event.block
         if (respawnableBlocks.contains(block.type)) {

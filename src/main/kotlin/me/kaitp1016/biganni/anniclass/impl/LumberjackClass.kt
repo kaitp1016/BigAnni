@@ -36,7 +36,7 @@ object LumberjackClass: AnniClass(), Listener {
     override val description = arrayOf(
         "斧の近接ダメージが常に増える。",
         "原木を掘った時に追加で原木を入手できる。",
-        "アビリティの効果中に斧で殴ることで敵の防具の耐久値を減らすことができる。"
+        "アビリティの効果中に斧で殴ることで敵の防具の耐久値を減らす。"
     )
 
     const val BRUTE_FORCE_ITEM_ID = "lumberjack_brute_force"

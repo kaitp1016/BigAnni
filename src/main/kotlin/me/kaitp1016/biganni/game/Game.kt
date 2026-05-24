@@ -259,7 +259,7 @@ object Game: Listener {
     @EventHandler
     fun onClick(event: InventoryClickEvent) {
         val item = event.currentItem ?: return
-        if (isStarted && phase < BLAZE_POWDER_USABLE_PHASE && item.type == Material.BLAZE_POWDER && !item.isAnniItem()) {
+        if (item.type == Material.BLAZE_POWDER && !canUseBlazePowder() && !item.isAnniItem()) {
             event.isCancelled = true
             event.whoClicked.sendMessage("このアイテムはPhase 4まで使用できません!")
         }
@@ -332,5 +332,9 @@ object Game: Listener {
     fun getTeam(player: Player): AnniTeam? {
         val teamName = player.toMC().team?.name
         return teams.find { it.name.equals(teamName,true) }
+    }
+
+    fun canUseBlazePowder(): Boolean {
+        return !isStarted || phase >= BLAZE_POWDER_USABLE_PHASE
     }
 }

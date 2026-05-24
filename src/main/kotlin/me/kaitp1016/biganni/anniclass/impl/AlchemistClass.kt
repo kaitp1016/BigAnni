@@ -5,6 +5,7 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.UseCooldown
 import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
+import me.kaitp1016.biganni.game.Game
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
@@ -225,6 +226,8 @@ object AlchemistClass: AnniClass(), Listener {
 
         player.openInventory(Bukkit.createInventory(player,27,Component.text("Alchemist's Tome")).apply {
             tomeItems.forEach { item ->
+                if (item.second == Material.BLAZE_POWDER && !Game.canUseBlazePowder()) return@forEach
+
                 if (Random.nextInt(0,100) < item.first) setItem(Random.nextInt(0,26),ItemStack(item.second))
             }
         })
