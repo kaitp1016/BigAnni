@@ -68,7 +68,7 @@ object AnniCommand {
             it.source.sender.sendMessage("$teamName のネクサスの体力を $health にしました!")
 
             return@executes 1
-        }))) .then(Commands.literal("reset").executes {
+        }))).then(Commands.literal("reset").executes {
             Game.reset()
             return@executes 1
         }).then(Commands.literal("givedelayblock").executes {
@@ -100,6 +100,14 @@ object AnniCommand {
             return@executes 1
         }).then(Commands.literal("openbrewingshop").executes {
             BrewingShopGui((it.source.executor as Player).toMC()).open()
+            return@executes 1
+        }).then(Commands.literal("resetcooldowns").executes {
+            val player = (it.source.executor as Player).toMC()
+            val cooldowns = player.cooldowns
+
+            cooldowns.cooldowns.toMutableMap().forEach {
+                cooldowns.removeCooldown(it.key)
+            }
             return@executes 1
         })
     }

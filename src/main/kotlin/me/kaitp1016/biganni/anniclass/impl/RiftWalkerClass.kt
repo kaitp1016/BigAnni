@@ -35,8 +35,8 @@ object RiftWalkerClass: AnniClass(), Listener {
     override val shortName = "RIF"
     override val icon = Items.BLAZE_ROD
     override val description = arrayOf(
-        "アビリティを使用することで、指定した味方にテレポートできる。",
-        "周囲にいたスニークしている味方もテレポートできる。",
+        "アビリティを使用することで、指定した場所にテレポートできる。",
+        "周囲にいたスニークしている味方も同時にテレポートできる。",
     )
 
     const val OPEN_RIFT_ITEM_ID = "riftwalker_open_rift"
@@ -162,6 +162,7 @@ object RiftWalkerClass: AnniClass(), Listener {
         override fun getIcon(): net.minecraft.world.item.ItemStack {
             return net.minecraft.world.item.ItemStack(Items.RED_BED).apply {
                 set(DataComponents.ITEM_NAME, net.minecraft.network.chat.Component.literal("${team.color}Your Base"))
+                set(DataComponents.LORE, ItemLore(listOf(net.minecraft.network.chat.Component.literal("リフトする!").withStyle(Style.EMPTY.withItalic(false)))))
             }
         }
 
@@ -191,7 +192,8 @@ object RiftWalkerClass: AnniClass(), Listener {
                 else -> Items.WHITE_WOOL
             }
             return net.minecraft.world.item.ItemStack(item).apply {
-                set(DataComponents.ITEM_NAME, net.minecraft.network.chat.Component.literal("§6Team ${team.color}${team.name}"))
+                set(DataComponents.ITEM_NAME, net.minecraft.network.chat.Component.literal("${team.color}${team.name} Team"))
+                set(DataComponents.LORE, ItemLore(listOf(net.minecraft.network.chat.Component.literal("リフトする!").withStyle(Style.EMPTY.withItalic(false)))))
             }
         }
 
