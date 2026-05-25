@@ -82,6 +82,13 @@ object DefenderClass: AnniClass(), Listener {
         }
     }
 
+    val alerts = mutableMapOf<Player, AlertItem>()
+
+    override fun onUnselect(player: Player) {
+        alerts[player]?.discard()
+        super.onUnselect(player)
+    }
+
     @EventHandler
     fun onInteract(event: PlayerInteractEvent) {
         if (event.action != Action.RIGHT_CLICK_BLOCK && event.action != Action.RIGHT_CLICK_AIR) return
@@ -95,8 +102,11 @@ object DefenderClass: AnniClass(), Listener {
         if (item.getAnniId() == ALERT_ITEM_ID) {
             val level = player.world.toMC()
 
+            alerts[player]?.discard()
+
             val alertItem = AlertItem(player.toMC(),level,player.x,player.y,player.z)
             level.addFreshEntity(alertItem)
+            alerts[player] = alertItem
 
             player.setCooldown(ALERT_COOLDOWN_GROUP, ALERT_COOLDOWN)
         }

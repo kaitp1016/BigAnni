@@ -158,8 +158,8 @@ object WizardClass: AnniClass(), Listener {
             val bukkit = bukkitEntity
 
             spell.particle.clone()
-                .count(100)
-                .offset(5.0,5.0,5.0)
+                .count(50)
+                .offset(2.5,2.5,2.5)
                 .location(bukkit.location)
                 .receivers(32,true)
                 .spawn()

@@ -1,5 +1,7 @@
 package me.kaitp1016.biganni.features
 
+import me.kaitp1016.biganni.anniclass.AnniClassManager.getAnniClass
+import me.kaitp1016.biganni.anniclass.AnniClasses
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
@@ -81,7 +83,8 @@ object DelayingBlock: Listener {
         if (!blocksInLevel.any { it.value.teamColor != team && it.key.distManhattan(pos) < DELAY_EFFECT_DISTANCE }) return
 
         val bukkitPlayer = player.bukkitEntity
-        player.addEffect(MobEffectInstance(MobEffects.MINING_FATIGUE,140,1))
+        val fitigueLevel = if (bukkitPlayer.getAnniClass() == AnniClasses.ENGINEER) 0 else 1
+        player.addEffect(MobEffectInstance(MobEffects.MINING_FATIGUE,140,fitigueLevel))
         bukkitPlayer.world.playSound(bukkitPlayer, Sound.ENTITY_ELDER_GUARDIAN_CURSE,1f,2f)
     }
 

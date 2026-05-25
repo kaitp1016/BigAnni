@@ -86,10 +86,8 @@ class BrewingShopGui: ChestPacketGui {
         player.bukkitEntity.give(item.bukkitStack)
         player.bukkitEntity.playSound(player.bukkitEntity, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1f,1f)
 
-        repeat(36) {
-            player.connection.send(player.inventory.createInventoryUpdatePacket(it))
-        }
-    }
+        player.inventoryMenu.sendAllDataToRemote()
+   }
 
     companion object {
         const val BLAZE_POWDER_SLOT = 25
