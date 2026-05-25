@@ -7,6 +7,7 @@ import me.kaitp1016.biganni.features.*
 import me.kaitp1016.biganni.game.Game
 import me.kaitp1016.biganni.game.boss.BossBuffItems
 import me.kaitp1016.biganni.game.boss.BossManager
+import me.kaitp1016.biganni.game.boss.FinalBossFight
 import me.kaitp1016.biganni.modifiers.*
 import me.kaitp1016.biganni.packetgui.PacketGuiManager
 import me.kaitp1016.biganni.utils.FallDamageResistance
@@ -46,6 +47,7 @@ class BigAnni : JavaPlugin() {
             EventManager,
             Game,
             BossManager,
+            FinalBossFight,
             BossBuffItems,
             Scheduler,
         ).forEach { plugin.server.pluginManager.registerEvents(it,plugin) }

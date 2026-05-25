@@ -8,6 +8,7 @@ import me.kaitp1016.biganni.anniclass.AnniClasses
 import me.kaitp1016.biganni.anniclass.impl.HandymanClass
 import me.kaitp1016.biganni.config.Config
 import me.kaitp1016.biganni.game.boss.BossManager
+import me.kaitp1016.biganni.game.boss.FinalBossFight
 import me.kaitp1016.biganni.mc
 import me.kaitp1016.biganni.packetgui.impl.AnniClassSelector
 import me.kaitp1016.biganni.plugin
@@ -24,6 +25,7 @@ import net.minecraft.world.level.Level
 import org.bukkit.*
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
+import org.bukkit.boss.BarColor
 import org.bukkit.damage.DamageSource
 import org.bukkit.damage.DamageType
 import org.bukkit.entity.EntityType
@@ -58,6 +60,8 @@ object Game: Listener {
 
         teams.clear()
 
+        BossBarManager.setColor(BarColor.BLUE)
+
         ScoreboardManager.reset()
         ScoreboardManager.setLine(0, Component.literal("§6apple.playit.plus"))
         ScoreboardManager.setLine(1, Component.empty())
@@ -89,13 +93,13 @@ object Game: Listener {
         }
 
         Scheduler.scheduleTask(5) {
-            getPhaseMessage(1).forEach {
-                Bukkit.broadcast(it)
-            }
+            sendPhaseMessage(1)
         }
     }
 
     fun reset() {
+        FinalBossFight.reset()
+
         isStarted = false
         phase = -1
         teams.clear()
@@ -119,9 +123,7 @@ object Game: Listener {
                 phase++
                 phaseTime = map.phaseTime
 
-                getPhaseMessage(phase).forEach {
-                    Bukkit.broadcast(it)
-                }
+                sendPhaseMessage(phase)
 
                 if (phase == 3) {
                     teams.forEach { it.spawnWitch() }
@@ -151,15 +153,15 @@ object Game: Listener {
             }
 
             BossBarManager.setTitle("Phase 5 - §c${multiplier} §fNexus Damage!")
+            BossBarManager.setProgress(0.0)
         }
         else {
             val min = phaseTime / 20 / 60
             val sec = phaseTime / 20 % 60
 
             BossBarManager.setTitle("Phase ${this.phase} - ${min}:${if (sec > 9) "$sec" else "0${sec}"}")
+            BossBarManager.setProgress(phaseTime.toDouble() / map.phaseTime)
         }
-
-        BossBarManager.onTick()
     }
 
     @EventHandler(priority = EventPriority.LOW)
@@ -226,6 +228,36 @@ object Game: Listener {
 
         val mcPlayer = player.toMC()
         mcPlayer.mainHandItem.hurtAndBreak(1, mcPlayer, EquipmentSlot.MAINHAND)
+
+        if (team.health < 1) {
+            sendDestructionMessage(team,"${getTeam(player)?.color ?: ""}${player.name}")
+
+            if (teams.count { it.health > 1 } < 2) {
+                val message = arrayOf(
+                    "119999911" to "",
+                    "190000091" to "",
+                    "900000009" to "        §6§lBoss Fight!",
+                    "909000909" to "§aIt's time to go all in if you're brave.",
+                    "909909909" to "§aBe sneaking in 30s time,",
+                    "900000009" to "§ato be teleported to the arena!",
+                    "190909091" to "",
+                    "190909091" to "",
+                    "199999991" to "",
+                ) to mapOf(
+                    '0' to TextColor.color(255, 255, 255),
+                    '1' to TextColor.color(92, 90, 90),
+                    '9' to TextColor.color(0, 0, 0),
+                )
+
+                sendPixelArtWithMessage(message)
+
+                isStarted = false
+                BossBarManager.setTitle("Game Ended.")
+                BossBarManager.setColor(BarColor.PURPLE)
+                BossBarManager.setProgress(1.0)
+                FinalBossFight.start()
+            }
+        }
     }
 
     @EventHandler
@@ -344,7 +376,7 @@ object Game: Listener {
         return "killed"
     }
 
-    private fun getPhaseMessage(phase: Int): List<BukkitComponent> {
+    private fun sendPhaseMessage(phase: Int) {
         val message = when (phase) {
             1 -> (arrayOf(
                 "113110131" to "",
@@ -437,13 +469,74 @@ object Game: Listener {
             else -> throw IllegalArgumentException()
         }
 
-        return message.first.map { line ->
+        sendPixelArtWithMessage(message)
+    }
+
+    private fun sendDestructionMessage(team: AnniTeam,destroyer: String) {
+        val message = when(team.name.lowercase()) {
+            "red" -> (arrayOf(
+                "000000000" to "",
+                "119999111" to "",
+                "229222922" to "",
+                "339333933" to "",
+                "449999444" to "${team.color}${team.name} §7team's ",
+                "559595555" to "§7Nexus has been destroyed",
+                "669669666" to "§7by $destroyer",
+                "779777977" to "",
+                "888888888" to "",
+            ) to mapOf(
+                '0' to TextColor.color(255, 245, 245),
+                '1' to TextColor.color(255, 235, 235),
+                '2' to TextColor.color(255, 225, 225),
+                '3' to TextColor.color(255, 215, 215),
+                '4' to TextColor.color(255, 205, 205),
+                '5' to TextColor.color(255, 195, 195),
+                '6' to TextColor.color(255, 185, 185),
+                '7' to TextColor.color(255, 175, 175),
+                '8' to TextColor.color(255, 165, 165),
+                '9' to TextColor.color(255, 0, 0),
+            ))
+            "blue" -> (arrayOf(
+                "000000000" to "",
+                "119999111" to "",
+                "229222922" to "",
+                "339333933" to "",
+                "449999444" to "${team.color}${team.name} §7team's ",
+                "559555955" to "§7Nexus has been destroyed",
+                "669555955" to "§7by $destroyer",
+                "779999777" to "",
+                "888888888" to "",
+            ) to mapOf(
+                '0' to TextColor.color(245, 245, 255),
+                '1' to TextColor.color(235, 235, 255),
+                '2' to TextColor.color(225, 225, 255),
+                '3' to TextColor.color(215, 215, 255),
+                '4' to TextColor.color(205, 205, 255),
+                '5' to TextColor.color(195, 195, 255),
+                '6' to TextColor.color(185, 185, 255),
+                '7' to TextColor.color(175, 175, 255),
+                '8' to TextColor.color(165, 165, 255),
+                '9' to TextColor.color(0, 0, 255),
+            ))
+            else -> {
+                Bukkit.broadcast(BukkitComponent.text("${team.color}${team.name} §7チームのネクサスは ${destroyer} §7によって破壊された!"))
+                return
+            }
+        }
+
+        sendPixelArtWithMessage(message)
+    }
+
+    fun sendPixelArtWithMessage(message: Pair<Array<Pair<String, String>>, Map<Char, TextColor>>) {
+        message.first.map { line ->
             var component = BukkitComponent.empty()
             line.first.map {
                 return@map message.second[it] ?: throw IllegalArgumentException()
             }.forEach { component = component.append(BukkitComponent.text("█").color(it)) }
 
             return@map component.append(BukkitComponent.text(" ${line.second}"))
+        }.forEach {
+            Bukkit.broadcast(it)
         }
     }
 

@@ -20,9 +20,11 @@ object BossBarManager {
         bossbar.setTitle(title)
     }
 
-    fun onTick() {
-        if (!Game.isStarted) return
+    fun setColor(color: BarColor) {
+        bossbar.color = color
+    }
 
-        bossbar.progress = Game.phaseTime.toDouble() / Game.map.phaseTime
+    fun setProgress(progress: Double) {
+        bossbar.progress = progress
     }
 }
