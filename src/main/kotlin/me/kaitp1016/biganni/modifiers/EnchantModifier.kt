@@ -1,6 +1,7 @@
 package me.kaitp1016.biganni.modifiers
 
 import me.kaitp1016.biganni.utils.Scheduler
+import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.event.EventHandler
@@ -53,7 +54,7 @@ object EnchantModifier: Listener {
     fun onEnchant(event: EnchantItemEvent) {
         if (event.isCancelled) return
 
-        if (event.expLevelCost == 30) {
+        if (event.expLevelCost == 30 && event.enchanter.gameMode != GameMode.CREATIVE) {
             Scheduler.scheduleTask(1) {
                 event.enchanter.level -= 2
             }

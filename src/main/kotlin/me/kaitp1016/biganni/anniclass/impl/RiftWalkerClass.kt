@@ -191,12 +191,12 @@ object RiftWalkerClass: AnniClass(), Listener {
                 else -> Items.WHITE_WOOL
             }
             return net.minecraft.world.item.ItemStack(item).apply {
-                set(DataComponents.ITEM_NAME, net.minecraft.network.chat.Component.literal("${team.color}${team.name} Base"))
+                set(DataComponents.ITEM_NAME, net.minecraft.network.chat.Component.literal("§6Team ${team.color}${team.name}"))
             }
         }
 
         override fun getName(): Component {
-            return Component.text("${team.color}${team.name} Base")
+            return Component.text("§6Team ${team.color}${team.name}")
         }
     }
 

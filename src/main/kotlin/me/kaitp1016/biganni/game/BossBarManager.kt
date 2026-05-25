@@ -6,7 +6,7 @@ import org.bukkit.boss.BarStyle
 import org.bukkit.entity.Player
 
 object BossBarManager {
-    val bossbar = Bukkit.createBossBar("Annihilation", BarColor.RED, BarStyle.SOLID)
+    val bossbar = Bukkit.createBossBar("Annihilation", BarColor.BLUE, BarStyle.SOLID)
 
     fun onJoin(player: Player) {
         bossbar.addPlayer(player)

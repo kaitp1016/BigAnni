@@ -3,6 +3,8 @@ package me.kaitp1016.biganni.game
 import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import io.papermc.paper.event.player.AsyncChatEvent
 import me.kaitp1016.biganni.anniclass.AnniClassManager.getAnniClass
+import me.kaitp1016.biganni.anniclass.AnniClassManager.selectAnniClass
+import me.kaitp1016.biganni.anniclass.AnniClasses
 import me.kaitp1016.biganni.anniclass.impl.HandymanClass
 import me.kaitp1016.biganni.config.Config
 import me.kaitp1016.biganni.game.boss.BossManager
@@ -13,16 +15,13 @@ import me.kaitp1016.biganni.utils.ItemUtils.isAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import me.kaitp1016.biganni.utils.Scheduler
 import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.TextColor
 import net.minecraft.network.chat.Component
 import net.minecraft.util.CommonColors
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.monster.Witch
 import net.minecraft.world.level.Level
-import org.bukkit.Bukkit
-import org.bukkit.Material
-import org.bukkit.NamespacedKey
-import org.bukkit.Particle
-import org.bukkit.Sound
+import org.bukkit.*
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.damage.DamageSource
@@ -73,8 +72,26 @@ object Game: Listener {
         ScoreboardManager.setLine(teams.size + 3, Component.literal("§6Map: §l${map.name}"))
         ScoreboardManager.setLine(teams.size + 4, Component.empty())
 
-        Bukkit.getOnlinePlayers().forEach {
-            it.kill()
+        Bukkit.getOnlinePlayers().forEach { player ->
+            player.totalExperience = 0
+            player.enchantmentSeed = Random.nextInt()
+            player.clearActivePotionEffects()
+
+            if (player.getAnniClass() == null) {
+                player.selectAnniClass(AnniClasses.CIVILIAN)
+            }
+
+            if (player.gameMode != GameMode.SPECTATOR) {
+                player.inventory.clear()
+                player.enderChest.clear()
+                player.kill()
+            }
+        }
+
+        Scheduler.scheduleTask(5) {
+            getPhaseMessage(1).forEach {
+                Bukkit.broadcast(it)
+            }
         }
     }
 
@@ -102,8 +119,8 @@ object Game: Listener {
                 phase++
                 phaseTime = map.phaseTime
 
-                Bukkit.getOnlinePlayers().forEach {
-                    it.sendMessage("§a--- §e§lPhase $phase §r§a---")
+                getPhaseMessage(phase).forEach {
+                    Bukkit.broadcast(it)
                 }
 
                 if (phase == 3) {
@@ -125,8 +142,15 @@ object Game: Listener {
             }
         }
 
-        if (phase > 4) {
-            BossBarManager.setTitle("Phase 5 - §c${if (map.doubleNexusDamage) "Double" else "Single"} §fNexus Damage!")
+        if (phase >= MAX_PHASE) {
+            val multiplier = when(val multiplier = getNexusDamage()) {
+                1 -> "Single"
+                2 -> "Double"
+                3 -> "Triple"
+                else -> "${multiplier}x"
+            }
+
+            BossBarManager.setTitle("Phase 5 - §c${multiplier} §fNexus Damage!")
         }
         else {
             val min = phaseTime / 20 / 60
@@ -158,8 +182,7 @@ object Game: Listener {
 
         if (phase < 2 || team.name.equals(player.toMC().team?.name, ignoreCase = true)) return
 
-        val damage = if (phase >= MAX_PHASE && map.doubleNexusDamage) 2 else 1
-        team.health -= damage
+        team.health -= getNexusDamage()
 
         val pitch = Random.nextFloat() * 0.8f
         val actionbar = player.teamDisplayName().append(BukkitComponent.text(" damaged the").color(NamedTextColor.GRAY).append(BukkitComponent.text(" ${team.color}${team.name} team's nexus!")))
@@ -319,6 +342,118 @@ object Game: Listener {
         if (source.damageType == DamageType.ARROW) return "shot"
 
         return "killed"
+    }
+
+    private fun getPhaseMessage(phase: Int): List<BukkitComponent> {
+        val message = when (phase) {
+            1 -> (arrayOf(
+                "113110131" to "",
+                "120292323" to "",
+                "019991230" to "",
+                "131393231" to "",
+                "323292023" to " §7The game has §6started!",
+                "321391112" to " §7The nexus is §6invincible",
+                "012293011" to "",
+                "119999933" to "",
+                "221212212" to "",
+            ) to mapOf(
+                '0' to TextColor.color(180, 177, 129),
+                '1' to TextColor.color(216, 224, 160),
+                '2' to TextColor.color(208, 216, 149),
+                '3' to TextColor.color(210, 215, 156),
+                '9' to TextColor.color(0, 136, 13),
+            ))
+            2 -> (arrayOf(
+                "213120232" to "",
+                "230999303" to "",
+                "019210930" to "",
+                "131333901" to "",
+                "311309112" to " §6Phase 2 §7has §6started",
+                "321391113" to " §7The nexus has §6lost its §6invincibility",
+                "013913012" to "",
+                "129999933" to "",
+                "132322131" to "",
+            ) to mapOf(
+                '0' to TextColor.color(185, 174, 127),
+                '1' to TextColor.color(193, 194, 134),
+                '2' to TextColor.color(219, 226, 168),
+                '3' to TextColor.color(222, 230, 168),
+                '9' to TextColor.color(7, 206, 233),
+            ))
+            3 -> (arrayOf(
+                "212112202" to "",
+                "220999212" to "",
+                "219110902" to "",
+                "201110923" to "",
+                "200999123" to " §6Phase 3 §7has §6started",
+                "211111903" to " §bDiamonds §7have spawned in the middle",
+                "209020903" to " §bWitches §7have also spawned!",
+                "200999223" to "",
+                "232332322" to "",
+            ) to mapOf(
+                '0' to TextColor.color(116, 249, 255),
+                '1' to TextColor.color(136, 221, 206),
+                '2' to TextColor.color(26, 191, 191),
+                '3' to TextColor.color(11, 153, 155),
+                '9' to TextColor.color(0, 0, 0),
+            ))
+            4 -> (arrayOf(
+                "333332322" to "",
+                "322329222" to "",
+                "322299223" to "",
+                "323929223" to "",
+                "339339333" to " §6Phase 4 §7has §6started",
+                "309999923" to " §6Blaze Powder §7is now available",
+                "322339223" to " §5The Wither §7has spawned",
+                "322329223" to "",
+                "322213311" to "",
+            ) to mapOf(
+                '0' to TextColor.color(60, 73, 90),
+                '1' to TextColor.color(30, 30, 39),
+                '2' to TextColor.color(20, 26, 36),
+                '3' to TextColor.color(11, 17, 20),
+                '9' to TextColor.color(255, 255, 255),
+            ))
+            5 -> (arrayOf(
+                "120172101" to "",
+                "109999920" to "",
+                "319083102" to "",
+                "209080101" to "",
+                "019999217" to " §6Phase 5 §7has §6started",
+                "078731980" to " §c${getNexusDamage()}x §6Nexus damage",
+                "780700912" to "",
+                "819999800" to "",
+                "212181303" to "",
+            ) to mapOf(
+                '0' to TextColor.color(185, 174, 127),
+                '1' to TextColor.color(193, 194, 134),
+                '2' to TextColor.color(219, 226, 168),
+                '3' to TextColor.color(222, 230, 168),
+                '7' to TextColor.color(134, 132, 134),
+                '8' to TextColor.color(52, 52, 52),
+                '9' to TextColor.color(108, 1, 3),
+            ))
+
+            else -> throw IllegalArgumentException()
+        }
+
+        return message.first.map { line ->
+            var component = BukkitComponent.empty()
+            line.first.map {
+                return@map message.second[it] ?: throw IllegalArgumentException()
+            }.forEach { component = component.append(BukkitComponent.text("█").color(it)) }
+
+            return@map component.append(BukkitComponent.text(" ${line.second}"))
+        }
+    }
+
+    private fun getNexusDamage(): Int {
+        if (phase > 4 && map.doubleNexusDamage) {
+            return 2
+        }
+        else {
+            return 1
+        }
     }
 
     class GameWitch: Witch {

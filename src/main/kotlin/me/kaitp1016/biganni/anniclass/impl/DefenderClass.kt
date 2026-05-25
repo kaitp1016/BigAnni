@@ -86,6 +86,8 @@ object DefenderClass: AnniClass(), Listener {
 
     override fun onUnselect(player: Player) {
         alerts[player]?.discard()
+        alerts.remove(player)
+
         super.onUnselect(player)
     }
 
