@@ -31,6 +31,7 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.Vec3
 import org.bukkit.Bukkit
 import org.bukkit.Material
+import org.bukkit.Sound
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -51,12 +52,16 @@ object BossManager: Listener {
         val level = world.toMC()
 
         val wither = Boss(level).apply {
-            this.setPos(bossLocation.x,bossLocation.y,bossLocation.z)
+            this.setPos(bossLocation.x, bossLocation.y, bossLocation.z)
         }
 
         level.addFreshEntity(wither)
 
         boss = wither.uuid
+
+        Bukkit.getOnlinePlayers().forEach {
+            it.playSound(it, Sound.ENTITY_WITHER_SPAWN, 1f, 1f)
+        }
     }
 
     @EventHandler
@@ -67,10 +72,10 @@ object BossManager: Listener {
         event.drops.clear()
 
         val level = entity.world.toMC()
-        level.addFreshEntity(PickupableBossBuff(level,entity.x,entity.y,entity.z))
+        level.addFreshEntity(PickupableBossBuff(level, entity.x, entity.y, entity.z))
 
         val killer = event.damageSource.causingEntity as? Player
-        killer?.giveExp(1385,true)
+        killer?.giveExp(1385, true)
     }
 
     @EventHandler
@@ -82,8 +87,8 @@ object BossManager: Listener {
         BossBuffGui(player).open()
     }
 
-    class Boss: WitherBoss {
-        constructor(level: ServerLevel):super(EntityType.WITHER,level) {
+    class Boss : WitherBoss {
+        constructor(level: ServerLevel) : super(EntityType.WITHER, level) {
 
         }
 
@@ -99,10 +104,10 @@ object BossManager: Listener {
         }
     }
 
-    class PickupableBossBuff: ItemEntity {
+    class PickupableBossBuff : ItemEntity {
         val serverLevel: ServerLevel
 
-        constructor(level: ServerLevel, x: Double, y: Double, z: Double):super(level,x,y,z, ItemStack(Items.NETHER_STAR)) {
+        constructor(level: ServerLevel, x: Double, y: Double, z: Double) : super(level, x, y, z, ItemStack(Items.NETHER_STAR)) {
             this.serverLevel = level
             this.pickupDelay = 10
         }
@@ -136,11 +141,11 @@ object BossManager: Listener {
         }
     }
 
-    class BossBuffGui: ChestPacketGui {
+    class BossBuffGui : ChestPacketGui {
         override val name = "Boss Buff"
         override val displayName = net.minecraft.network.chat.Component.literal("Boss Buff")
 
-        constructor(player: ServerPlayer):super(player,54) {
+        constructor(player: ServerPlayer) : super(player, 54) {
             items.fill(ItemStack(Items.GRAY_STAINED_GLASS_PANE).apply {
                 this.set(DataComponents.ITEM_NAME, net.minecraft.network.chat.Component.empty())
             })
@@ -151,18 +156,18 @@ object BossManager: Listener {
             setItem(37, BossBuffItems.BootsOfExtingushment.create())
 
             setItem(12, ItemStack(Items.GOLDEN_PICKAXE).bukkitStack.apply {
-                addUnsafeEnchantment(Enchantment.UNBREAKING,10)
-                addUnsafeEnchantment(Enchantment.EFFICIENCY,3)
+                addUnsafeEnchantment(Enchantment.UNBREAKING, 10)
+                addUnsafeEnchantment(Enchantment.EFFICIENCY, 3)
             }.toMC()!!)
 
             setItem(13, ItemStack(Items.GOLDEN_PICKAXE).bukkitStack.apply {
-                addUnsafeEnchantment(Enchantment.UNBREAKING,10)
-                addUnsafeEnchantment(Enchantment.FORTUNE,3)
+                addUnsafeEnchantment(Enchantment.UNBREAKING, 10)
+                addUnsafeEnchantment(Enchantment.FORTUNE, 3)
             }.toMC()!!)
 
             setItem(21, ItemStack(Items.BOW).bukkitStack.apply {
-                addUnsafeEnchantment(Enchantment.POWER,3)
-                addUnsafeEnchantment(Enchantment.FLAME,1)
+                addUnsafeEnchantment(Enchantment.POWER, 3)
+                addUnsafeEnchantment(Enchantment.FLAME, 1)
             }.toMC()!!)
 
             setItem(22, BossBuffItems.BowOfAether.create())
@@ -170,12 +175,12 @@ object BossManager: Listener {
             setItem(30, BossBuffItems.SwordOfVenom.create())
 
             setItem(31, ItemStack(Items.DIAMOND_SWORD).bukkitStack.apply {
-                addUnsafeEnchantment(Enchantment.UNBREAKING,10)
-                addUnsafeEnchantment(Enchantment.FIRE_ASPECT,3)
+                addUnsafeEnchantment(Enchantment.UNBREAKING, 10)
+                addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 3)
             }.toMC()!!)
 
             setItem(39, ItemStack(Items.GOLDEN_SWORD).bukkitStack.apply {
-                addUnsafeEnchantment(Enchantment.LOOTING,1)
+                addUnsafeEnchantment(Enchantment.LOOTING, 1)
             }.toMC()!!)
 
             setItem(16, ItemStack(Items.SPLASH_POTION).apply {

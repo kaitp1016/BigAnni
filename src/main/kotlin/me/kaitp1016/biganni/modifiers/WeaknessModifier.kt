@@ -7,11 +7,9 @@ import org.bukkit.attribute.AttributeModifier
 import org.bukkit.damage.DamageType
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
-import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityPotionEffectEvent
-import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
 object WeaknessModifier: Listener {
@@ -40,7 +38,13 @@ object WeaknessModifier: Listener {
         if ((source.damageType != DamageType.PLAYER_ATTACK && source.damageType != DamageType.MOB_ATTACK && source.damageType != DamageType.MOB_ATTACK_NO_AGGRO) || directEntity !is LivingEntity) return
 
         val weakness = directEntity.getPotionEffect(PotionEffectType.WEAKNESS)?.amplifier ?: return
-        event.damage -= getNewWeaknessReduction(weakness,event.damage)
+
+        if (weakness > 9) {
+            event.isCancelled = true
+        }
+        else {
+            event.damage -= getNewWeaknessReduction(weakness,event.damage)
+        }
     }
 
     fun getNewWeaknessReduction(level: Int,damage: Double): Double {

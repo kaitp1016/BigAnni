@@ -5,6 +5,7 @@ import me.kaitp1016.biganni.anniclass.AnniClassHandler
 import me.kaitp1016.biganni.events.EventManager
 import me.kaitp1016.biganni.features.*
 import me.kaitp1016.biganni.game.Game
+import me.kaitp1016.biganni.game.StartCountdown
 import me.kaitp1016.biganni.game.boss.BossBuffItems
 import me.kaitp1016.biganni.game.boss.BossManager
 import me.kaitp1016.biganni.game.boss.FinalBossFight
@@ -48,6 +49,7 @@ class BigAnni : JavaPlugin() {
             Game,
             BossManager,
             FinalBossFight,
+            StartCountdown,
             BossBuffItems,
             Scheduler,
         ).forEach { plugin.server.pluginManager.registerEvents(it,plugin) }

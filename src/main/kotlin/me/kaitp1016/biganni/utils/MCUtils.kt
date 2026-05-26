@@ -4,7 +4,9 @@ import io.papermc.paper.adventure.PaperAdventure
 import net.kyori.adventure.text.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.state.BlockState
+import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.block.Block
 import org.bukkit.block.data.BlockData
@@ -15,6 +17,7 @@ import org.bukkit.craftbukkit.damage.CraftDamageSource
 import org.bukkit.craftbukkit.entity.CraftEntity
 import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.craftbukkit.inventory.CraftItemStack
+import org.bukkit.craftbukkit.inventory.CraftItemType
 import org.bukkit.damage.DamageSource
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
@@ -55,6 +58,10 @@ object MCUtils {
 
     fun Component.toMC(): MCComponent {
         return PaperAdventure.asVanilla(this)
+    }
+
+    fun Item.toBukkit(): Material {
+        return CraftItemType.minecraftToBukkit(this)
     }
 
     fun MCComponent.toBukkit(): Component {

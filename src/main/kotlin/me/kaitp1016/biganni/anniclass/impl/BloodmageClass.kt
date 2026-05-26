@@ -174,7 +174,7 @@ object BloodmageClass: AnniClass(), Listener {
     @EventHandler
     fun onInteract(event: PlayerInteractEvent) {
         val player = event.player
-        if (!isSelected(player) || event.isCancelled) return
+        if (!isSelected(player)) return
 
         val item = event.item ?: return
         if (player.hasCooldown(item)) return

@@ -1,5 +1,6 @@
 package me.kaitp1016.biganni.features
 
+import me.kaitp1016.biganni.game.Game
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
@@ -138,15 +139,6 @@ object TeamDoor: Listener {
     }
 
     fun getTeamDoorBlock(player: ServerPlayer): Block {
-        return when(player.team?.name?.lowercase()) {
-            "red" -> Blocks.RED_STAINED_GLASS_PANE
-            "blue" -> Blocks.BLUE_STAINED_GLASS_PANE
-            "green" -> Blocks.LIME_STAINED_GLASS_PANE
-            "yellow" -> Blocks.YELLOW_STAINED_GLASS_PANE
-            "black" -> Blocks.BLACK_STAINED_GLASS_PANE
-            "gray" -> Blocks.GRAY_STAINED_GLASS
-            "brown" -> Blocks.BROWN_STAINED_GLASS_PANE
-            else -> Blocks.WHITE_STAINED_GLASS_PANE
-        }
+        return Game.getTeam(player.bukkitEntity)?.teamDoorBlock ?: Blocks.GLASS_PANE
     }
 }

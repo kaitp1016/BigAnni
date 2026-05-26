@@ -42,7 +42,7 @@ object SpiderClass: AnniClass(), Listener {
     override val shortName = "SPI"
     override val description = arrayOf(
         "ツタを周囲の壁に設置することができる。",
-        "アビリティを使用すると蜘蛛の巣を投げることできる。",
+        "投げることができる蜘蛛の巣が初期装備に含まれている。",
     )
 
     const val TOGGLE_WALL_CLIMB_ITEM_ID = "spider_toggle_wall_climb"

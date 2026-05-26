@@ -103,7 +103,7 @@ abstract class AnniClass {
             it.persistentDataContainer.set(ItemKeys.SOULBOUND, PersistentDataType.BOOLEAN, true)
         }
 
-        addLore(Component.text("Undroppable").color(NamedTextColor.GOLD).decoration(TextDecoration.ITALIC,false))
+        addLore(Component.text("Soulbound").color(NamedTextColor.GOLD).decoration(TextDecoration.ITALIC,false))
     }
 
     protected fun ItemStack.uniqueClassItem() = apply {

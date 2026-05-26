@@ -5,8 +5,10 @@ import io.papermc.paper.datacomponent.item.UseCooldown
 import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
 import me.kaitp1016.biganni.features.DelayingBlock
+import me.kaitp1016.biganni.game.Game
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
+import me.kaitp1016.biganni.utils.MCUtils.toBukkit
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -58,8 +60,10 @@ object BuilderClass: AnniClass(), Listener {
         val item = event.item ?: return
         if (item.getAnniId() != RESOURCE_DROP_ITEM_ID || player.hasCooldown(item)) return
 
+        val wool = Game.getTeam(player)?.teamWool?.toBukkit() ?: Material.WHITE_WOOL
+
         player.openInventory(Bukkit.createInventory(player,27,Component.text("Resource Drop")).apply {
-            setItem(Random.nextInt(0,26),ItemStack(Material.WHITE_WOOL).also { it.amount = Random.nextInt(10,64) })
+            setItem(Random.nextInt(0,26),ItemStack(wool).also { it.amount = Random.nextInt(10,64) })
             setItem(Random.nextInt(0,26),ItemStack(Material.OAK_PLANKS).also { it.amount = Random.nextInt(10,64) })
             setItem(Random.nextInt(0,26),ItemStack(Material.STONE).also { it.amount = Random.nextInt(10,64) })
             setItem(Random.nextInt(0,26),ItemStack(Material.DIRT).also { it.amount = Random.nextInt(10,64) })

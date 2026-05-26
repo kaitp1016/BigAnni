@@ -16,6 +16,7 @@ import me.kaitp1016.biganni.features.DelayingBlock
 import me.kaitp1016.biganni.features.TeamDoor
 import me.kaitp1016.biganni.game.boss.BossManager
 import me.kaitp1016.biganni.game.Game
+import me.kaitp1016.biganni.game.StartCountdown
 import me.kaitp1016.biganni.packetgui.impl.AnniClassSelector
 import me.kaitp1016.biganni.packetgui.impl.WeaeponShopGui
 import me.kaitp1016.biganni.packetgui.impl.BrewingShopGui
@@ -41,13 +42,21 @@ object AnniCommand {
             }
 
             return@executes 1
-        })).then(Commands.literal("start").executes {
-            if (Game.isStarted) {
+        })).then(Commands.literal("startimmediately").executes {
+            if (Game.isStarted || StartCountdown.isStarted) {
                 it.source.sender.sendMessage("ゲームが始まっているため開始できません。/anni resetをしてから開始してください。")
                 return@executes 1
             }
 
             Game.start()
+            return@executes 1
+        }).then(Commands.literal("start").executes {
+            if (Game.isStarted || StartCountdown.isStarted) {
+                it.source.sender.sendMessage("ゲームが始まっているため開始できません。/anni resetをしてから開始してください。")
+                return@executes 1
+            }
+
+            StartCountdown.start()
             return@executes 1
         }).then(Commands.literal("skipphase").executes {
             Game.phaseTime = 1

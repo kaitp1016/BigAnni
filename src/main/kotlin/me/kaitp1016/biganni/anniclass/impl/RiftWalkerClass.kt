@@ -160,7 +160,7 @@ object RiftWalkerClass: AnniClass(), Listener {
         }
 
         override fun getIcon(): net.minecraft.world.item.ItemStack {
-            return net.minecraft.world.item.ItemStack(Items.RED_BED).apply {
+            return net.minecraft.world.item.ItemStack(team.teamWool).apply {
                 set(DataComponents.ITEM_NAME, net.minecraft.network.chat.Component.literal("${team.color}Your Base"))
                 set(DataComponents.LORE, ItemLore(listOf(net.minecraft.network.chat.Component.literal("リフトする!").withStyle(Style.EMPTY.withItalic(false)))))
             }
@@ -181,17 +181,7 @@ object RiftWalkerClass: AnniClass(), Listener {
         }
 
         override fun getIcon(): net.minecraft.world.item.ItemStack {
-            val item = when(team.name.lowercase()) {
-                "red" -> Items.RED_WOOL
-                "blue" -> Items.BLUE_WOOL
-                "green" -> Items.GREEN_WOOL
-                "yellow" -> Items.YELLOW_WOOL
-                "gray" -> Items.GRAY_WOOL
-                "black" -> Items.BLACK_WOOL
-                "white" -> Items.WHITE_WOOL
-                else -> Items.WHITE_WOOL
-            }
-            return net.minecraft.world.item.ItemStack(item).apply {
+            return net.minecraft.world.item.ItemStack(team.teamWool).apply {
                 set(DataComponents.ITEM_NAME, net.minecraft.network.chat.Component.literal("${team.color}${team.name} Team"))
                 set(DataComponents.LORE, ItemLore(listOf(net.minecraft.network.chat.Component.literal("リフトする!").withStyle(Style.EMPTY.withItalic(false)))))
             }

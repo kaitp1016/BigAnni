@@ -239,7 +239,7 @@ object NinjaClass: AnniClass(), Listener {
         override fun onHit(hitResult: HitResult) {
             val pos = hitResult.location
 
-            repeat(12) {
+            repeat(20) {
                 Scheduler.scheduleTask(it * 5) {
                     smoke(pos)
                 }
