@@ -169,7 +169,7 @@ object TransporterClass: AnniClass(), Listener {
                 world.setBlockData(pos.x,pos.y,pos.z, Bukkit.createBlockData(Material.NETHER_QUARTZ_ORE))
 
                 portal.secound = PortalBlock(world,pos,originalBlock)
-                world.playSound(clickedBlock.location, Sound.ENTITY_BLAZE_HURT,1f,2f)
+                player.playSound(player.location, Sound.ENTITY_BLAZE_HURT,1f,2f)
 
                 portal.first.portal = portal
                 portal.secound!!.portal = portal
@@ -191,7 +191,7 @@ object TransporterClass: AnniClass(), Listener {
 
         portal = Portal(uuid, PortalBlock(world,pos,originalBlock),null)
 
-        world.playSound(clickedBlock.location, Sound.ENTITY_BLAZE_HURT,1f,1f)
+        player.playSound(player, Sound.ENTITY_BLAZE_HURT,1f,1f)
         portals.add(portal)
     }
 

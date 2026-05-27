@@ -24,7 +24,7 @@ import kotlin.jvm.optionals.getOrNull
 object Config {
     val MAPS_DIRECTORY = File(plugin.dataFolder, "maps")
 
-    data class TeamConfig(val name: String, val nexus: LevelBlockPos, val health: Int, val spawn: Location, val color: String, val baseArea: AABB, val nexusWarp: Location, val witchLocation: Location, val riftLocation: Location, val teamWool: Item, val teamDoorBlock: Block) {
+    data class TeamConfig(val name: String, val nexus: LevelBlockPos, val health: Int, val spawn: Location, val color: String, val baseArea: AABB, val nexusWarp: Location, val witchLocation: Location, val riftLocation: Location, val bossSpawn: Location, val teamWool: Item, val teamDoorBlock: Block) {
         companion object {
             fun fromJson(json: JsonObject): TeamConfig {
                 val name = json.get("name").asString
@@ -36,15 +36,16 @@ object Config {
                 val nexusWarp = parseLocation(json.get("nexusWarp").asJsonObject)
                 val witchLocation = parseLocation(json.get("witchLocation").asJsonObject)
                 val riftLocation = parseLocation(json.get("riftLocation").asJsonObject)
+                val bossSpawn = parseLocation(json.get("bossSpawn").asJsonObject)
                 val teamWool = getItem(json.get("teamWool").asString) ?: Items.WHITE_WOOL
                 val teamDoorBlock = getBlock(json.get("teamDoorBlock").asString) ?: Blocks.GLASS_PANE
 
-                return TeamConfig(name, nexus, health, spawn, color, baseArea, nexusWarp, witchLocation, riftLocation, teamWool, teamDoorBlock)
+                return TeamConfig(name, nexus, health, spawn, color, baseArea, nexusWarp, witchLocation, riftLocation, bossSpawn, teamWool, teamDoorBlock)
             }
         }
 
         fun create(): AnniTeam {
-            return AnniTeam(name, nexus, health, color, spawn, baseArea, nexusWarp, witchLocation, riftLocation, teamWool, teamDoorBlock)
+            return AnniTeam(name, nexus, health, color, spawn, baseArea, nexusWarp, witchLocation, riftLocation, bossSpawn, teamWool, teamDoorBlock)
         }
     }
 
@@ -72,7 +73,8 @@ object Config {
                 val bossLocation = Location(world, 10000.0, 0.0, 0.0)
                 val blockedClasses = listOf<String>()
                 val teams = listOf(
-                    TeamConfig("Blue", LevelBlockPos(world, -118, -51, 190), 75, Location(world, -108.5, -38.0, 180.5, -135f, 0f), "§9", AABB(-70.0, -256.0, 138.0, -140.0, 312.0, 217.0), Location(world, -117.0, -52.0, 187.0), Location(world, 6.5, -47.0, 127.5), Location(world, 60.5, -48.0, 140.0, 90f, 0f), Items.BLUE_WOOL, Blocks.BLUE_STAINED_GLASS_PANE), TeamConfig("Red", LevelBlockPos(world, 118, -51, -188), 75, Location(world, 109.5, -38.0, -177.5, 45f, 0f), "§c", AABB(77.0, -256.0, -133.0, 115.0, 312.0, -225.0), Location(world, 118.0, -52.0, -185.0), Location(world, -5.5, -47.0, -124.5), Location(world, -60.5, -48.0, -140.0, -90f, 0f), Items.RED_WOOL, Blocks.RED_STAINED_GLASS_PANE)
+                    TeamConfig("Blue", LevelBlockPos(world, -118, -51, 190), 75, Location(world, -108.5, -38.0, 180.5, -135f, 0f), "§9", AABB(-70.0, -256.0, 138.0, -140.0, 312.0, 217.0), Location(world, -117.0, -52.0, 187.0), Location(world, 6.5, -47.0, 127.5), Location(world, 60.5, -48.0, 140.0, 90f, 0f), Location(world, 10000.0, 0.0, 0.0), Items.BLUE_WOOL, Blocks.BLUE_STAINED_GLASS_PANE),
+                    TeamConfig("Red", LevelBlockPos(world, 118, -51, -188), 75, Location(world, 109.5, -38.0, -177.5, 45f, 0f), "§c", AABB(77.0, -256.0, -133.0, 115.0, 312.0, -225.0), Location(world, 118.0, -52.0, -185.0), Location(world, -5.5, -47.0, -124.5), Location(world, -60.5, -48.0, -140.0, -90f, 0f), Location(world, 10000.0, 0.0, 0.0), Items.RED_WOOL, Blocks.RED_STAINED_GLASS_PANE)
                 )
 
                 val doubleNexusDamage = false

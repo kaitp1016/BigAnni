@@ -20,11 +20,12 @@ class AnniTeam {
     val nexusWarp: Location
     val witchLocation: Location
     val riftLocation: Location
+    val bossSpawn: Location
     val teamWool: Item
     val teamDoorBlock: Block
     var witch: UUID? = null
 
-    constructor(name: String, nexus: LevelBlockPos, health: Int, color: String, spawn: Location, baseArea: AABB, nexusWarp: Location, witchLocation: Location, riftLocation: Location, teamWool: Item, teamDoorBlock: Block) {
+    constructor(name: String, nexus: LevelBlockPos, health: Int, color: String, spawn: Location, baseArea: AABB, nexusWarp: Location, witchLocation: Location, riftLocation: Location, bossSpawn: Location, teamWool: Item, teamDoorBlock: Block) {
         this.name = name
         this.nexus = nexus
         this.color = color
@@ -34,6 +35,7 @@ class AnniTeam {
         this.nexusWarp = nexusWarp
         this.witchLocation = witchLocation
         this.riftLocation = riftLocation
+        this.bossSpawn = bossSpawn
         this.teamWool = teamWool
         this.teamDoorBlock = teamDoorBlock
     }

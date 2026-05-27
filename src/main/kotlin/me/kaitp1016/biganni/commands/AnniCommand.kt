@@ -86,7 +86,7 @@ object AnniCommand {
         }).then(Commands.literal("giveteamdoor").executes {
             (it.source.sender as Player).give(TeamDoor.createItem())
             return@executes 1
-        }).then(Commands.literal("givebosbuff").executes {
+        }).then(Commands.literal("givebossbuff").executes {
             (it.source.sender as Player).give(BossManager.createBossBuffItem())
             return@executes 1
         }).then(Commands.literal("spawnboss").executes {

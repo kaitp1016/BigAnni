@@ -209,7 +209,9 @@ object Game: Listener {
         }
         if (event.cause == PlayerTeleportEvent.TeleportCause.END_PORTAL) {
             val player = event.player
-            player.teleport(map.bossLocation)
+            val team = getTeam(player)
+            val location = team?.bossSpawn ?: map.bossLocation
+            player.teleport(location)
             event.isCancelled = true
         }
     }
