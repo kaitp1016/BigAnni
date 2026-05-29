@@ -8,7 +8,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
 object StartCountdown: Listener {
-    const val START_TICK = 2401
+    const val START_TICK = 2400
 
     var isStarted = false
     var tick = -1

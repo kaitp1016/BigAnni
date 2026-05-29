@@ -176,7 +176,7 @@ object Game: Listener {
 
         event.isCancelled = true
 
-        NexusHandler.onMine(player,block,team)
+        NexusHandler.damage(player,block,team)
     }
 
     @EventHandler

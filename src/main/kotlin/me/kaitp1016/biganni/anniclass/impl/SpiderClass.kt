@@ -16,7 +16,6 @@ import net.minecraft.util.Mth
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.projectile.Projectile
-import net.minecraft.world.entity.projectile.Projectile.ProjectileFactory
 import net.minecraft.world.entity.projectile.throwableitemprojectile.Snowball
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
@@ -47,6 +46,7 @@ object SpiderClass: AnniClass(), Listener {
     override val description = arrayOf(
         "ツタを周囲の壁に設置することができる。",
         "投げることができる蜘蛛の巣が初期装備に含まれている。",
+        "落下ダメージでは死なない。",
     )
 
     const val TOGGLE_WALL_CLIMB_ITEM_ID = "spider_toggle_wall_climb"
@@ -133,7 +133,7 @@ object SpiderClass: AnniClass(), Listener {
             val level = mcPlayer.level()
             val mcItem = item.toMC() ?: MCItemStack(Items.COBWEB)
             val power = if (event.action.isRightClick) 1.0f else -0.75f
-            val snowball = Projectile.spawnProjectileFromRotationDelayed(ProjectileFactory { level: ServerLevel, mob: LivingEntity, item: MCItemStack -> ThrownWeb(mcPlayer, level, mob) }, level, mcItem, mcPlayer, -3.0f, power, 1.0f)
+            val snowball = Projectile.spawnProjectileFromRotationDelayed({ level: ServerLevel, mob: LivingEntity, item: MCItemStack -> ThrownWeb(mcPlayer, level, mob) }, level, mcItem, mcPlayer, -3.0f, power, 1.0f)
             if (!snowball.attemptSpawn()) return
 
             item.amount--

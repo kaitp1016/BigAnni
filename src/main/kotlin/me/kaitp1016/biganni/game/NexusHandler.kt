@@ -25,7 +25,7 @@ import kotlin.random.Random
 object NexusHandler {
     const val NEXUS_RESPAWN_TICK = 7
 
-    fun onMine(player: Player, block: Block, team: AnniTeam) {
+    fun damage(player: Player, block: Block, team: AnniTeam) {
         if (phase < 2 || team.name.equals(player.toMC().team?.name, ignoreCase = true)) return
 
         team.health -= getNexusDamage()
@@ -64,7 +64,7 @@ object NexusHandler {
         mcPlayer.mainHandItem.hurtAndBreak(1, mcPlayer, EquipmentSlot.MAINHAND)
 
         if (team.health < 1) {
-            onNexusBroken(team, player)
+            destroy(team, player)
         }
     }
 
@@ -76,7 +76,7 @@ object NexusHandler {
         }
     }
 
-    fun onNexusBroken(team: AnniTeam, breaker: Player) {
+    fun destroy(team: AnniTeam, breaker: Player) {
         sendDestructionMessage(team, breaker)
 
         if (teams.count { it.health > 1 } < 2) {

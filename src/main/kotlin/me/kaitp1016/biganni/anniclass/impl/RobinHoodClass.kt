@@ -105,11 +105,7 @@ object RobinHoodClass: AnniClass(), Listener {
             val level = mcPlayer.level()
             val horse = horses.getOrPut(player) { RobinHoodHorse(level,mcPlayer) }
 
-            if (horse.level() != level) {
-                horse.setLevel(level)
-            }
-
-            if (horse.isSpawned && !horse.isRemoved) {
+            if (horse.isSpawned) {
                 val horse = horses[player]!!
                 horse.remove(Entity.RemovalReason.DISCARDED)
 
@@ -122,6 +118,7 @@ object RobinHoodClass: AnniClass(), Listener {
 
             level.addFreshEntity(horse.apply {
                 this.setPos(mcPlayer.position())
+                this.setLevel(mcPlayer.level())
                 this.isSpawned = true
             })
 
