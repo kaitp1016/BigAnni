@@ -5,6 +5,7 @@ import me.kaitp1016.biganni.anniclass.AnniClass
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
+import me.kaitp1016.biganni.utils.Utils.isFullBlock
 import me.kaitp1016.biganni.utils.Utils.toIntCorrect
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -88,8 +89,10 @@ object SpiderClass: AnniClass(), Listener {
 
     override fun onUnselect(player: Player) {
         enabledPlayers.remove(player)
+
         val webs = placedWebs.filter { it.player == player }
         placedWebs.removeAll(webs)
+
         webs.forEach {
             if (it.level.getBlockState(it.pos).block == Blocks.COBWEB) {
                 it.level.setBlockAndUpdate(it.pos,Blocks.AIR.defaultBlockState())
@@ -137,14 +140,14 @@ object SpiderClass: AnniClass(), Listener {
     @EventHandler
     fun onTick(event: ServerTickStartEvent) {
         if (!placedVines.isEmpty()) {
-            placedVines.removeAll { vine ->
+            placedVines.removeIf { vine ->
                 vine.tick--
 
                 if (vine.tick < 1) {
                     if (vine.level.getBlockState(vine.pos).block == Blocks.VINE) {
                         vine.level.setBlockAndUpdate(vine.pos, Blocks.AIR.defaultBlockState())
                     }
-                    return@removeAll true
+                    return@removeIf true
                 }
 
                 false
@@ -228,13 +231,13 @@ object SpiderClass: AnniClass(), Listener {
     )
 
     fun canPlaceVine(level: ServerLevel, pos: BlockPos): Boolean {
-        return level.getBlockState(pos).isAir && directions.any { direction -> level.getBlockState(pos.offset(direction[0],direction[1],direction[2])).occlusionShape.`moonrise$isFullBlock`() }
+        return level.getBlockState(pos).isAir && directions.any { direction -> level.isFullBlock(pos.offset(direction[0],direction[1],direction[2])) }
     }
 
     fun getVineAt(level: ServerLevel,pos: BlockPos): BlockState {
         var vine = Blocks.VINE.defaultBlockState()
         properties.forEach { (direction, property) ->
-            vine = vine.setValue(property,level.getBlockState(pos.offset(direction[0],direction[1],direction[2])).occlusionShape.`moonrise$isFullBlock`())
+            vine = vine.setValue(property,level.isFullBlock(pos.offset(direction[0],direction[1],direction[2])))
         }
 
         return vine

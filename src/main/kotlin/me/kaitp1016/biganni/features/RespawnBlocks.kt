@@ -124,16 +124,15 @@ object RespawnBlocks: Listener {
     fun onTick(event: ServerTickStartEvent) {
         if (respawingBlocks.isEmpty()) return
 
-        respawingBlocks.removeAll { block ->
+        respawingBlocks.removeIf { block ->
             block.tick--
 
             if (block.tick < 1) {
                 block.level.setBlockAndUpdate(block.pos,block.block)
-
-                return@removeAll true
+                return@removeIf true
             }
 
-            return@removeAll false
+            return@removeIf false
         }
     }
 }

@@ -57,7 +57,7 @@ object BardClass: AnniClass(), Listener {
 
     const val BUFF_BOX_ITEM_ID = "bard_buffbox"
     const val BUFF_BOX_COOLDOWN = 200
-    val BUFF_BOX_COOLDOWN_GROUP = Key.key(PLUGIN_ID,"bard_buff_box")
+    val BUFF_BOX_COOLDOWN_GROUP = Key.key(PLUGIN_ID, "bard_buff_box")
 
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {
         return super.getDefaultItems(player).also {
@@ -80,13 +80,10 @@ object BardClass: AnniClass(), Listener {
     const val BUFF_BOX_RANGE = 15
 
     enum class Buff(val title: String, val description: String, val icon: Item, val effect: Holder<MobEffect>, val isBuff: Boolean) {
-        INVIGORATE(title = "Invigorate",description = "味方に再生を付与する。",icon = Items.MUSIC_DISC_MALL,effect = MobEffects.REGENERATION, isBuff = true),
-        ENLIGHTEN(title = "Enlighten",description = "味方に移動速度上昇を付与する。",icon = Items.MUSIC_DISC_FAR,effect = MobEffects.SPEED, isBuff = true),
-        INTIMIDATE(title = "Intimidate",description = "敵に弱体化を付与する。",icon = Items.MUSIC_DISC_MELLOHI,effect = MobEffects.WEAKNESS, isBuff = false),
-        SHACKLE(title = "Shackle",description = "敵に移動速度低下を付与する。",icon = Items.MUSIC_DISC_STAL,effect = MobEffects.SLOWNESS, isBuff = false),
+        INVIGORATE(title = "Invigorate", description = "味方に再生を付与する。", icon = Items.MUSIC_DISC_MALL, effect = MobEffects.REGENERATION, isBuff = true), ENLIGHTEN(title = "Enlighten", description = "味方に移動速度上昇を付与する。", icon = Items.MUSIC_DISC_FAR, effect = MobEffects.SPEED, isBuff = true), INTIMIDATE(title = "Intimidate", description = "敵に弱体化を付与する。", icon = Items.MUSIC_DISC_MELLOHI, effect = MobEffects.WEAKNESS, isBuff = false), SHACKLE(title = "Shackle", description = "敵に移動速度低下を付与する。", icon = Items.MUSIC_DISC_STAL, effect = MobEffects.SLOWNESS, isBuff = false),
     }
 
-    data class Buffbox(val owner: Player,val level: Level, val pos: BlockPos,var buff: Buff?) {
+    data class Buffbox(val owner: Player, val level: Level, val pos: BlockPos, var buff: Buff?) {
         var tick: Int = 0
     }
 
@@ -110,37 +107,37 @@ object BardClass: AnniClass(), Listener {
 
         val block = event.block
         val level = player.toMC().level()
-        val pos = BlockPos(block.x,block.y,block.z)
+        val pos = BlockPos(block.x, block.y, block.z)
 
         level.setBlockAndUpdate(pos, Blocks.JUKEBOX.defaultBlockState())
-        buffboxes.add(Buffbox(player,level,pos,null))
+        buffboxes.add(Buffbox(player, level, pos, null))
     }
 
     @EventHandler
     fun onTick(event: ServerTickStartEvent) {
         if (buffboxes.isEmpty()) return
 
-        buffboxes.removeAll { box ->
+        buffboxes.removeIf { box ->
             val state = box.level.getBlockState(box.pos)
             if (state.block != Blocks.JUKEBOX) {
                 box.owner.give(createBardBox())
-                return@removeAll true
+                box.owner.setCooldown(BUFF_BOX_COOLDOWN_GROUP, BUFF_BOX_COOLDOWN)
+                return@removeIf true
             }
 
             box.tick++
             if (box.tick % 20 == 0) {
-                val buff = box.buff ?: return@removeAll false
+                val buff = box.buff ?: return@removeIf false
 
                 val pos = box.pos
-                val aabb = AABB((pos.x + BUFF_BOX_RANGE).toDouble(),(pos.y + BUFF_BOX_RANGE).toDouble(),(pos.z + BUFF_BOX_RANGE).toDouble(),(pos.x - BUFF_BOX_RANGE).toDouble(),(pos.y - BUFF_BOX_RANGE).toDouble(),(pos.z - BUFF_BOX_RANGE).toDouble())
+                val aabb = AABB((pos.x + BUFF_BOX_RANGE).toDouble(), (pos.y + BUFF_BOX_RANGE).toDouble(), (pos.z + BUFF_BOX_RANGE).toDouble(), (pos.x - BUFF_BOX_RANGE).toDouble(), (pos.y - BUFF_BOX_RANGE).toDouble(), (pos.z - BUFF_BOX_RANGE).toDouble())
                 val centerPos = pos.center
                 val team = box.owner.toMC().teamColor
 
-                box.level.getEntitiesOfClass(ServerPlayer::class.java,aabb) { centerPos.distanceTo(it.position()) < BUFF_BOX_RANGE }
-                    .forEach { target ->
+                box.level.getEntitiesOfClass(ServerPlayer::class.java, aabb) { centerPos.distanceTo(it.position()) < BUFF_BOX_RANGE }.forEach { target ->
                         val isTeammate = target.teamColor == team
                         if (isTeammate == buff.isBuff && (buff.isBuff || !BerserkerClass.isUsingAbility(target.bukkitEntity))) {
-                            target.addEffect(MobEffectInstance(buff.effect,60,0))
+                            target.addEffect(MobEffectInstance(buff.effect, 60, 0))
                         }
                     }
 
@@ -154,14 +151,11 @@ object BardClass: AnniClass(), Listener {
                     val z = pos.z + 0.5 + distance * sin(angle)
                     val y = pos.y + 0.5
 
-                    Particle.NOTE.builder()
-                        .location(world,x,y,z)
-                        .receivers(32,true)
-                        .spawn()
+                    Particle.NOTE.builder().location(world, x, y, z).receivers(32, true).spawn()
                 }
             }
 
-            return@removeAll false
+            return@removeIf false
         }
     }
 
@@ -170,7 +164,7 @@ object BardClass: AnniClass(), Listener {
         val block = event.clickedBlock
 
         if (event.action == Action.RIGHT_CLICK_BLOCK && block?.type == Material.JUKEBOX) {
-            val pos = BlockPos(block.x,block.y,block.z)
+            val pos = BlockPos(block.x, block.y, block.z)
             val level = block.world.toMC()
             val box = buffboxes.find { it.pos == pos && it.level == level } ?: return
 
@@ -178,7 +172,7 @@ object BardClass: AnniClass(), Listener {
             val owner = box.owner
             if (owner != user) return
 
-            BuffSelectorGui(box,user.toMC()).open()
+            BuffSelectorGui(box, user.toMC()).open()
 
             return
         }
@@ -187,7 +181,7 @@ object BardClass: AnniClass(), Listener {
     @EventHandler
     fun onBlockDropItem(event: BlockDropItemEvent) {
         val block = event.block
-        val pos = BlockPos(block.x,block.y,block.z)
+        val pos = BlockPos(block.x, block.y, block.z)
         val level = block.world.toMC()
         if (buffboxes.none { it.pos == pos && it.level == level }) return
 
@@ -207,22 +201,22 @@ object BardClass: AnniClass(), Listener {
         }
     }
 
-    class BuffSelectorGui: ChestPacketGui {
+    class BuffSelectorGui : ChestPacketGui {
         override val name = "buff selector"
         override val displayName = net.minecraft.network.chat.Component.literal("Buff Selector")
 
         val box: Buffbox
         val buffs: List<Buff>
 
-        constructor(box: Buffbox, player: ServerPlayer):super(player,9) {
+        constructor(box: Buffbox, player: ServerPlayer) : super(player, 9) {
             this.box = box
             this.buffs = Buff.entries
 
-            buffs.forEachIndexed { slot,buff ->
+            buffs.forEachIndexed { slot, buff ->
                 this.setItem(slot, net.minecraft.world.item.ItemStack(buff.icon).apply {
                     set(DataComponents.ITEM_NAME, net.minecraft.network.chat.Component.literal(buff.title).withColor(0xFFAA00))
                     set(DataComponents.LORE, ItemLore(listOf(net.minecraft.network.chat.Component.literal(buff.description).withStyle(Style.EMPTY.withItalic(false).withColor(0x55FF55)))))
-                    set(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay(false,linkedSetOf(DataComponents.JUKEBOX_PLAYABLE)))
+                    set(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay(false, linkedSetOf(DataComponents.JUKEBOX_PLAYABLE)))
                 })
             }
 
@@ -238,10 +232,10 @@ object BardClass: AnniClass(), Listener {
 
                 if (packet.slotNum.toInt() == buffs.size) {
                     player.bukkitEntity.give(createBardBox())
-                    player.bukkitEntity.setCooldown(BUFF_BOX_COOLDOWN_GROUP,BUFF_BOX_COOLDOWN)
+                    player.bukkitEntity.setCooldown(BUFF_BOX_COOLDOWN_GROUP, BUFF_BOX_COOLDOWN)
 
                     buffboxes.remove(box)
-                    box.level.setBlockAndUpdate(box.pos,Blocks.AIR.defaultBlockState())
+                    box.level.setBlockAndUpdate(box.pos, Blocks.AIR.defaultBlockState())
                     close()
 
                     return@execute
@@ -255,7 +249,7 @@ object BardClass: AnniClass(), Listener {
                 val jukebox = level.getBlockEntity(pos) as? JukeboxBlockEntity ?: return@execute
                 val song = JukeboxSong.fromStack(net.minecraft.world.item.ItemStack(buff.icon))
 
-                jukebox.songPlayer.play(level,song.get())
+                jukebox.songPlayer.play(level, song.get())
                 jukebox.onSongChanged()
 
                 close()

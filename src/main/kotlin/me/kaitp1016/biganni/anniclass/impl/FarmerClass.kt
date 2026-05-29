@@ -159,29 +159,29 @@ object FarmerClass: AnniClass(), Listener {
     @EventHandler(priority = EventPriority.HIGH)
     fun onTick(event: ServerTickStartEvent) {
         if (plants.isNotEmpty()) {
-            plants.removeAll {(level,pos) ->
+            plants.removeIf {(level,pos) ->
                 val state = level.getBlockState(pos)
-                if (state.block != Blocks.WHEAT) return@removeAll true
+                if (state.block != Blocks.WHEAT) return@removeIf true
 
                 if (Random.nextInt(0,100) == 0) {
                     val age = state.getValue(CropBlock.AGE)
-                    if (age >= CropBlock.MAX_AGE) return@removeAll true
+                    if (age >= CropBlock.MAX_AGE) return@removeIf true
 
                     level.setBlockAndUpdate(pos,state.setValue(CropBlock.AGE,age + 1))
                 }
 
-                return@removeAll false
+                return@removeIf false
             }
         }
 
         if (faminePlayers.isNotEmpty()) {
-            faminePlayers.removeAll {player ->
+            faminePlayers.removeIf {player ->
                 if (player.foodLevel < 7) {
                     player.removePotionEffect(PotionEffectType.HUNGER)
-                    return@removeAll true
+                    return@removeIf true
                 }
 
-                return@removeAll false
+                return@removeIf false
             }
         }
     }

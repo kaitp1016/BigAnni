@@ -8,6 +8,7 @@ import me.kaitp1016.biganni.utils.FallDamageResistance
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
+import me.kaitp1016.biganni.utils.Utils.isFullBlock
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -58,8 +59,11 @@ object SwapperClass: AnniClass(), Listener {
         val item = event.item ?: return
         if (item.getAnniId() != SWAPPER_ITEM_ID || player.hasCooldown(item)) return
 
+        val mcPlayer = player.toMC()
+        val pos = mcPlayer.blockPosition()
         val world = player.world
-        if (!world.getBlockState(player.location).block.isEmpty || !world.getBlockState(player.location.clone().add(0.0,1.0,0.0)).block.isEmpty || !world.getBlockState(player.location.clone().add(0.0,-1.0,0.0)).block.toMC().occlusionShape.`moonrise$isFullBlock`()) {
+        val level = world.toMC()
+        if (!world.getBlockState(player.location).block.isEmpty || !world.getBlockState(player.location.clone().add(0.0,1.0,0.0)).block.isEmpty || !level.isFullBlock(pos.offset(0,-1,0))) {
             player.sendMessage("ここでは使用できません!")
             return
         }

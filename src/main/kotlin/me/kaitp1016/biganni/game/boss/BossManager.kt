@@ -158,16 +158,28 @@ object BossManager: Listener {
             setItem(12, ItemStack(Items.GOLDEN_PICKAXE).bukkitStack.apply {
                 addUnsafeEnchantment(Enchantment.UNBREAKING, 10)
                 addUnsafeEnchantment(Enchantment.EFFICIENCY, 3)
+
+                editMeta {
+                    it.itemName(Component.text("Pick of Speed").color(NamedTextColor.GOLD))
+                }
             }.toMC()!!)
 
             setItem(13, ItemStack(Items.GOLDEN_PICKAXE).bukkitStack.apply {
                 addUnsafeEnchantment(Enchantment.UNBREAKING, 10)
                 addUnsafeEnchantment(Enchantment.FORTUNE, 3)
+
+                editMeta {
+                    it.itemName(Component.text("Pick of Fortune").color(NamedTextColor.GOLD))
+                }
             }.toMC()!!)
 
             setItem(21, ItemStack(Items.BOW).bukkitStack.apply {
                 addUnsafeEnchantment(Enchantment.POWER, 3)
                 addUnsafeEnchantment(Enchantment.FLAME, 1)
+
+                editMeta {
+                    it.itemName(Component.text("Bow of Power").color(NamedTextColor.GOLD))
+                }
             }.toMC()!!)
 
             setItem(22, BossBuffItems.BowOfAether.create())
@@ -177,10 +189,18 @@ object BossManager: Listener {
             setItem(31, ItemStack(Items.DIAMOND_SWORD).bukkitStack.apply {
                 addUnsafeEnchantment(Enchantment.UNBREAKING, 10)
                 addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 3)
+
+                editMeta {
+                    it.itemName(Component.text("Sword of Flames").color(NamedTextColor.GOLD))
+                }
             }.toMC()!!)
 
             setItem(39, ItemStack(Items.GOLDEN_SWORD).bukkitStack.apply {
                 addUnsafeEnchantment(Enchantment.LOOTING, 1)
+
+                editMeta {
+                    it.itemName(Component.text("Sword of Looting").color(NamedTextColor.GOLD))
+                }
             }.toMC()!!)
 
             setItem(16, ItemStack(Items.SPLASH_POTION).apply {

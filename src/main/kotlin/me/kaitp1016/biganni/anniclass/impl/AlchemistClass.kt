@@ -123,14 +123,14 @@ object AlchemistClass: AnniClass(), Listener {
     fun onTick(event: ServerTickStartEvent) {
         if (stands.isEmpty()) return
 
-        stands.removeAll { stand ->
+        stands.removeIf { stand ->
             val state = stand.level.getBlockState(stand.pos)
-            if (state.block != Blocks.BREWING_STAND) return@removeAll true
+            if (state.block != Blocks.BREWING_STAND) return@removeIf true
 
-            val entity = stand.level.getBlockEntity(stand.pos) as? BrewingStandBlockEntity ?: return@removeAll false
+            val entity = stand.level.getBlockEntity(stand.pos) as? BrewingStandBlockEntity ?: return@removeIf false
             BrewingStandBlockEntity.serverTick(stand.level,stand.pos,state,entity)
 
-            return@removeAll false
+            return@removeIf false
         }
     }
 

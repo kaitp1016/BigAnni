@@ -32,13 +32,13 @@ object Config {
                 val health = json.get("health").asInt
                 val spawn = parseLocation(json.get("spawn").asJsonObject)
                 val color = json.get("color").asString
-                val baseArea = parseAABB(json.get("baseArea").asJsonObject)
-                val nexusWarp = parseLocation(json.get("nexusWarp").asJsonObject)
-                val witchLocation = parseLocation(json.get("witchLocation").asJsonObject)
-                val riftLocation = parseLocation(json.get("riftLocation").asJsonObject)
-                val bossSpawn = parseLocation(json.get("bossSpawn").asJsonObject)
-                val teamWool = getItem(json.get("teamWool").asString) ?: Items.WHITE_WOOL
-                val teamDoorBlock = getBlock(json.get("teamDoorBlock").asString) ?: Blocks.GLASS_PANE
+                val baseArea = parseAABB(json.get("base_area").asJsonObject)
+                val nexusWarp = parseLocation(json.get("nexus_warp").asJsonObject)
+                val witchLocation = parseLocation(json.get("witch_location").asJsonObject)
+                val riftLocation = parseLocation(json.get("rift_location").asJsonObject)
+                val bossSpawn = parseLocation(json.get("boss_spawn").asJsonObject)
+                val teamWool = getItem(json.get("team_wool").asString) ?: Items.WHITE_WOOL
+                val teamDoorBlock = getBlock(json.get("team_door_block").asString) ?: Blocks.GLASS_PANE
 
                 return TeamConfig(name, nexus, health, spawn, color, baseArea, nexusWarp, witchLocation, riftLocation, bossSpawn, teamWool, teamDoorBlock)
             }
@@ -53,12 +53,12 @@ object Config {
         companion object {
             fun fromJson(json: JsonObject): MapConfig {
                 val name = json.get("name").asString
-                val phaseTime = json.get("phaseTime").asInt
-                val bossPortals = parseLevelBlockPoses(json.get("bossPortals").asJsonArray)
-                val bossLocation = parseLocation(json.get("bossLocation").asJsonObject)
+                val phaseTime = json.get("phase_time").asInt
+                val bossPortals = parseLevelBlockPoses(json.get("boss_portals").asJsonArray)
+                val bossLocation = parseLocation(json.get("boss_location").asJsonObject)
                 val teams = parseTeams(json.get("teams").asJsonArray)
-                val blockedClasses = json.get("blockedClasses").asJsonArray.map { it.asString }
-                val doubleNexusDamage = json.get("doubleNexusDamage")?.asBoolean ?: true
+                val blockedClasses = json.get("blocked_classes").asJsonArray.map { it.asString }
+                val doubleNexusDamage = json.get("double_nexus_damage")?.asBoolean ?: true
 
                 return MapConfig(name, phaseTime, bossPortals, bossLocation, teams, blockedClasses, doubleNexusDamage)
             }
@@ -112,12 +112,12 @@ object Config {
     }
 
     private fun parseAABB(json: JsonObject): AABB {
-        val minX = json.get("minX").asDouble
-        val minY = json.get("minY").asDouble
-        val minZ = json.get("minZ").asDouble
-        val maxX = json.get("maxX").asDouble
-        val maxY = json.get("maxY").asDouble
-        val maxZ = json.get("maxZ").asDouble
+        val minX = json.get("min_x").asDouble
+        val minY = json.get("min_y").asDouble
+        val minZ = json.get("min_z").asDouble
+        val maxX = json.get("max_x").asDouble
+        val maxY = json.get("max_y").asDouble
+        val maxZ = json.get("max_z").asDouble
 
         return AABB(minX, minY, minZ, maxX, maxY, maxZ)
     }

@@ -91,9 +91,9 @@ object MinerClass: AnniClass(), Listener {
     fun onTick(event: ServerTickStartEvent) {
         if (goldrushes.isEmpty()) return
 
-        goldrushes.removeAll {
+        goldrushes.removeIf {
             it.time--
-            return@removeAll it.time <= 0
+            return@removeIf it.time <= 0
         }
     }
 

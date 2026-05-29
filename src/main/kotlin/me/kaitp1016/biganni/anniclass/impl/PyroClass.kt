@@ -85,6 +85,12 @@ object PyroClass: AnniClass(), Listener {
         super.onUnselect(player)
     }
 
+    override fun onRespawn(player: Player) {
+        player.addPotionEffect(PotionEffect(PotionEffectType.FIRE_RESISTANCE, PotionEffect.INFINITE_DURATION,0))
+
+        super.onRespawn(player)
+    }
+
     @EventHandler
     fun onInteract(event: PlayerInteractEvent) {
         if (!event.action.isRightClick) return

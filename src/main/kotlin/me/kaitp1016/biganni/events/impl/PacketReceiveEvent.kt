@@ -6,7 +6,7 @@ import org.bukkit.event.Cancellable
 import org.bukkit.event.HandlerList
 import org.bukkit.event.player.PlayerEvent
 
-class PacketReciveEvent: PlayerEvent, Cancellable {
+class PacketReceiveEvent: PlayerEvent, Cancellable {
     val packet:Packet<*>
     @JvmField
     var isCancelled = false

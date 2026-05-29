@@ -95,9 +95,9 @@ object LumberjackClass: AnniClass(), Listener {
     fun onTick(event: ServerTickStartEvent) {
         if (bruteForces.isEmpty()) return
 
-        bruteForces.removeAll {
+        bruteForces.removeIf {
             it.time--
-            return@removeAll it.time <= 0
+            return@removeIf it.time <= 0
         }
     }
 

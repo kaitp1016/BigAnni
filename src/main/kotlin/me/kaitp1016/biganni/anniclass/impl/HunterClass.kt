@@ -11,11 +11,13 @@ import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.LevelBlockPos
 import me.kaitp1016.biganni.utils.MCUtils.toMC
+import me.kaitp1016.biganni.utils.Utils.isFullBlock
 import me.kaitp1016.biganni.utils.Utils.toIntCorrect
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Vec3i
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket
 import net.minecraft.server.level.ServerLevel
@@ -48,8 +50,8 @@ object HunterClass: AnniClass(), Listener {
 
     const val TRAP_SNARE_ITEM_ID = "hunter_trap_snare"
     const val TRAP_SNARE_COOLDOWN = 300
-    val TRAP_SNARE_COOLDOWN_GROUP = Key.key(PLUGIN_ID,"hunter_trap_snare")
-    
+    val TRAP_SNARE_COOLDOWN_GROUP = Key.key(PLUGIN_ID, "hunter_trap_snare")
+
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {
         return super.getDefaultItems(player).also {
             it.add(ItemStack(Material.LEAD).apply {
@@ -67,7 +69,7 @@ object HunterClass: AnniClass(), Listener {
     }
 
     override fun onUnselect(player: Player) {
-        traps.removeAll { it.player == player }
+        traps.removeIf { it.player == player }
 
         super.onUnselect(player)
     }
@@ -76,11 +78,8 @@ object HunterClass: AnniClass(), Listener {
 
     data class Trap(val player: Player, val pos: LevelBlockPos, val type: TrapType)
 
-    enum class TrapType(val displayName: String, val display: Item,val block: BlockData) {
-        FREEZE(displayName = "Freeze",display = Items.ICE,block = Material.ICE.createBlockData()),
-        BLAST(displayName = "Blast",display = Items.TNT,block = Material.TNT.createBlockData()),
-        DECAY(displayName = "Decay",display = Items.COAL_BLOCK,block = Material.COAL_BLOCK.createBlockData()),
-        LEVITATION(displayName = "Levitation",display = Items.EMERALD_BLOCK,block = Material.EMERALD_BLOCK.createBlockData());
+    enum class TrapType(val displayName: String, val display: Item, val block: BlockData) {
+        FREEZE(displayName = "Freeze", display = Items.ICE, block = Material.ICE.createBlockData()), BLAST(displayName = "Blast", display = Items.TNT, block = Material.TNT.createBlockData()), DECAY(displayName = "Decay", display = Items.COAL_BLOCK, block = Material.COAL_BLOCK.createBlockData()), LEVITATION(displayName = "Levitation", display = Items.EMERALD_BLOCK, block = Material.EMERALD_BLOCK.createBlockData());
 
         fun next(): TrapType {
             val entries = entries
@@ -88,6 +87,15 @@ object HunterClass: AnniClass(), Listener {
             return entries.getOrNull(index + 1) ?: entries.first()
         }
     }
+
+    val trapSizes = arrayOf(
+        arrayOf(Vec3i(1, 0, 1), Vec3i(1, 0, 0), Vec3i(1, 0, -1), Vec3i(0, 0, 1), Vec3i(0, 0, 0), Vec3i(0, 0, -1), Vec3i(-1, 0, 1), Vec3i(-1, 0, 0), Vec3i(-1, 0, -1),),
+        arrayOf(Vec3i(1, 0, 1), Vec3i(1, 0, 0), Vec3i(0, 0, 1), Vec3i(0, 0, 0),),
+        arrayOf(Vec3i(-1, 0, 1), Vec3i(-1, 0, 0), Vec3i(0, 0, 1), Vec3i(0, 0, 0),),
+        arrayOf(Vec3i(1, 0, -1), Vec3i(0, 0, -1), Vec3i(1, 0, 0), Vec3i(0, 0, 0),),
+        arrayOf(Vec3i(-1, 0, -1), Vec3i(0, 0, -1), Vec3i(-1, 0, 0), Vec3i(0, 0, 0),),
+        arrayOf(Vec3i(0, 0, 0),),
+    )
 
     val traps = mutableListOf<Trap>()
 
@@ -104,7 +112,7 @@ object HunterClass: AnniClass(), Listener {
             val pos = event.clickedBlock ?: return
             val mcPlayer = player.toMC()
 
-            PlaceTrapGui(player.toMC(), LevelBlockPos(mcPlayer.level(),pos.x,pos.y,pos.z)).open()
+            PlaceTrapGui(player.toMC(), LevelBlockPos(mcPlayer.level(), pos.x, pos.y, pos.z)).open()
         }
     }
 
@@ -114,33 +122,36 @@ object HunterClass: AnniClass(), Listener {
 
         val player = event.player.toMC()
         val loaction = event.to
-        val pos = BlockPos(loaction.x.toIntCorrect(),loaction.y.toIntCorrect(),loaction.z.toIntCorrect())
+        val pos = BlockPos(loaction.x.toIntCorrect(), loaction.y.toIntCorrect(), loaction.z.toIntCorrect())
         val level = player.level()
-        val levelPos = LevelBlockPos(level,pos.x,pos.y,pos.z)
+        val levelPos = LevelBlockPos(level, pos.x, pos.y, pos.z)
 
         val trap = traps.find { it.pos == levelPos } ?: return
         if (trap.player.toMC().teamColor == player.teamColor) return
 
-        when(trap.type) {
+        when (trap.type) {
             TrapType.FREEZE -> {
-                player.addEffect(MobEffectInstance(MobEffects.SLOWNESS,200,1))
+                player.addEffect(MobEffectInstance(MobEffects.SLOWNESS, 200, 1))
             }
+
             TrapType.BLAST -> {
                 player.hurtMarked = true
-                player.lerpMotion(player.position().subtract(pos.center).normalize().multiply(3.0,1.0,3.0))
-                val source = DamageSource(mc.registryAccess().get(DamageTypes.PLAYER_EXPLOSION).get(),trap.player.toMC())
+                player.lerpMotion(player.position().subtract(pos.center).normalize().multiply(3.0, 1.0, 3.0))
+                val source = DamageSource(mc.registryAccess().get(DamageTypes.PLAYER_EXPLOSION).get(), trap.player.toMC())
 
-                player.bukkitEntity.playSound(player.bukkitEntity.location, Sound.ENTITY_GENERIC_EXPLODE,1f,1f)
-                player.hurtServer(level,source,10f)
+                player.bukkitEntity.playSound(player.bukkitEntity.location, Sound.ENTITY_GENERIC_EXPLODE, 1f, 1f)
+                player.hurtServer(level, source, 10f)
             }
+
             TrapType.DECAY -> {
-                player.addEffect(MobEffectInstance(MobEffects.WITHER,160,1))
-                player.bukkitEntity.playSound(player.bukkitEntity.location, Sound.ENTITY_WITHER_SHOOT,1f,1f)
+                player.addEffect(MobEffectInstance(MobEffects.WITHER, 160, 1))
+                player.bukkitEntity.playSound(player.bukkitEntity.location, Sound.ENTITY_WITHER_SHOOT, 1f, 1f)
             }
+
             TrapType.LEVITATION -> {
-                player.bukkitEntity.playSound(player.bukkitEntity.location, Sound.ENTITY_FIREWORK_ROCKET_TWINKLE,1f,1f)
-                player.addEffect(MobEffectInstance(MobEffects.LEVITATION,200,1))
-                player.addEffect(MobEffectInstance(MobEffects.SLOWNESS,200,10))
+                player.bukkitEntity.playSound(player.bukkitEntity.location, Sound.ENTITY_FIREWORK_ROCKET_TWINKLE, 1f, 1f)
+                player.addEffect(MobEffectInstance(MobEffects.LEVITATION, 200, 1))
+                player.addEffect(MobEffectInstance(MobEffects.SLOWNESS, 200, 10))
             }
         }
 
@@ -153,8 +164,8 @@ object HunterClass: AnniClass(), Listener {
 
         val block = event.block
         val level = block.world.toMC()
-        val pos = BlockPos(block.x,block.y,block.z)
-        val levelPos = LevelBlockPos(level,pos.x,pos.y,pos.z)
+        val pos = BlockPos(block.x, block.y, block.z)
+        val levelPos = LevelBlockPos(level, pos.x, pos.y, pos.z)
 
         val trap = traps.find { it.pos == levelPos } ?: return
         traps.remove(trap)
@@ -175,26 +186,20 @@ object HunterClass: AnniClass(), Listener {
         traps.forEach { trap ->
             val team = trap.player.toMC().teamColor
 
-            val builder = Particle.BLOCK_CRUMBLE.builder()
-                .location(trap.pos.level.world,trap.pos.x.toDouble() + 0.5,trap.pos.y.toDouble() + 1.1,trap.pos.z.toDouble() + 0.5)
-                .offset(0.3,0.0,0.3)
-                .receivers(16, true)
-                .count(6)
-                .data(trap.type.block)
+            val builder = Particle.BLOCK_CRUMBLE.builder().location(trap.pos.level.world, trap.pos.x.toDouble() + 0.5, trap.pos.y.toDouble() + 1.1, trap.pos.z.toDouble() + 0.5).offset(0.3, 0.0, 0.3).receivers(16, true).count(6).data(trap.type.block)
 
-            builder.receivers(builder.receivers()!!.filter { it.toMC().teamColor == team })
-                .spawn()
+            builder.receivers(builder.receivers()!!.filter { it.toMC().teamColor == team }).spawn()
         }
     }
 
-    class PlaceTrapGui: ChestPacketGui {
+    class PlaceTrapGui : ChestPacketGui {
         override val name = "place trap"
         override val displayName = net.minecraft.network.chat.Component.literal("Place Trap")
 
         val types: List<TrapType>
         val pos: LevelBlockPos
 
-        constructor(player: ServerPlayer,pos: LevelBlockPos):super(player,9) {
+        constructor(player: ServerPlayer, pos: LevelBlockPos) : super(player, 9) {
             this.types = TrapType.entries.reversed()
             this.pos = pos
 
@@ -210,7 +215,8 @@ object HunterClass: AnniClass(), Listener {
                 if (!isOpened) return@execute
 
                 val type = types.getOrNull(packet.slotNum.toInt()) ?: return@execute
-                val size = arrayOf(3,2,1).find { isPossibleToPlace(it) }
+                val level = pos.level
+                val size = trapSizes.find { canPlace(it) }
                 val bukkitPlayer = player.bukkitEntity
                 if (size == null) {
                     bukkitPlayer.sendMessage("ここにはおけません!")
@@ -218,38 +224,26 @@ object HunterClass: AnniClass(), Listener {
                     return@execute
                 }
 
-                traps.removeAll { it.player == bukkitPlayer }
+                traps.removeIf { it.player == bukkitPlayer }
 
-                val level = pos.level
-
-                repeat(size * size) {
-                    val x = pos.x + it % size
-                    val y = pos.y
-                    val z = pos.z + it / size
-
-                    traps.add(Trap(bukkitPlayer, LevelBlockPos(level,x,y,z),type))
+                size.forEach {
+                    traps.add(Trap(bukkitPlayer, LevelBlockPos(level, pos.x + it.x, pos.y + it.y, pos.z + it.z), type))
                 }
 
-                bukkitPlayer.setCooldown(TRAP_SNARE_COOLDOWN_GROUP,TRAP_SNARE_COOLDOWN)
+                bukkitPlayer.setCooldown(TRAP_SNARE_COOLDOWN_GROUP, TRAP_SNARE_COOLDOWN)
                 close()
             }
         }
 
-        fun isPossibleToPlace(size: Int): Boolean {
+        fun canPlace(size: Array<Vec3i>): Boolean {
             val level = pos.level
+            val pos = pos.toBlockPos()
 
-            repeat(size * size) {
-                val x = pos.x + it % size
-                val z = pos.z + it / size
-
-                if (!canPlaceAt(level,x,pos.y,z)) return false
-            }
-
-            return true
+            return size.all { canPlaceAt(level, pos.offset(it)) }
         }
 
-        fun canPlaceAt(level: ServerLevel, x: Int,y: Int,z: Int): Boolean {
-            return level.getBlockState(BlockPos(x,y,z)).occlusionShape.`moonrise$isFullBlock`() && level.getBlockState(BlockPos(x,y + 1,z)).isAir && level.getBlockState(BlockPos(x,y + 2,z)).isAir
+        fun canPlaceAt(level: ServerLevel, pos: BlockPos): Boolean {
+            return level.isFullBlock(pos) && level.getBlockState(pos.offset(0, 1, 0)).isAir && level.getBlockState(pos.offset(0, 2, 0)).isAir
         }
     }
 }

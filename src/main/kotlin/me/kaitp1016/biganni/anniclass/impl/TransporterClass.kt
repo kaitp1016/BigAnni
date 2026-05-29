@@ -5,10 +5,13 @@ import me.kaitp1016.biganni.anniclass.AnniClass
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
+import me.kaitp1016.biganni.utils.Utils.isFullBlock
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.core.BlockPos
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.item.Items
+import net.minecraft.world.level.block.Blocks
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
@@ -160,8 +163,9 @@ object TransporterClass: AnniClass(), Listener {
                 destroy(portal)
             }
             else {
-                if (!canUse(world,pos) || !clickedBlock.blockData.toMC().occlusionShape.`moonrise$isFullBlock`() || clickedBlock.blockData.toMC().hasBlockEntity() || clickedBlock.type == Material .NETHER_QUARTZ_ORE) {
-                    player.sendMessage(Component.text("ここにはおけません!").color(NamedTextColor.RED))
+                val level = world.toMC()
+                if (!canPlace(level,pos)) {
+                    player.sendMessage(Component.text("そこにはおけません!").color(NamedTextColor.RED))
                     return
                 }
 
@@ -181,8 +185,9 @@ object TransporterClass: AnniClass(), Listener {
             }
         }
 
-        if (!canUse(world,pos) || !clickedBlock.blockData.toMC().occlusionShape.`moonrise$isFullBlock`() || clickedBlock.blockData.toMC().hasBlockEntity() || clickedBlock.type == Material .NETHER_QUARTZ_ORE) {
-            player.sendMessage(Component.text("ここにはおけません!").color(NamedTextColor.RED))
+        val level = world.toMC()
+        if (!canPlace(level,pos)) {
+            player.sendMessage(Component.text("そこにはおけません!").color(NamedTextColor.RED))
             return
         }
 
@@ -211,7 +216,7 @@ object TransporterClass: AnniClass(), Listener {
     @EventHandler
     fun onTick(event: ServerTickStartEvent) {
         if (teleportPlayers.isNotEmpty()) {
-            teleportPlayers.removeAll { !it.isOnline || !it.isSneaking }
+            teleportPlayers.removeIf { !it.isOnline || !it.isSneaking }
         }
 
         portals.forEach { portal ->
@@ -228,6 +233,11 @@ object TransporterClass: AnniClass(), Listener {
         if (portals.any { portal -> portal.first.pos == pos || portal.secound?.pos == pos }) {
             event.isCancelled = true
         }
+    }
+
+    private fun canPlace(level: ServerLevel,pos: BlockPos): Boolean {
+        val block = level.getBlockState(pos)
+        return canUse(level.world,pos) && level.isFullBlock(pos) && !block.hasBlockEntity() && block.block != Blocks.NETHER_QUARTZ_ORE
     }
 
     private fun canUse(world: World, pos: BlockPos): Boolean {

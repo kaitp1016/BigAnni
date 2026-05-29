@@ -82,7 +82,7 @@ object RiftWalkerClass: AnniClass(), Listener {
     fun onTick(event: ServerTickStartEvent) {
         if (rifts.isEmpty()) return
 
-        rifts.removeAll(Rift::tick)
+        rifts.removeIf(Rift::tick)
     }
 
     data class Rift(val rifter: Player,val target: RiftTarget,val location: Location) {
@@ -161,13 +161,13 @@ object RiftWalkerClass: AnniClass(), Listener {
 
         override fun getIcon(): net.minecraft.world.item.ItemStack {
             return net.minecraft.world.item.ItemStack(team.teamWool).apply {
-                set(DataComponents.ITEM_NAME, net.minecraft.network.chat.Component.literal("${team.color}Your Base"))
+                set(DataComponents.ITEM_NAME, net.minecraft.network.chat.Component.literal("${team.color}${team.name} Team"))
                 set(DataComponents.LORE, ItemLore(listOf(net.minecraft.network.chat.Component.literal("リフトする!").withStyle(Style.EMPTY.withItalic(false)))))
             }
         }
 
         override fun getName(): Component {
-            return Component.text("${team.color}Your Base")
+            return Component.text("§6team ${team.color}${team.name}")
         }
     }
 
@@ -188,7 +188,7 @@ object RiftWalkerClass: AnniClass(), Listener {
         }
 
         override fun getName(): Component {
-            return Component.text("§6Team ${team.color}${team.name}")
+            return Component.text("§6team ${team.color}${team.name}")
         }
     }
 

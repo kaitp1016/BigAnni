@@ -50,7 +50,7 @@ object AnniCommand {
 
             Game.start()
             return@executes 1
-        }).then(Commands.literal("start").executes {
+        }).then(Commands.literal("startwithcountdown").executes {
             if (Game.isStarted || StartCountdown.isStarted) {
                 it.source.sender.sendMessage("ゲームが始まっているため開始できません。/anni resetをしてから開始してください。")
                 return@executes 1

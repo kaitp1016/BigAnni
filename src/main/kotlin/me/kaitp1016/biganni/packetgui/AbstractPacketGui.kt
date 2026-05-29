@@ -1,6 +1,6 @@
 package me.kaitp1016.biganni.packetgui
 
-import me.kaitp1016.biganni.events.impl.PacketReciveEvent
+import me.kaitp1016.biganni.events.impl.PacketReceiveEvent
 import me.kaitp1016.biganni.events.impl.PacketSendEvent
 import net.minecraft.server.level.ServerPlayer
 
@@ -16,7 +16,7 @@ abstract class AbstractPacketGui {
         this.player = player
     }
 
-    abstract fun onPacketRecive(event: PacketReciveEvent)
+    abstract fun onPacketRecive(event: PacketReceiveEvent)
     abstract fun onPacketSend(event: PacketSendEvent)
 
     abstract fun onOpen()

@@ -72,14 +72,14 @@ object AcrobatClass: AnniClass(), Listener {
     fun onTick(event: ServerTickStartEvent) {
         if (cooldowns.isEmpty()) return
 
-        cooldowns.removeAll{
+        cooldowns.removeIf{
             it.tick--
             if (it.tick < 1) {
                 it.player.allowFlight = true
                 it.player.playSound(it.player, Sound.ENTITY_PLAYER_LEVELUP,1f,2f)
-                return@removeAll true
+                return@removeIf true
             }
-            return@removeAll false
+            return@removeIf false
         }
     }
 

@@ -32,14 +32,14 @@ object FallDamageResistance: Listener {
 
     @EventHandler
     fun onTick(event: ServerTickStartEvent) {
-        resistancePlayers.removeAll{
+        resistancePlayers.removeIf{
             it.time--
             if (it.time < 1) {
                 it.player.getAttribute(Attribute.FALL_DAMAGE_MULTIPLIER)?.removeModifier(FALL_DAMAGE_RESISTANCE_KEY)
-                return@removeAll true
+                return@removeIf true
             }
 
-            return@removeAll false
+            return@removeIf false
         }
     }
 }

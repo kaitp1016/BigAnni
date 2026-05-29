@@ -96,6 +96,12 @@ object NeptuneClass: AnniClass(), Listener {
         super.onUnselect(player)
     }
 
+    override fun onRespawn(player: Player) {
+        player.addPotionEffect(PotionEffect(PotionEffectType.WATER_BREATHING, PotionEffect.INFINITE_DURATION,0))
+
+        super.onRespawn(player)
+    }
+
 
     @EventHandler
     fun onInteract(event: PlayerInteractEvent) {
@@ -142,14 +148,14 @@ object NeptuneClass: AnniClass(), Listener {
     @EventHandler
     fun onTick(event: ServerTickStartEvent) {
         if (!frozenBlocks.isEmpty()) {
-            frozenBlocks.removeAll { block ->
+            frozenBlocks.removeIf { block ->
                 block.tick--
 
                 if (block.tick < 1) {
                     if (block.level.getBlockState(block.pos).block == block.frozenBlock) {
                         block.level.setBlockAndUpdate(block.pos, block.unfrozenBlock.defaultBlockState())
                     }
-                    return@removeAll true
+                    return@removeIf true
                 }
 
                 false

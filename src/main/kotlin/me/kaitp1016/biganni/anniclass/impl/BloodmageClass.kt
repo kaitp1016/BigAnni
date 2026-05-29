@@ -248,16 +248,15 @@ object BloodmageClass: AnniClass(), Listener {
     @EventHandler
     fun onTick(event: ServerTickStartEvent) {
         if (!terraforms.isEmpty()) {
-            terraforms.removeAll {
-                it.tick()
-                return@removeAll it.tick < 1
+            terraforms.removeIf {
+                return@removeIf it.tick()
             }
         }
 
         if (!curseCooldown.isEmpty()) {
-            curseCooldown.removeAll {
+            curseCooldown.removeIf {
                 it.tick--
-                return@removeAll it.tick < 1
+                return@removeIf it.tick < 1
             }
         }
     }

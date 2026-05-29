@@ -37,7 +37,7 @@ object NexusHandler {
         val blockLocation = block.location
 
         Bukkit.getOnlinePlayers().forEach {
-            if (team.health < 1) it.playSound(it, Sound.ENTITY_GENERIC_EXPLODE, 2f, 0f)
+            if (team.health < 1) it.playSound(it, Sound.ENTITY_LIGHTNING_BOLT_IMPACT, 2f, 0f)
             else if (world == it.world && blockLocation.toVector().distance(it.location.toVector()) < 30) it.playSound(it, Sound.BLOCK_ANVIL_PLACE, 2f, pitch)
             else if (it.toMC().team?.name?.equals(team.name, ignoreCase = true) == true) it.playSound(it, Sound.BLOCK_NOTE_BLOCK_HARP, 2f, 2f)
 

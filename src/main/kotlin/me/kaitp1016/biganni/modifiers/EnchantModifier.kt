@@ -59,6 +59,10 @@ object EnchantModifier: Listener {
                 event.enchanter.level -= 2
             }
         }
+
+        if (event.enchantsToAdd.contains(Enchantment.DEPTH_STRIDER)) {
+            event.enchantsToAdd[Enchantment.DEPTH_STRIDER] = 1
+        }
     }
 
     @EventHandler

@@ -1,6 +1,6 @@
 package me.kaitp1016.biganni.packetgui
 
-import me.kaitp1016.biganni.events.impl.PacketReciveEvent
+import me.kaitp1016.biganni.events.impl.PacketReceiveEvent
 import me.kaitp1016.biganni.events.impl.PacketSendEvent
 import me.kaitp1016.biganni.utils.Scheduler
 import net.minecraft.core.NonNullList
@@ -30,7 +30,7 @@ abstract class ChestPacketGui: AbstractPacketGui {
         this.menuType = menuTypeMap[size] ?: throw IllegalArgumentException("size is must be one of ${menuTypeMap.keys.joinToString()}.")
     }
 
-    override fun onPacketRecive(event: PacketReciveEvent) {
+    override fun onPacketRecive(event: PacketReceiveEvent) {
         val packet = event.packet
 
         if (packet is ServerboundContainerClickPacket) {

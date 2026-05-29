@@ -107,16 +107,16 @@ object MercenaryClass: AnniClass(), Listener {
     @EventHandler
     fun onTick(event: ServerTickStartEvent) {
         if (!markCooldowns.isEmpty()) {
-            markCooldowns.removeAll {
+            markCooldowns.removeIf {
                 it.time--
-                return@removeAll it.time <= 0
+                return@removeIf it.time <= 0
             }
         }
 
         if (!marks.isEmpty()) {
-            marks.removeAll {
+            marks.removeIf {
                 it.time--
-                return@removeAll it.time <= 0
+                return@removeIf it.time <= 0
             }
         }
     }

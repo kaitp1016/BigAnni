@@ -395,7 +395,7 @@ object Game: Listener {
                 "201110923" to BukkitComponent.text(""),
                 "200999123" to BukkitComponent.text("§6Phase 3 §7has §6started"),
                 "211111903" to BukkitComponent.text("§bDiamonds §7have spawned in the middle"),
-                "209020903" to BukkitComponent.text("§bWitches §7have also spawned!"),
+                "209020903" to BukkitComponent.text("§bWitches §7have also spawned"),
                 "200999223" to BukkitComponent.text(""),
                 "232332322" to BukkitComponent.text(""),
             ) to mapOf(

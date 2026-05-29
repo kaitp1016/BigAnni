@@ -122,9 +122,9 @@ object ImmobilizerClass: AnniClass(), Listener {
     fun onTick(event: ServerTickStartEvent) {
         if (targetCooldown.isEmpty()) return
 
-        targetCooldown.removeAll { cooldown ->
+        targetCooldown.removeIf { cooldown ->
             cooldown.time--
-            return@removeAll cooldown.time < 1
+            return@removeIf cooldown.time < 1
         }
     }
 

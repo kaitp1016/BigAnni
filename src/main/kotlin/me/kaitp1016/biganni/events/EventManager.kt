@@ -3,7 +3,7 @@ package me.kaitp1016.biganni.events
 import io.netty.channel.ChannelDuplexHandler
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelPromise
-import me.kaitp1016.biganni.events.impl.PacketReciveEvent
+import me.kaitp1016.biganni.events.impl.PacketReceiveEvent
 import me.kaitp1016.biganni.events.impl.PacketSendEvent
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.minecraft.network.protocol.Packet
@@ -30,7 +30,7 @@ object EventManager: Listener {
 
         override fun channelRead(ctx: ChannelHandlerContext?, packet: Any?) {
             if (packet is Packet<*>) {
-                val event = PacketReciveEvent(packet, player)
+                val event = PacketReceiveEvent(packet, player)
                 Bukkit.getPluginManager().callEvent(event)
 
                 if (!event.isCancelled) {

@@ -62,9 +62,9 @@ object LauncherPad: Listener {
     fun onTick(event: ServerTickStartEvent) {
         if (cooldowns.isEmpty()) return
 
-        cooldowns.removeAll {
+        cooldowns.removeIf {
             it.tick--
-            return@removeAll it.tick < 0
+            return@removeIf it.tick < 0
         }
     }
 }

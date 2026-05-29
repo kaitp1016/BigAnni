@@ -1,6 +1,6 @@
 package me.kaitp1016.biganni.features
 
-import me.kaitp1016.biganni.events.impl.PacketReciveEvent
+import me.kaitp1016.biganni.events.impl.PacketReceiveEvent
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.minecraft.network.protocol.game.ClientboundCooldownPacket
 import net.minecraft.network.protocol.game.ServerboundPlayerLoadedPacket
@@ -9,7 +9,7 @@ import org.bukkit.event.Listener
 
 object CooldownFix: Listener {
     @EventHandler
-    fun onPacket(event: PacketReciveEvent) {
+    fun onPacket(event: PacketReceiveEvent) {
         if (event.packet !is ServerboundPlayerLoadedPacket) return
         val player = event.player.toMC()
         val tick = player.cooldowns.tickCount

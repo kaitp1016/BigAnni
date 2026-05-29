@@ -28,8 +28,8 @@ object TaggedItem: Listener {
 
     @EventHandler
     fun onDeath(event: PlayerDeathEvent) {
-        event.drops.removeAll {item ->
-            return@removeAll item.persistentDataContainer.has(ItemKeys.SOULBOUND)
+        event.drops.removeIf {item ->
+            return@removeIf item.persistentDataContainer.has(ItemKeys.SOULBOUND)
         }
     }
 

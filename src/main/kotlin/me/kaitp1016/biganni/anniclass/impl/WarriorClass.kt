@@ -78,9 +78,9 @@ object WarriorClass: AnniClass(), Listener {
     fun onTick(event: ServerTickStartEvent) {
         if (frenzies.isEmpty()) return
 
-        frenzies.removeAll {
+        frenzies.removeIf {
             it.time--
-            return@removeAll it.time <= 0
+            return@removeIf it.time <= 0
         }
     }
 

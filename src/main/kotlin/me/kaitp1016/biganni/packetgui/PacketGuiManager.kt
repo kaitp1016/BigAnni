@@ -1,7 +1,7 @@
 package me.kaitp1016.biganni.packetgui
 
 import com.destroystokyo.paper.event.server.ServerTickStartEvent
-import me.kaitp1016.biganni.events.impl.PacketReciveEvent
+import me.kaitp1016.biganni.events.impl.PacketReceiveEvent
 import me.kaitp1016.biganni.events.impl.PacketSendEvent
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import org.bukkit.Bukkit
@@ -20,7 +20,7 @@ object PacketGuiManager: Listener {
     }
 
     @EventHandler
-    fun onPacketRecive(event: PacketReciveEvent) {
+    fun onPacketRecive(event: PacketReceiveEvent) {
         val player = event.player.toMC()
 
         val inv = player.containerMenu

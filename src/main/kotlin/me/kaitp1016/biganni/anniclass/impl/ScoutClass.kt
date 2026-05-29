@@ -90,9 +90,9 @@ object ScoutClass: AnniClass(), Listener {
     fun onTick(event: ServerTickStartEvent) {
         if (cooldowns.isEmpty()) return
 
-        cooldowns.removeAll{
+        cooldowns.removeIf{
             it.time--
-            return@removeAll it.time < 1
+            return@removeIf it.time < 1
         }
     }
 

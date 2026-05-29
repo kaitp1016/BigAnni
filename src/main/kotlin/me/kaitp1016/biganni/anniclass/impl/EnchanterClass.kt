@@ -94,9 +94,9 @@ object EnchanterClass: AnniClass(), Listener {
     fun onTick(event: ServerTickStartEvent) {
         if (intensifiers.isEmpty()) return
 
-        intensifiers.removeAll {
+        intensifiers.removeIf {
             it.time--
-            return@removeAll it.time <= 0
+            return@removeIf it.time <= 0
         }
     }
 

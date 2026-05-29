@@ -84,14 +84,14 @@ object FullyInvisible: Listener {
     fun onTick(event: ServerTickStartEvent) {
         if (invisiblePlayers.isEmpty()) return
 
-        invisiblePlayers.removeAll { player ->
+        invisiblePlayers.removeIf { player ->
             player.time--
 
             if (player.time < 1) {
                 revealInvisible(player.player)
-                return@removeAll true
+                return@removeIf true
             }
-            return@removeAll false
+            return@removeIf false
         }
     }
 
