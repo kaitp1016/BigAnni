@@ -30,6 +30,7 @@ class BigAnni : JavaPlugin() {
             WeaknessModifier,
             FarmlandModifier,
             KnockbackModifier,
+            HealModifier,
             FastCraft,
             ItemSign,
             RequiredTool,

@@ -46,11 +46,11 @@ object BloodmageClass: AnniClass(), Listener {
 
     const val CORRUPT_ITEM_ID = "bloodmage_corrupt"
     const val CORRUPT_COOLDOWN = 1200
-    val CORRUPT_COOLDOWN_GROUP = Key.key(PLUGIN_ID,"bloodmage_corrupt")
+    val CORRUPT_COOLDOWN_GROUP = Key.key(PLUGIN_ID, "bloodmage_corrupt")
 
     const val BLOODCURSED_TERRAFORM_ITEM_ID = "bloodmage_bloodcursed_terraform"
     const val BLOODCURSED_TERRAFORM_COOLDOWN = 2400
-    val BLOODCURSED_TERRAFORM_COOLDOWN_GROUP = Key.key(PLUGIN_ID,"bloodmage_bloodcursed_terraform")
+    val BLOODCURSED_TERRAFORM_COOLDOWN_GROUP = Key.key(PLUGIN_ID, "bloodmage_bloodcursed_terraform")
 
     const val TERRAFORM_DISTANCE = 16
     const val TERRAFORM_EFFECT_TICK = 600
@@ -106,14 +106,14 @@ object BloodmageClass: AnniClass(), Listener {
         }
     }
 
-    data class CurseCooldown(val player: Player,var tick: Int = 200)
+    data class CurseCooldown(val player: Player, var tick: Int = 200)
 
     val terraforms = mutableListOf<Terraform>()
     val curseCooldown = mutableListOf<CurseCooldown>()
 
-    data class TerraformedBlock(val pos: LevelBlockPos, val original: BlockState,val current: Material)
+    data class TerraformedBlock(val pos: LevelBlockPos, val original: BlockState, val current: Material)
 
-    data class Terraform(val pos: LevelBlockPos,val player: Player) {
+    data class Terraform(val pos: LevelBlockPos, val player: Player) {
         val terraforms = mutableListOf<TerraformedBlock>()
         var tick = TERRAFORM_EFFECT_TICK
 
@@ -124,13 +124,13 @@ object BloodmageClass: AnniClass(), Listener {
                 val dx = index % TERRAFORM_DISTANCE - TERRAFORM_DISTANCE / 2
                 val dy = index / TERRAFORM_DISTANCE % TERRAFORM_DISTANCE - TERRAFORM_DISTANCE / 2
                 val dz = index / TERRAFORM_DISTANCE / TERRAFORM_DISTANCE - TERRAFORM_DISTANCE / 2
-                val pos = BlockPos(dx + pos.x,dy + pos.y,dz + pos.z )
+                val pos = BlockPos(dx + pos.x, dy + pos.y, dz + pos.z)
                 val block = level.getBlockState(pos)
                 val material = block.bukkitMaterial
 
                 val replacement = terraformBlocks[material] ?: return@repeat
-                val terraform = TerraformedBlock(LevelBlockPos(level,pos.x,pos.y,pos.z),block,replacement)
-                level.setBlock(pos,replacement.createBlockData().toMC(),818)
+                val terraform = TerraformedBlock(LevelBlockPos(level, pos.x, pos.y, pos.z), block, replacement)
+                level.setBlock(pos, replacement.createBlockData().toMC(), 818)
 
                 terraforms.add(terraform)
             }
@@ -143,8 +143,8 @@ object BloodmageClass: AnniClass(), Listener {
                 terraforms.forEach { terraform ->
                     val pos = terraform.pos
                     val level = pos.level
-                    val blockPos = BlockPos(pos.x,pos.y,pos.z)
-                    if (level.getBlockState(blockPos).bukkitMaterial == terraform.current) level.setBlock(blockPos,terraform.original,818)
+                    val blockPos = BlockPos(pos.x, pos.y, pos.z)
+                    if (level.getBlockState(blockPos).bukkitMaterial == terraform.current) level.setBlock(blockPos, terraform.original, 818)
                 }
 
                 return true
@@ -152,24 +152,24 @@ object BloodmageClass: AnniClass(), Listener {
 
             val level = pos.level
             val world = level.world
-            val location = Location(world,pos.x + 0.5,pos.y + 0.5,pos.z + 0.5)
+            val location = Location(world, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5)
 
             val team = player.toMC().teamColor
-            world.getNearbyPlayers(location,TERRAFORM_DISTANCE / 2.0).forEach { player ->
+            world.getNearbyPlayers(location, TERRAFORM_DISTANCE / 2.0).forEach { player ->
                 if (player.toMC().teamColor == team || curseCooldown.any { it.player == player }) return@forEach
 
-                player.addPotionEffect(PotionEffect(PotionEffectType.WITHER,100,1))
-                player.addPotionEffect(PotionEffect(PotionEffectType.BLINDNESS,200,0))
-                player.addPotionEffect(PotionEffect(PotionEffectType.HUNGER,200,2))
+                player.addPotionEffect(PotionEffect(PotionEffectType.WITHER, 100, 1))
+                player.addPotionEffect(PotionEffect(PotionEffectType.BLINDNESS, 200, 0))
+                player.addPotionEffect(PotionEffect(PotionEffectType.HUNGER, 200, 2))
 
-                curseCooldown.add(CurseCooldown(player,CURSE_COOLDOWN))
+                curseCooldown.add(CurseCooldown(player, CURSE_COOLDOWN))
             }
 
             return false
         }
     }
 
-    val CORRUPT_ATTRIBUTE_KEY = NamespacedKey(plugin,"bloodmage_corrupt_max_health_reduce")
+    val CORRUPT_ATTRIBUTE_KEY = NamespacedKey(plugin, "bloodmage_corrupt_max_health_reduce")
 
     @EventHandler
     fun onInteract(event: PlayerInteractEvent) {
@@ -198,23 +198,23 @@ object BloodmageClass: AnniClass(), Listener {
                     attribute.removeModifier(CORRUPT_ATTRIBUTE_KEY)
                 }
 
-                target.playSound(target, Sound.ENTITY_WITHER_DEATH,1f,1f)
+                target.playSound(target, Sound.ENTITY_WITHER_DEATH, 1f, 1f)
             }
 
             player.setCooldown(CORRUPT_COOLDOWN_GROUP, CORRUPT_COOLDOWN)
-            player.world.playSound(player.location, Sound.ENTITY_WITHER_DEATH,1f,1f)
+            player.world.playSound(player.location, Sound.ENTITY_WITHER_DEATH, 1f, 1f)
         }
 
         if (anniId == BLOODCURSED_TERRAFORM_ITEM_ID) {
             event.isCancelled = true
 
             val mcPlayer = player.toMC()
-            val pos = LevelBlockPos(mcPlayer.level(),mcPlayer.x.toInt(),mcPlayer.y.toInt(),mcPlayer.z.toInt())
-            val terraform = Terraform(pos,player)
+            val pos = LevelBlockPos(mcPlayer.level(), mcPlayer.x.toInt(), mcPlayer.y.toInt(), mcPlayer.z.toInt())
+            val terraform = Terraform(pos, player)
             terraform.start()
 
             terraforms.add(terraform)
-            player.setCooldown(item,BLOODCURSED_TERRAFORM_COOLDOWN)
+            player.setCooldown(item, BLOODCURSED_TERRAFORM_COOLDOWN)
         }
     }
 
@@ -226,7 +226,7 @@ object BloodmageClass: AnniClass(), Listener {
 
         val attacker = source.causingEntity
         if (attacker is Player && source.damageType == DamageType.PLAYER_ATTACK && isSelected(attacker)) {
-            entity.addPotionEffect(PotionEffect(PotionEffectType.WITHER,40,0))
+            entity.addPotionEffect(PotionEffect(PotionEffectType.WITHER, 40, 0))
         }
     }
 
@@ -234,7 +234,7 @@ object BloodmageClass: AnniClass(), Listener {
     fun onBlockDropItem(event: BlockDropItemEvent) {
         val block = event.block
         val level = block.world.toMC()
-        val pos = LevelBlockPos(level,block.x,block.y,block.z)
+        val pos = LevelBlockPos(level, block.x, block.y, block.z)
 
         terraforms.forEach { terraform ->
             terraform.terraforms.forEach {

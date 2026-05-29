@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.HitResult
 import org.bukkit.Material
 import org.bukkit.Sound
+import org.bukkit.damage.DamageType
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -34,6 +35,8 @@ import org.bukkit.event.entity.EntityRemoveEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 import kotlin.math.PI
 import net.minecraft.world.item.ItemStack as MCItemStack
 
@@ -171,6 +174,17 @@ object SpiderClass: AnniClass(), Listener {
         val player = event.player
         if (!isSelected(player)) return
 
+        if (event.damageSource.damageType == DamageType.FALL) {
+            event.isCancelled = true
+
+            player.addPotionEffect(PotionEffect(PotionEffectType.REGENERATION, 400, 0))
+            player.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION, 200, 0))
+            player.health = 0.1
+            player.world.playSound(player.location, Sound.ITEM_TOTEM_USE, 1f, 1f)
+
+            return
+        }
+
         val webs = placedWebs.filter { it.player == player }
         placedWebs.removeAll(webs)
 
@@ -180,7 +194,6 @@ object SpiderClass: AnniClass(), Listener {
             }
         }
     }
-
 
     override fun onUserTick(player: Player) {
         if (!enabledPlayers.contains(player)) return
