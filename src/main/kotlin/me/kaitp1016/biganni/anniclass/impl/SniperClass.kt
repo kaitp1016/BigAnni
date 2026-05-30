@@ -112,7 +112,7 @@ object SniperClass: AnniClass(), Listener {
         val weapon = event.bow?.toMC() ?: net.minecraft.world.item.ItemStack(Items.BOW)
         val power = event.force * 5f
 
-        val arrow = Projectile.spawnProjectileFromRotationDelayed({ level,shooter: LivingEntity,weapon: net.minecraft.world.item.ItemStack -> SniperArrow(level,mcPlayer,event.consumable?.toMC() ?: net.minecraft.world.item.ItemStack(Items.ARROW),weapon) },level,weapon,mcPlayer,1f,power,1f)
+        val arrow = Projectile.spawnProjectileFromRotationDelayed({ level,shooter: LivingEntity,weapon: net.minecraft.world.item.ItemStack -> SniperArrow(level,mcPlayer,event.consumable?.toMC() ?: net.minecraft.world.item.ItemStack(Items.ARROW),weapon) },level,weapon,mcPlayer,0f,power,1f)
         arrow.attemptSpawn()
 
         player.setRotation(player.yaw + Random.nextFloat() * 10 - 5, player.pitch + Random.nextFloat() * 10 - 5)

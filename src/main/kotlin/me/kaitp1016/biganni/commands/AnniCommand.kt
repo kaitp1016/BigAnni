@@ -1,5 +1,6 @@
 package me.kaitp1016.biganni.commands
 
+import com.mojang.brigadier.arguments.DoubleArgumentType
 import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
@@ -17,6 +18,7 @@ import me.kaitp1016.biganni.features.TeamDoor
 import me.kaitp1016.biganni.game.boss.BossManager
 import me.kaitp1016.biganni.game.Game
 import me.kaitp1016.biganni.game.StartCountdown
+import me.kaitp1016.biganni.modifiers.KnockbackModifier
 import me.kaitp1016.biganni.packetgui.impl.AnniClassSelector
 import me.kaitp1016.biganni.packetgui.impl.WeaeponShopGui
 import me.kaitp1016.biganni.packetgui.impl.BrewingShopGui
@@ -118,7 +120,18 @@ object AnniCommand {
                 cooldowns.removeCooldown(it.key)
             }
             return@executes 1
-        })
+        }).then(Commands.literal("kbtest").then(Commands.argument("type", StringArgumentType.word()).then(Commands.argument("num", DoubleArgumentType.doubleArg()).executes {
+            val type = StringArgumentType.getString(it,"type")
+            val num = DoubleArgumentType.getDouble(it,"num")
+
+            when(type) {
+                "normal" -> KnockbackModifier.normalMultiply = num
+                "normalY" -> KnockbackModifier.normalMultiplyY = num
+                "sprint" -> KnockbackModifier.sprintMultiply = num
+                "sprinY" -> KnockbackModifier.sprintMultiplyY = num
+            }
+            return@executes 1
+        })))
     }
 
     object MapSuggestion: SuggestionProvider<CommandSourceStack> {

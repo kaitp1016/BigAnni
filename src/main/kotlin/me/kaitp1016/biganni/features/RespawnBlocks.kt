@@ -59,14 +59,14 @@ object RespawnBlocks: Listener {
 
         val block = event.block
         val pos = BlockPos(block.x, block.y, block.z)
+        val level = block.world.toMC()
 
-        if (respawingBlocks.any { it.pos == pos }) {
+        if (respawingBlocks.any { it.pos == pos && it.level == level }) {
             event.isCancelled = true
             return
         }
 
         val respawnData = respawnableBlocks[block.type] ?: return
-        val level = block.world.toMC()
         if (placedBlocks.contains(level to pos)) return
 
         val exp = respawnData.experience.random()
@@ -117,6 +117,14 @@ object RespawnBlocks: Listener {
         if (respawnableBlocks.contains(block.type)) {
             val level = block.world.toMC()
             placedBlocks.add(level to BlockPos(block.x, block.y, block.z))
+        }
+
+        val pos = BlockPos(block.x,block.y,block.z)
+        val level = block.world.toMC()
+
+        if (respawingBlocks.any { it.pos == pos && it.level == level }) {
+            event.isCancelled = true
+            return
         }
     }
 

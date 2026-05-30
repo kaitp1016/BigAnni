@@ -11,6 +11,11 @@ import org.bukkit.event.Listener
 object KnockbackModifier: Listener {
     val currentKnockbacks = mutableListOf<Entity>()
 
+    var sprintMultiply = 0.35
+    var sprintMultiplyY = 0.65
+    var normalMultiply = 1.3
+    var normalMultiplyY = 0.85
+
     @EventHandler
     fun onKnockback(event: EntityKnockbackByEntityEvent) {
         if (event.cause != EntityKnockbackEvent.Cause.ENTITY_ATTACK || event.hitBy !is Player) return
@@ -23,16 +28,16 @@ object KnockbackModifier: Listener {
             event.knockback = event.knockback.apply {
                 this.y = 0.0
             }.normalize().apply {
-                multiply(strength * 0.35)
-                this.y = y * 0.65
+                multiply(strength * sprintMultiply)
+                this.y = y * sprintMultiplyY
             }
         }
         else {
             event.knockback = event.knockback.apply {
                 this.y = 0.0
             }.normalize().apply {
-                multiply(strength * 1.25)
-                this.y = y * 0.85
+                multiply(strength * normalMultiply)
+                this.y = y * normalMultiplyY
             }
 
             currentKnockbacks.add(entity)

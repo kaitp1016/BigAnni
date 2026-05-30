@@ -39,6 +39,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
+import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.entity.PotionSplashEvent
 import org.bukkit.event.player.PlayerInteractEvent
@@ -66,15 +67,7 @@ object AlchemistClass: AnniClass(), Listener {
 
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {
         return super.getDefaultItems(player).also {
-            it.add(ItemStack(Material.BREWING_STAND).apply {
-                uniqueClassItem()
-                soulbound()
-                setAnniItem(ALCHEMIST_STAND_ITEM_ID)
-
-                editMeta {
-                    it.itemName(Component.text("Alchemist's Stand").color(NamedTextColor.AQUA))
-                }
-            })
+            it.add(createAlchemistStand())
 
             it.add(ItemStack(Material.ENCHANTED_BOOK).apply {
                 uniqueClassItem()
@@ -117,6 +110,24 @@ object AlchemistClass: AnniClass(), Listener {
         level.setBlockAndUpdate(pos, Blocks.BREWING_STAND.defaultBlockState())
 
         stands.add(PlacedStand(level,pos,player))
+    }
+
+    @EventHandler
+    fun onBreak(event: BlockBreakEvent) {
+        val block = event.block
+        if (block.type != Material.BREWING_STAND) return
+
+        val pos = BlockPos(block.x,block.y,block.z)
+        val level = block.world.toMC()
+        val stand = stands.find { it.pos == pos && it.level == level } ?: return
+
+        event.isCancelled = true
+
+        level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState())
+
+        if (isSelected(stand.owner)) {
+            stand.owner.give(createAlchemistStand())
+        }
     }
 
     @EventHandler
@@ -253,6 +264,18 @@ object AlchemistClass: AnniClass(), Listener {
             }
 
             event.setIntensity(target,0.00001)
+        }
+    }
+
+    fun createAlchemistStand(): ItemStack {
+        return ItemStack(Material.BREWING_STAND).apply {
+            uniqueClassItem()
+            soulbound()
+            setAnniItem(ALCHEMIST_STAND_ITEM_ID)
+
+            editMeta {
+                it.itemName(Component.text("Alchemist's Stand").color(NamedTextColor.AQUA))
+            }
         }
     }
 }

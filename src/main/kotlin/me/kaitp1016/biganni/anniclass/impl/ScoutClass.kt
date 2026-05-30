@@ -18,6 +18,7 @@ import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerFishEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffectType
+import org.bukkit.util.Vector
 
 object ScoutClass: AnniClass(), Listener {
     override val name = "Scout"
@@ -58,8 +59,6 @@ object ScoutClass: AnniClass(), Listener {
 
     @EventHandler
     fun onFish(event: PlayerFishEvent) {
-        if (event.state != PlayerFishEvent.State.IN_GROUND && event.state != PlayerFishEvent.State.REEL_IN) return
-
         val player = event.player
         if (!isSelected(player)) return
 
@@ -67,23 +66,29 @@ object ScoutClass: AnniClass(), Listener {
         val item = event.player.inventory.getItem(hand)
         if (item.getAnniId() != GRAPPLING_HOOK_ID) return
 
-        if (cooldowns.any { it.player == player } || player.fireTicks > 0 || player.hasPotionEffect(PotionEffectType.SLOWNESS)) {
+        val state = event.state
+        if (state == PlayerFishEvent.State.IN_GROUND || state == PlayerFishEvent.State.REEL_IN) {
+            if (cooldowns.any { it.player == player } || player.fireTicks > 0 || player.hasPotionEffect(PotionEffectType.SLOWNESS)) {
+                event.isCancelled = true
+                return
+            }
+
+            val hook = event.hook
+            val world = hook.world
+            if (!hook.isOnGround && world.getBlockAt(hook.x.toInt(),hook.y.toIntCorrect(),hook.z.toInt()).isPassable && world.getBlockAt(hook.x.toInt(),(hook.y - 1).toIntCorrect(),hook.z.toInt()).isPassable) {
+                return
+            }
+
+            val velocity = player.location.clone().subtract(hook.location).apply {
+                y *= 0.6
+                multiply(-0.35)
+            }
+
+            player.velocity = player.velocity.add(velocity.toVector())
+        }
+        if (state == PlayerFishEvent.State.CAUGHT_ENTITY) {
             event.isCancelled = true
-            return
         }
-
-        val hook = event.hook
-        val world = hook.world
-        if (!hook.isOnGround && world.getBlockAt(hook.x.toInt(),hook.y.toIntCorrect(),hook.z.toInt()).isPassable && world.getBlockAt(hook.x.toInt(),(hook.y - 1).toIntCorrect(),hook.z.toInt()).isPassable) {
-            return
-        }
-
-        val velocity = player.location.clone().subtract(hook.location).apply {
-            y *= 0.6
-            multiply(-0.3)
-        }
-
-        player.velocity = player.velocity.add(velocity.toVector())
     }
 
     @EventHandler

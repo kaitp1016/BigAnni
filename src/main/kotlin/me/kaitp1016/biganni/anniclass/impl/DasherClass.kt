@@ -46,7 +46,7 @@ object DasherClass: AnniClass(), Listener {
                 setData(DataComponentTypes.USE_COOLDOWN, UseCooldown.useCooldown(BLINK_COOLDOWN / 20f).cooldownGroup(BLINK_COOLDOWN_GROUP).build())
 
                 editMeta {
-                    it.itemName(Component.text("Dasher").color(NamedTextColor.GOLD))
+                    it.itemName(Component.text("Blink").color(NamedTextColor.GOLD))
                 }
             })
         }

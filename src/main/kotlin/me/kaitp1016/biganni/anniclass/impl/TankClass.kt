@@ -109,7 +109,7 @@ object TankClass: AnniClass(), Listener {
         else {
             state.regenTick++
 
-            if (state.regenTick > 120 && state.stamina < MAX_STAMINA) {
+            if (state.regenTick > 50 && state.stamina < MAX_STAMINA) {
                 state.stamina = min(state.stamina + 3, MAX_STAMINA)
                 state.regenTick = 0
                 player.sendMessage("§7Stamina level: §6${state.stamina}")
