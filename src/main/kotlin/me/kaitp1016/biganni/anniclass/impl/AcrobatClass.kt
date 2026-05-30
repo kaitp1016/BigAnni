@@ -39,7 +39,11 @@ object AcrobatClass: AnniClass(), Listener {
 
     override fun onSelect(player: Player) {
         player.allowFlight = true
-        player.getAttribute(Attribute.FALL_DAMAGE_MULTIPLIER)?.addModifier(AttributeModifier(ACROBAT_FALL_DAMAGE_RESITANCE,-1000.0, AttributeModifier.Operation.ADD_NUMBER))
+
+        val fallDamageMultiplier = player.getAttribute(Attribute.FALL_DAMAGE_MULTIPLIER)
+        if (fallDamageMultiplier?.getModifier(ACROBAT_FALL_DAMAGE_RESITANCE) == null) {
+            fallDamageMultiplier?.addModifier(AttributeModifier(ACROBAT_FALL_DAMAGE_RESITANCE,-1000.0, AttributeModifier.Operation.ADD_NUMBER))
+        }
         super.onSelect(player)
     }
 

@@ -79,7 +79,7 @@ object ImmobilizerClass: AnniClass(), Listener {
         if (event.action == Action.RIGHT_CLICK_BLOCK || event.action == Action.RIGHT_CLICK_AIR) {
             val team = player.toMC().teamColor
 
-            val targets = player.world.getNearbyPlayers(player.location,5.0).filter { target -> (target.toMC().teamColor != team && targetCooldown.none { it.player == it } && !BerserkerClass.isUsingAbility(target)) || player == target }
+            val targets = player.world.getNearbyPlayers(player.location,5.0).filter { target -> (target.toMC().teamColor != team && targetCooldown.none { it.player == target } && !BerserkerClass.isUsingAbility(target)) || player == target }
             if (targets.size == 1) return
 
             targets.forEach { target ->
@@ -89,7 +89,12 @@ object ImmobilizerClass: AnniClass(), Listener {
                 target.addPotionEffect(PotionEffect(PotionEffectType.MINING_FATIGUE, effectTime, 1))
                 target.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION, effectTime, 1))
                 target.addPotionEffect(PotionEffect(PotionEffectType.WEAKNESS, effectTime, 10))
-                target.getAttribute(Attribute.JUMP_STRENGTH)?.addTransientModifier(AttributeModifier(IMMOBILIZE_JUMP_REDUCE_KEY, -10.0, AttributeModifier.Operation.ADD_NUMBER))
+
+                val jumpStrength = target.getAttribute(Attribute.JUMP_STRENGTH)
+                if (jumpStrength?.getModifier(IMMOBILIZE_JUMP_REDUCE_KEY) == null) {
+                    jumpStrength?.addTransientModifier(AttributeModifier(IMMOBILIZE_JUMP_REDUCE_KEY, -10.0, AttributeModifier.Operation.ADD_NUMBER))
+                }
+
                 FallDamageResistance.add(target, effectTime)
 
                 Scheduler.scheduleTask(effectTime) {
@@ -97,7 +102,7 @@ object ImmobilizerClass: AnniClass(), Listener {
                 }
 
                 target.playSound(target, Sound.ENTITY_PLAYER_BIG_FALL, 2f, 0f)
-                targetCooldown.add(TargetCooldown(player, IMMOBILIZE_COOLDOWN))
+                targetCooldown.add(TargetCooldown(target, IMMOBILIZE_COOLDOWN))
             }
 
             player.setCooldown(IMMOBILIZE_COOLDOWN_GROUP,IMMOBILIZE_COOLDOWN)

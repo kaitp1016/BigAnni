@@ -15,22 +15,22 @@ import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSele
 import me.kaitp1016.biganni.config.Config
 import me.kaitp1016.biganni.features.DelayingBlock
 import me.kaitp1016.biganni.features.TeamDoor
-import me.kaitp1016.biganni.game.boss.BossManager
 import me.kaitp1016.biganni.game.Game
 import me.kaitp1016.biganni.game.StartCountdown
+import me.kaitp1016.biganni.game.boss.BossManager
 import me.kaitp1016.biganni.modifiers.KnockbackModifier
 import me.kaitp1016.biganni.packetgui.impl.AnniClassSelector
-import me.kaitp1016.biganni.packetgui.impl.WeaeponShopGui
 import me.kaitp1016.biganni.packetgui.impl.BrewingShopGui
+import me.kaitp1016.biganni.packetgui.impl.WeaeponShopGui
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.minecraft.commands.SharedSuggestionProvider
+import net.minecraft.server.permissions.LevelBasedPermissionSet
 import org.bukkit.entity.Player
 import java.util.concurrent.CompletableFuture
 
 object AnniCommand {
     fun register(): LiteralArgumentBuilder<CommandSourceStack> {
-        return Commands.literal("anni").then(
-            Commands.literal("classselector").executes {
+        return Commands.literal("anni").requires { (it as net.minecraft.commands.CommandSourceStack).permissions() == LevelBasedPermissionSet.GAMEMASTER || it.sender.isOp }.then(Commands.literal("classselector").executes {
             val player = (it.source.executor as Player).toMC()
             AnniClassSelector(player, null).open()
             return@executes 1

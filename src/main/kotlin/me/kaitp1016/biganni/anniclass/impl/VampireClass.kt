@@ -36,19 +36,19 @@ object VampireClass: AnniClass(), Listener {
     override val name = "Vampire"
     override val shortName = "VMP"
     override val description = arrayOf(
-        "この職業の時は常に攻撃力が増える。",
+        "この職業の時は常に近接ダメージが増える。",
         "敵を殴ることで確率で体力を回復する。",
         "Blood Senseを使用することで、周囲の敵を発光させる。",
-        "Insidisious Dispatchを使用すると、自身に背を向けてる敵にテレポートできる。"
+        "Insidisious Dispatchを使用すると、自身に背を向けてる敵にテレポートできる。",
     )
 
     const val BLOOD_SENSE_ITEM_ID = "vampire_blood_sense"
-    const val BLOOD_SENSE_COOLDOWN = 60
-    val BLOOD_SENSE_COOLDOWN_GROUP = Key.key(PLUGIN_ID,"vampire_blood_sense")
+    const val BLOOD_SENSE_COOLDOWN = 200
+    val BLOOD_SENSE_COOLDOWN_GROUP = Key.key(PLUGIN_ID, "vampire_blood_sense")
 
     const val INSIDISIOUS_DISPATCH_ITEM_ID = "vampire_insidisious_dispatch"
     const val INSIDISIOUS_DISPATCH_COOLDOWN = 800
-    val INSIDISIOUS_DISPATCH_COOLDOWN_GROUP = Key.key(PLUGIN_ID,"vampire_insidisious_dispatch")
+    val INSIDISIOUS_DISPATCH_COOLDOWN_GROUP = Key.key(PLUGIN_ID, "vampire_insidisious_dispatch")
 
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {
         return super.getDefaultItems(player).also {
@@ -93,14 +93,13 @@ object VampireClass: AnniClass(), Listener {
             val world = player.world
             val team = player.toMC().teamColor
 
-            val targets = world.getNearbyPlayers(player.location,8.0).filter { it.toMC().teamColor != team }
-            if (targets.isEmpty()) return
+            val targets = world.getNearbyPlayers(player.location, 8.0).filter { it.toMC().teamColor != team }
 
             targets.forEach {
-                it.addPotionEffect(PotionEffect(PotionEffectType.GLOWING,30,0))
+                it.addPotionEffect(PotionEffect(PotionEffectType.GLOWING, 30, 0))
             }
 
-            player.setCooldown(BLOOD_SENSE_COOLDOWN_GROUP,BLOOD_SENSE_COOLDOWN)
+            player.setCooldown(BLOOD_SENSE_COOLDOWN_GROUP, BLOOD_SENSE_COOLDOWN)
         }
         if (id == INSIDISIOUS_DISPATCH_ITEM_ID) {
             event.isCancelled = true
@@ -112,9 +111,9 @@ object VampireClass: AnniClass(), Listener {
             if (distance > 40 || player.toMC().teamColor == target.toMC().teamColor) return
 
             player.teleport(target)
-            player.world.playSound(player.location, Sound.ENTITY_ENDERMAN_TELEPORT,1f,1f)
+            player.world.playSound(player.location, Sound.ENTITY_ENDERMAN_TELEPORT, 1f, 1f)
 
-            player.setCooldown(INSIDISIOUS_DISPATCH_COOLDOWN_GROUP,INSIDISIOUS_DISPATCH_COOLDOWN)
+            player.setCooldown(INSIDISIOUS_DISPATCH_COOLDOWN_GROUP, INSIDISIOUS_DISPATCH_COOLDOWN)
         }
     }
 
@@ -130,7 +129,7 @@ object VampireClass: AnniClass(), Listener {
             val chance = if (world.isDayTime) 15 else 30
             if (Random.nextInt(100) < chance) {
                 attacker.heal(1.0)
-                attacker.world.playSound(attacker.location, Sound.ENTITY_ZOMBIE_VILLAGER_CURE,1f,1f)
+                attacker.world.playSound(attacker.location, Sound.ENTITY_ZOMBIE_VILLAGER_CURE, 1f, 1f)
             }
         }
     }
@@ -142,16 +141,16 @@ object VampireClass: AnniClass(), Listener {
 
         val mcPlayer = player.toMC()
         val level = mcPlayer.level()
-        level.addFreshEntity(VampireBat(level,mcPlayer).apply {
+        level.addFreshEntity(VampireBat(level, mcPlayer).apply {
             setPos(player.x, player.y, player.z)
         })
     }
 
-    class VampireBat: Bat {
+    class VampireBat : Bat {
         val player: ServerPlayer
         var tick = 0
 
-        constructor(level: ServerLevel,player: ServerPlayer):super(EntityType.BAT,level) {
+        constructor(level: ServerLevel, player: ServerPlayer) : super(EntityType.BAT, level) {
             this.player = player
             this.customName = player.name
         }

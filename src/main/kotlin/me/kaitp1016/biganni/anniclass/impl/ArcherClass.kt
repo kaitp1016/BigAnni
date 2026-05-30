@@ -20,7 +20,6 @@ import net.minecraft.world.item.alchemy.PotionContents
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
 import org.bukkit.Material
-import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.damage.DamageType
 import org.bukkit.enchantments.Enchantment
@@ -35,9 +34,6 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.potion.PotionType
 import java.util.*
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.sin
 import kotlin.random.Random
 
 object ArcherClass: AnniClass(), Listener {
@@ -55,8 +51,8 @@ object ArcherClass: AnniClass(), Listener {
                 uniqueClassItem()
                 soulbound()
 
-                addEnchantment(Enchantment.PUNCH,1)
-                addEnchantment(Enchantment.INFINITY,1)
+                addEnchantment(Enchantment.PUNCH, 1)
+                addEnchantment(Enchantment.INFINITY, 1)
             })
 
             it.add(ItemStack(Material.ARROW).uniqueClassItem().soulbound())
@@ -83,10 +79,10 @@ object ArcherClass: AnniClass(), Listener {
         super.onUnselect(player)
     }
 
-    enum class AbilityType(val displayName: String,val cooldown: Key?,val cooldownTick: Int) {
-        NONE("None",null,-1),
-        RAIN_OF_ARROW("Rain of Arrow",RAIN_OF_ARROW_GROUP,600),
-        POISON_SHOT("Poison Shot",POISON_SHOT_GROUP,1000);
+    enum class AbilityType(val displayName: String, val cooldown: Key?, val cooldownTick: Int) {
+        NONE("None", null, -1),
+        RAIN_OF_ARROW("Rain of Arrow", RAIN_OF_ARROW_GROUP, 600),
+        POISON_SHOT("Poison Shot", POISON_SHOT_GROUP, 1000);
 
         fun next(): AbilityType {
             val entries = entries
@@ -95,8 +91,8 @@ object ArcherClass: AnniClass(), Listener {
         }
     }
 
-    val RAIN_OF_ARROW_GROUP = Key.key(PLUGIN_ID,"archer_rain_of_arrow")
-    val POISON_SHOT_GROUP = Key.key(PLUGIN_ID,"archer_poison_shot")
+    val RAIN_OF_ARROW_GROUP = Key.key(PLUGIN_ID, "archer_rain_of_arrow")
+    val POISON_SHOT_GROUP = Key.key(PLUGIN_ID, "archer_poison_shot")
 
     val selectedAbility = mutableMapOf<Player, AbilityType>()
 
@@ -111,7 +107,7 @@ object ArcherClass: AnniClass(), Listener {
             selectedAbility[player] = ability
 
             player.sendMessage("${ability.displayName} を選択しました!")
-            player.playSound(player, Sound.UI_BUTTON_CLICK,1f,1f)
+            player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
 
             return
         }
@@ -133,9 +129,9 @@ object ArcherClass: AnniClass(), Listener {
         val weapon = event.bow?.toMC() ?: net.minecraft.world.item.ItemStack(Items.BOW)
         val power = event.force * 3f
 
-        val arrow = Projectile.spawnProjectileFromRotationDelayed({ level,shooter: LivingEntity,weapon: net.minecraft.world.item.ItemStack -> ArcherArrow(level,mcPlayer,event.consumable?.toMC() ?: net.minecraft.world.item.ItemStack(Items.ARROW),weapon,ability) },level,weapon,mcPlayer,1f,power,1f)
+        val arrow = Projectile.spawnProjectileFromRotationDelayed({ level, shooter: LivingEntity, weapon: net.minecraft.world.item.ItemStack -> ArcherArrow(level, mcPlayer, event.consumable?.toMC() ?: net.minecraft.world.item.ItemStack(Items.ARROW), weapon, ability) }, level, weapon, mcPlayer, 1f, power, 1f)
         if (arrow.attemptSpawn()) {
-            player.setCooldown(cooldown,ability.cooldownTick)
+            player.setCooldown(cooldown, ability.cooldownTick)
         }
     }
 
@@ -150,12 +146,12 @@ object ArcherClass: AnniClass(), Listener {
         event.damage += 1
     }
 
-    class ArcherArrow: Arrow {
+    class ArcherArrow : Arrow {
         var usedAbility = false
         val ability: AbilityType
         val player: ServerPlayer
 
-        constructor(level: ServerLevel,owner: ServerPlayer,arrow: net.minecraft.world.item.ItemStack,weapon: net.minecraft.world.item.ItemStack,ability: AbilityType):super(level,owner,arrow,weapon) {
+        constructor(level: ServerLevel, owner: ServerPlayer, arrow: net.minecraft.world.item.ItemStack, weapon: net.minecraft.world.item.ItemStack, ability: AbilityType) : super(level, owner, arrow, weapon) {
             this.player = owner
             this.ability = ability
         }
@@ -163,38 +159,17 @@ object ArcherClass: AnniClass(), Listener {
         override fun onHit(hitResult: HitResult) {
             if (!usedAbility) {
                 if (ability == AbilityType.RAIN_OF_ARROW) {
-                    val entity = bukkitEntity
-                    val distance = 1.75
-                    val amount = 32
-                    val world = entity.world
-
-                    repeat(5) { count ->
-                        Scheduler.scheduleTask(count * 20) {
-                            repeat(amount) {
-                                val angle = 360f / amount * it * PI / 180f
-                                val x = entity.x + distance * cos(angle)
-                                val z = entity.z + distance * sin(angle)
-                                val y = entity.y + 1.0
-
-                                Particle.END_ROD.builder()
-                                    .location(world, x, y, z)
-                                    .receivers(32, true)
-                                    .count(0)
-                                    .offset(0.0, 0.0, 0.0)
-                                    .spawn()
-                            }
-                        }
-
-                        repeat(20) {
-                            Scheduler.scheduleTask(it * 5) {
+                    repeat(20) {
+                        Scheduler.scheduleTask(it * 5) {
+                            repeat(5) {
                                 val x = this.x + Random.nextDouble(-0.8, 0.8)
                                 val y = this.y + Random.nextDouble(-0.8, 0.8) + 5.0
                                 val z = this.z + Random.nextDouble(-0.8, 0.8)
 
                                 val arrow = Arrow(level(), x, y, z, net.minecraft.world.item.ItemStack(Items.ARROW), null).apply {
                                     pickup = Pickup.CREATIVE_ONLY
-                                    lerpMotion(Vec3(Random.nextDouble(-0.05,0.05),0.5,Random.nextDouble(-0.05,0.05)))
-                                    setOwner(player,false)
+                                    lerpMotion(Vec3(Random.nextDouble(-0.05, 0.05), 0.5, Random.nextDouble(-0.05, 0.05)))
+                                    setOwner(player, false)
                                 }
 
                                 level().addFreshEntity(arrow)
@@ -202,14 +177,15 @@ object ArcherClass: AnniClass(), Listener {
                         }
                     }
                 }
+
                 if (ability == AbilityType.POISON_SHOT) {
-                    val potion = ThrownSplashPotion(level(),player, net.minecraft.world.item.ItemStack(Items.SPLASH_POTION).apply {
-                        set(DataComponents.POTION_CONTENTS, PotionContents(Optional.empty(),Optional.empty(),listOf(MobEffectInstance(MobEffects.POISON,200,0)),Optional.empty()))
-                        lerpMotion(Vec3(0.0,0.3,0.0))
+                    val potion = ThrownSplashPotion(level(), player, net.minecraft.world.item.ItemStack(Items.SPLASH_POTION).apply {
+                        set(DataComponents.POTION_CONTENTS, PotionContents(Optional.empty(), Optional.empty(), listOf(MobEffectInstance(MobEffects.POISON, 200, 0)), Optional.empty()))
+                        lerpMotion(Vec3(0.0, 0.3, 0.0))
                     })
 
                     level().addFreshEntity(potion)
-                    potion.setPos(position().add(0.0,0.5,0.0))
+                    potion.setPos(position().add(0.0, 0.5, 0.0))
                 }
 
                 usedAbility = true

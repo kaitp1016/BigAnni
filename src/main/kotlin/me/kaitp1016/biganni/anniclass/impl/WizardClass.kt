@@ -32,6 +32,7 @@ import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.phys.HitResult
 import org.bukkit.Material
 import org.bukkit.Particle
+import org.bukkit.Sound
 import org.bukkit.damage.DamageSource
 import org.bukkit.damage.DamageType
 import org.bukkit.entity.Player
@@ -113,32 +114,41 @@ object WizardClass: AnniClass(), Listener {
         if (!isSelected(player)) return
 
         val item = event.item ?: return
-        if (player.hasCooldown(item)) return
-
         val anniId = item.getAnniId()
+
         if (anniId == WAND_ITEM_ID) {
-            val spell = selectedSpell[player]
-            if (spell == null) {
-                player.sendMessage("スペルを選択していません!")
-                return
+            if (event.action.isLeftClick) {
+                val spell = selectedSpell.getOrPut(player) { SpellType.entries.first() }.next()
+                selectedSpell[player] = spell
+
+                player.sendMessage("${spell.displayName} §rを選択しました!")
+                player.playSound(player, Sound.UI_BUTTON_CLICK,1f,1f)
             }
+            else {
+                if (player.hasCooldown(item)) return
 
-            val mcPlayer = player.toMC()
-            val level = mcPlayer.level()
-            val mcItem = item.toMC() ?: return
-            val direction = mcPlayer.direction
+                val spell = selectedSpell[player]
+                if (spell == null) {
+                    player.sendMessage("スペルを選択していません!")
+                    return
+                }
 
-            val snowball = Projectile.spawnProjectileFromRotationDelayed({ level: ServerLevel, mob: net.minecraft.world.entity.LivingEntity, aa: net.minecraft.world.item.ItemStack -> Bullet(level,mcPlayer, spell,direction) }, level, mcItem, mcPlayer, 0.0f, 1.0f, 1.0f)
-            if (!snowball.attemptSpawn()) return
+                val mcPlayer = player.toMC()
+                val level = mcPlayer.level()
+                val mcItem = item.toMC() ?: return
+                val direction = mcPlayer.direction
 
-            player.setCooldown(WAND_COOLDOWN_GROUP,WAND_COOLDOWN)
+                val snowball = Projectile.spawnProjectileFromRotationDelayed({ level: ServerLevel, mob: net.minecraft.world.entity.LivingEntity, aa: net.minecraft.world.item.ItemStack -> Bullet(level,mcPlayer, spell,direction) }, level, mcItem, mcPlayer, 0.0f, 1.0f, 1.0f)
+                if (!snowball.attemptSpawn()) return
+
+                player.setCooldown(WAND_COOLDOWN_GROUP,WAND_COOLDOWN)
+            }
         }
         if (anniId == SPELLBOOK_ITEM_ID) {
             val mcPlayer = player.toMC()
             SpellSelectorGui(mcPlayer).open()
         }
     }
-
 
     class Bullet : Snowball {
         val thrower: ServerPlayer

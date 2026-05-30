@@ -73,9 +73,18 @@ object RiftWalkerClass: AnniClass(), Listener {
         if (!isSelected(player)) return
 
         val item = event.item ?: return
-        if (item.getAnniId() != OPEN_RIFT_ITEM_ID || player.hasCooldown(item)) return
+        if (item.getAnniId() != OPEN_RIFT_ITEM_ID) return
 
-        RiftSelectGui(player.toMC()).open()
+        if (event.action.isLeftClick) {
+            val rift = rifts.find { it.rifter == player } ?: return
+            rifts.remove(rift)
+            player.setCooldown(OPEN_RIFT_COOLDOWN_GROUP, 0)
+        }
+        else {
+            if (player.hasCooldown(item)) return
+
+            RiftSelectGui(player.toMC()).open()
+        }
     }
 
     @EventHandler
@@ -94,6 +103,12 @@ object RiftWalkerClass: AnniClass(), Listener {
             if (time % 20 != 0) return false
 
             val world = location.world
+
+            if (world.getNearbyPlayers(location,5.0, 5.0,).none { it == rifter && isSelected(it) }) {
+                rifter.setCooldown(OPEN_RIFT_COOLDOWN_GROUP, 0)
+                return true
+            }
+
             arrayOf(3.0 to 3.0,-3.0 to 3.0,-3.0 to -3.0, 3.0 to -3.0,5.0 to 0.0,-5.0 to 0.0,0.0 to 5.0,0.0 to -5.0).forEach { (dx,dz) ->
                 Particle.HAPPY_VILLAGER.builder()
                     .location(location.clone().add(dx,0.0,dz))
@@ -203,15 +218,13 @@ object RiftWalkerClass: AnniClass(), Listener {
             val targets = mutableListOf<RiftTarget>()
 
             Game.teams.find { it.name.equals(team?.name, true) }?.let { targets.add(BaseRiftTarget(it)) }
-            targets.addAll(Game.teams.filter { !it.name.equals(team?.name, true)}.map { EnemyBaseRiftTarget(it) })
-            targets.addAll(mc.playerList.players.also { it.remove(player) }.filter { it.team == team }.map{ PlayerRiftTarget(it.bukkitEntity) })
+            targets.addAll(Game.teams.filter { !it.name.equals(team?.name, true) }.map { EnemyBaseRiftTarget(it) })
+            targets.addAll(mc.playerList.players.filter { it != player && it.team == team }.map { PlayerRiftTarget(it.bukkitEntity) })
 
             this.targets = targets
 
-            var i = -1
-            targets.forEach { target ->
-                i++
-                this.setItem(i, target.getIcon())
+            targets.forEachIndexed { index, target ->
+                this.setItem(index, target.getIcon())
             }
         }
 

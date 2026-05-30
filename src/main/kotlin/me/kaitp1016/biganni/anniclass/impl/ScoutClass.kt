@@ -10,15 +10,17 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
 import net.minecraft.world.item.Items
+import org.bukkit.Bukkit
 import org.bukkit.Material
+import org.bukkit.entity.FishHook
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
+import org.bukkit.event.entity.ProjectileHitEvent
 import org.bukkit.event.player.PlayerFishEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffectType
-import org.bukkit.util.Vector
 
 object ScoutClass: AnniClass(), Listener {
     override val name = "Scout"
@@ -114,6 +116,20 @@ object ScoutClass: AnniClass(), Listener {
 
         if (isSelected(entity)) {
             addCooldown(entity)
+        }
+    }
+
+    @EventHandler
+    fun onProjectileHit(event: ProjectileHitEvent) {
+        val entity = event.entity
+        if (entity !is FishHook) return
+
+        val owner = entity.ownerUniqueId?.let { Bukkit.getEntity(it) } ?: return
+        if (owner !is Player || !isSelected(owner)) return
+
+        val inv = owner.inventory
+        if (inv.itemInMainHand.getAnniId() == GRAPPLING_HOOK_ID || inv.itemInOffHand.getAnniId() == GRAPPLING_HOOK_ID) {
+            event.isCancelled = true
         }
     }
 

@@ -193,6 +193,9 @@ object AlchemistClass: AnniClass(), Listener {
                 event.isCancelled = true
                 return
             }
+            else {
+                user.breakBlock(block)
+            }
 
             return
         }
