@@ -10,13 +10,13 @@ import me.kaitp1016.biganni.utils.FallDamageResistance
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
-import me.kaitp1016.biganni.utils.Scheduler
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.world.item.Items
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
+import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
@@ -44,6 +44,7 @@ object ImmobilizerClass: AnniClass(), Listener {
     const val IMMOBILIZE_COOLDOWN = 400
     val IMMOBILIZE_COOLDOWN_GROUP = Key.key(PLUGIN_ID,"imobilizer_immobilize")
 
+    const val IMMOBILIZE_RECEIVE_COOLDOWN = 400
     val IMMOBILIZE_JUMP_REDUCE_KEY = NamespacedKey(plugin,"immobilize_jump_reduce")
 
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {
@@ -65,7 +66,9 @@ object ImmobilizerClass: AnniClass(), Listener {
     }
 
     data class TargetCooldown(val player: Player, var time: Int)
+    data class Immobilize(val user: Player,val target: Player,var tick: Int)
 
+    val immobilizes = mutableListOf<Immobilize>()
     val targetCooldown = mutableListOf<TargetCooldown>()
 
     @EventHandler
@@ -79,31 +82,18 @@ object ImmobilizerClass: AnniClass(), Listener {
         if (event.action == Action.RIGHT_CLICK_BLOCK || event.action == Action.RIGHT_CLICK_AIR) {
             val team = player.toMC().teamColor
 
-            val targets = player.world.getNearbyPlayers(player.location,5.0).filter { target -> (target.toMC().teamColor != team && targetCooldown.none { it.player == target } && !BerserkerClass.isUsingAbility(target)) || player == target }
-            if (targets.size == 1) return
+            val targets = player.world.getNearbyPlayers(player.location,5.0).filter { target -> target.toMC().teamColor != team && targetCooldown.none { it.player == target } && !BerserkerClass.isUsingAbility(target)}
+            if (targets.isEmpty()) return
 
+            var userEffectTick: Int = -1
             targets.forEach { target ->
                 val effectTime = getEffectTime(target)
+                userEffectTick = max(effectTime,userEffectTick)
 
-                target.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS, effectTime, 10))
-                target.addPotionEffect(PotionEffect(PotionEffectType.MINING_FATIGUE, effectTime, 1))
-                target.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION, effectTime, 1))
-                target.addPotionEffect(PotionEffect(PotionEffectType.WEAKNESS, effectTime, 10))
-
-                val jumpStrength = target.getAttribute(Attribute.JUMP_STRENGTH)
-                if (jumpStrength?.getModifier(IMMOBILIZE_JUMP_REDUCE_KEY) == null) {
-                    jumpStrength?.addTransientModifier(AttributeModifier(IMMOBILIZE_JUMP_REDUCE_KEY, -10.0, AttributeModifier.Operation.ADD_NUMBER))
-                }
-
-                FallDamageResistance.add(target, effectTime)
-
-                Scheduler.scheduleTask(effectTime) {
-                    target.getAttribute(Attribute.JUMP_STRENGTH)?.removeModifier(IMMOBILIZE_JUMP_REDUCE_KEY)
-                }
-
-                target.playSound(target, Sound.ENTITY_PLAYER_BIG_FALL, 2f, 0f)
-                targetCooldown.add(TargetCooldown(target, IMMOBILIZE_COOLDOWN))
+                applyImmobilize(target,player,effectTime)
             }
+
+            applyImmobilize(player,player,userEffectTick)
 
             player.setCooldown(IMMOBILIZE_COOLDOWN_GROUP,IMMOBILIZE_COOLDOWN)
         }
@@ -125,12 +115,62 @@ object ImmobilizerClass: AnniClass(), Listener {
 
     @EventHandler
     fun onTick(event: ServerTickStartEvent) {
-        if (targetCooldown.isEmpty()) return
-
-        targetCooldown.removeIf { cooldown ->
-            cooldown.time--
-            return@removeIf cooldown.time < 1
+        if (!targetCooldown.isEmpty()) {
+            targetCooldown.removeIf { cooldown ->
+                cooldown.time--
+                return@removeIf cooldown.time < 1
+            }
         }
+
+        if (!immobilizes.isEmpty()) {
+            immobilizes.removeIf { immobilize ->
+                immobilize.tick--
+
+                val user = immobilize.user
+                val target = immobilize.target
+                if (user.world != target.world) return@removeIf true
+
+                val distance = user.location.distance(target.location)
+                val location = user.location.clone().add(0.0,1.25,0.0)
+                val delta = target.location.clone().subtract(user.location).toVector().normalize().multiply(0.1)
+
+                repeat((distance * 10).toInt()) {
+                    location.add(delta)
+
+                    Particle.CRIT.builder()
+                        .location(location)
+                        .count(0)
+                        .offset(0.0,0.0,0.0)
+                        .spawn()
+                }
+
+                if (immobilize.tick < 1) {
+                    target.getAttribute(Attribute.JUMP_STRENGTH)?.removeModifier(IMMOBILIZE_JUMP_REDUCE_KEY)
+                    return@removeIf true
+                }
+                else {
+                    return@removeIf false
+                }
+            }
+        }
+    }
+
+    private fun applyImmobilize(target: Player, user: Player, tick: Int) {
+        target.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS, tick, 10))
+        target.addPotionEffect(PotionEffect(PotionEffectType.MINING_FATIGUE, tick, 1))
+        target.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION, tick, 1))
+        target.addPotionEffect(PotionEffect(PotionEffectType.WEAKNESS, tick, 10))
+
+        val jumpStrength = target.getAttribute(Attribute.JUMP_STRENGTH)
+        if (jumpStrength?.getModifier(IMMOBILIZE_JUMP_REDUCE_KEY) == null) {
+            jumpStrength?.addTransientModifier(AttributeModifier(IMMOBILIZE_JUMP_REDUCE_KEY, -10.0, AttributeModifier.Operation.ADD_NUMBER))
+        }
+
+        FallDamageResistance.add(target, tick)
+
+        target.playSound(target, Sound.ENTITY_PLAYER_BIG_FALL, 2f, 0f)
+        targetCooldown.add(TargetCooldown(target, IMMOBILIZE_RECEIVE_COOLDOWN))
+        immobilizes.add(Immobilize(user,target,tick))
     }
 
     private fun getEffectTime(player: Player): Int {

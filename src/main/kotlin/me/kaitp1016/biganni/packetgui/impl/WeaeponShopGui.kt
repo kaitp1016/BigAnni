@@ -31,11 +31,11 @@ class WeaeponShopGui: ChestPacketGui {
         30 to (ItemStack(Items.BOW) to 1),
         39 to (ItemStack(Items.ARROW).also { it.count = 16 } to 1),
 
-        14 to (ItemStack(Items.COOKED_BEEF).also { it.count = 5 } to 10),
+        14 to (ItemStack(Items.COOKED_BEEF).also { it.count = 10 } to 5),
         15 to (ItemStack(Items.CAKE) to 1),
         16 to (ItemStack(Items.COBWEB) to 3),
         23 to (ItemStack(Items.EXPERIENCE_BOTTLE).also { it.count = 3 } to 3),
-        24 to (ItemStack(Items.ENDER_PEARL) to 16),
+        24 to (ItemStack(Items.ENDER_PEARL) to 32),
         25 to (ItemStack(Items.MILK_BUCKET) to 3),
 
         41 to (TeamDoor.createItem().toMC()!! to 16),
