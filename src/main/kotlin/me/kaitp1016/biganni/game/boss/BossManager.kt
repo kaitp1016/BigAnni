@@ -1,6 +1,7 @@
 package me.kaitp1016.biganni.game.boss
 
 import me.kaitp1016.biganni.game.Game
+import me.kaitp1016.biganni.game.ScoreboardManager
 import me.kaitp1016.biganni.mc
 import me.kaitp1016.biganni.packetgui.ChestPacketGui
 import me.kaitp1016.biganni.utils.ItemUtils.consumeItem
@@ -38,13 +39,14 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerInteractEvent
-import java.util.Optional
-import java.util.UUID
+import java.util.*
 
 object BossManager: Listener {
     const val BOSS_BUFF_ITEM_ID = "boss_buff"
+    const val BOSS_RESPAWN_TICK = 6000
 
     var boss: UUID? = null
+    var respawnTick = -1
 
     fun spawn() {
         val bossLocation = Game.map.bossLocation
@@ -62,7 +64,32 @@ object BossManager: Listener {
         Bukkit.getOnlinePlayers().forEach {
             it.playSound(it, Sound.ENTITY_WITHER_SPAWN, 1f, 1f)
         }
+
+        ScoreboardManager.setLine(2, net.minecraft.network.chat.Component.literal("§6Boss§7: §5The Wither"))
+        ScoreboardManager.setLine(3, net.minecraft.network.chat.Component.empty())
     }
+
+    fun reset() {
+        respawnTick = -1
+    }
+
+    fun onTick() {
+        if (respawnTick == -1) return
+
+        if (respawnTick > 0) {
+            respawnTick--
+
+            val min = respawnTick / 20 / 60
+            val sec = respawnTick / 20 % 60
+
+            ScoreboardManager.setLine(2, net.minecraft.network.chat.Component.literal("§6Boss§7: ${min}:${if (sec > 9) "$sec" else "0${sec}"}"))
+        }
+        else {
+            spawn()
+            respawnTick = -1
+        }
+    }
+
 
     @EventHandler
     fun onDeath(event: EntityDeathEvent) {
@@ -76,6 +103,7 @@ object BossManager: Listener {
 
         val killer = event.damageSource.causingEntity as? Player
         killer?.giveExp(1385, true)
+        respawnTick = BOSS_RESPAWN_TICK
     }
 
     @EventHandler

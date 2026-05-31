@@ -71,9 +71,9 @@ object Game: Listener {
 
         teams.forEach { updateNexusHealth(it) }
 
-        ScoreboardManager.setLine(teams.size + 2, Component.empty())
-        ScoreboardManager.setLine(teams.size + 3, Component.literal("§6Map: §l${map.name}"))
         ScoreboardManager.setLine(teams.size + 4, Component.empty())
+        ScoreboardManager.setLine(teams.size + 5, Component.literal("§6Map: §l${map.name}"))
+        ScoreboardManager.setLine(teams.size + 6, Component.empty())
 
         Bukkit.getOnlinePlayers().forEach { player ->
             player.totalExperience = 0
@@ -99,6 +99,7 @@ object Game: Listener {
     fun reset() {
         FinalBossFight.reset()
         StartCountdown.reset()
+        BossManager.reset()
 
         isStarted = false
         phase = -1
@@ -156,6 +157,8 @@ object Game: Listener {
             BossBarManager.setTitle("Phase ${this.phase} - ${min}:${if (sec > 9) "$sec" else "0${sec}"}")
             BossBarManager.setProgress(phaseTime.toDouble() / map.phaseTime)
         }
+
+        BossManager.onTick()
     }
 
     @EventHandler(priority = EventPriority.LOW)
@@ -311,7 +314,7 @@ object Game: Listener {
     }
 
     fun updateNexusHealth(team: AnniTeam) {
-        val index = teams.indexOf(team) + 2
+        val index = teams.indexOf(team) + 4
         val health = if (team.health < 1) "§c✘" else "§b${team.health}"
         ScoreboardManager.setLine(index,Component.literal("${team.color}${team.name} Nexus: $health"))
     }
