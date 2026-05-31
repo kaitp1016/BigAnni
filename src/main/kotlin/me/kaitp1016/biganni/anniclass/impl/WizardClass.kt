@@ -167,12 +167,14 @@ object WizardClass: AnniClass(), Listener {
         override fun onHit(hitResult: HitResult) {
             val bukkit = bukkitEntity
 
-            spell.particle.clone()
-                .count(50)
-                .offset(2.5,2.5,2.5)
-                .location(bukkit.location)
-                .receivers(32,true)
-                .spawn()
+            repeat(30) {
+                spell.particle.clone()
+                    .count(0)
+                    .offset(0.0,0.0,0.0)
+                    .location(bukkit.location.clone().add(Random.nextDouble(-2.5,2.5),Random.nextDouble(-2.5,2.5),Random.nextDouble(-2.5,2.5),))
+                    .receivers(32,true)
+                    .spawn()
+            }
 
             val world = bukkit.world
             val team = thrower.teamColor

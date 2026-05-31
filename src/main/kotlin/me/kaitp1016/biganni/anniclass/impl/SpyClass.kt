@@ -31,14 +31,12 @@ object SpyClass: AnniClass(), Listener {
     override val shortName = "SPY"
     override val icon = Items.SPYGLASS
     override val description = arrayOf(
-        "スニークを一定時間続けると防具も含めた透明になる。",
-        "一定距離移動するか、特定の行動をした後に解除される。",
-        "アビリティを使用すると自身のコピーを召喚し、透明になる。"
+        "スニークを一定時間続けると防具も含めた透明になる。", "一定距離移動するか、特定の行動をした後に解除される。", "アビリティを使用すると自身のコピーを召喚し、透明になる。"
     )
 
     const val FLEE_ITEM_ID = "spy_flee"
     const val FLEE_COOLDOWN = 800
-    val FLEE_COOLDOWN_GROUP = Key.key(PLUGIN_ID,"spy_flee")
+    val FLEE_COOLDOWN_GROUP = Key.key(PLUGIN_ID, "spy_flee")
 
     const val MOVEABLE_DISTANCE = 3.0
     const val INVISBLE_COOLDOWN = 100
@@ -68,7 +66,7 @@ object SpyClass: AnniClass(), Listener {
         var invisbleStart: Location? = null
     }
 
-    val states = mutableMapOf<Player,SpyState>()
+    val states = mutableMapOf<Player, SpyState>()
 
     override fun onUnselect(player: Player) {
         FullyInvisible.remove(player)
@@ -88,6 +86,7 @@ object SpyClass: AnniClass(), Listener {
             val start = state.invisbleStart
             if (start != null && start.distance(player.location) > MOVEABLE_DISTANCE) {
                 state.invisibleCooldown = INVISBLE_COOLDOWN
+                player.playSound(player, Sound.ENTITY_ZOMBIE_VILLAGER_CONVERTED, 1f, 1f)
             }
         }
 
@@ -95,13 +94,12 @@ object SpyClass: AnniClass(), Listener {
             state.sneakTick++
 
             if (state.sneakTick > 50 && !state.isInvisible) {
-                FullyInvisible.add(player)
+                FullyInvisible.add(player, false)
                 state.isInvisible = true
                 state.invisbleStart = player.location
-                player.world.playSound(player.location, Sound.ENTITY_ENDERMAN_TELEPORT,1f,1f)
+                player.world.playSound(player.location, Sound.ENTITY_ENDERMAN_TELEPORT, 1f, 1f)
             }
-        }
-        else {
+        } else {
             state.sneakTick = 0
 
             if (state.isInvisible) {
@@ -116,7 +114,12 @@ object SpyClass: AnniClass(), Listener {
         val player = event.player
         if (!isSelected(player)) return
 
-        states[player]?.let { if (it.isInvisible) it.invisibleCooldown = 100 }
+        states[player]?.let {
+            if (it.isInvisible) {
+                it.invisibleCooldown = INVISBLE_COOLDOWN
+                player.playSound(player, Sound.ENTITY_ZOMBIE_VILLAGER_CONVERTED, 1f, 1f)
+            }
+        }
 
         val item = event.item ?: return
         if (item.getAnniId() != FLEE_ITEM_ID || player.hasCooldown(item)) return
@@ -124,18 +127,18 @@ object SpyClass: AnniClass(), Listener {
         val mcPlayer = player.toMC()
         val level = mcPlayer.level()
 
-        level.addFreshEntity(PlayerMannequin(level,mcPlayer).apply {
+        level.addFreshEntity(PlayerMannequin(level, mcPlayer).apply {
             setPos(mcPlayer.position())
-            absSnapRotationTo(mcPlayer.yRot,mcPlayer.xRot)
+            absSnapRotationTo(mcPlayer.yRot, mcPlayer.xRot)
         })
 
         FullyInvisible.add(player, 120)
 
-        player.setCooldown(FLEE_COOLDOWN_GROUP,FLEE_COOLDOWN)
+        player.setCooldown(FLEE_COOLDOWN_GROUP, FLEE_COOLDOWN)
     }
 
-    class PlayerMannequin: Mannequin {
-        constructor(level: ServerLevel,player: ServerPlayer):super(level) {
+    class PlayerMannequin : Mannequin {
+        constructor(level: ServerLevel, player: ServerPlayer) : super(level) {
             this.profile = player.profile
             this.customName = player.name
 

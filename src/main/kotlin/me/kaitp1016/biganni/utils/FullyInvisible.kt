@@ -36,8 +36,8 @@ object FullyInvisible: Listener {
         }
     }
 
-    fun add(player: Player) {
-        player.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY,PotionEffect.INFINITE_DURATION,0))
+    fun add(player: Player,showParticle: Boolean = true) {
+        player.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY,PotionEffect.INFINITE_DURATION,0,false,showParticle))
         invisiblePlayers.add(InvisiblePlayer(player.toMC(),player.entityId, Int.MAX_VALUE))
 
         val mcPlayer = player.toMC()
@@ -55,6 +55,7 @@ object FullyInvisible: Listener {
 
         player.removePotionEffect(PotionEffectType.INVISIBILITY)
         revealInvisible(player.toMC())
+        invisiblePlayers.removeIf { it.entityId == entityId }
     }
 
     @EventHandler
