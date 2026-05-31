@@ -32,7 +32,6 @@ object HandymanClass: AnniClass(), Listener {
                 soulbound()
                 addEnchantment(Enchantment.EFFICIENCY,1)
             })
-
         }
     }
 
