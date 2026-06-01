@@ -114,6 +114,7 @@ object SuccubusClass: AnniClass(), Listener {
                 .build()
 
             player.damage(health,source)
+            player.heal(health)
         }
         else {
             val source = DamageSource.builder(DamageType.GENERIC_KILL)

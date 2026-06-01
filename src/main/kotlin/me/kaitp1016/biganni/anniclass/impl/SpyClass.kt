@@ -31,7 +31,9 @@ object SpyClass: AnniClass(), Listener {
     override val shortName = "SPY"
     override val icon = Items.SPYGLASS
     override val description = arrayOf(
-        "スニークを一定時間続けると防具も含めた透明になる。", "一定距離移動するか、特定の行動をした後に解除される。", "アビリティを使用すると自身のコピーを召喚し、透明になる。"
+        "スニークを一定時間続けると防具も含めた透明になる。",
+        "一定距離移動するか、特定の行動をした後に解除される。",
+        "アビリティを使用すると自身のコピーを召喚し、透明になる。"
     )
 
     const val FLEE_ITEM_ID = "spy_flee"

@@ -36,7 +36,7 @@ object RiftWalkerClass: AnniClass(), Listener {
     override val icon = Items.BLAZE_ROD
     override val description = arrayOf(
         "アビリティを使用することで、指定した場所にテレポートできる。",
-        "周囲にいたスニークしている味方も同時にテレポートできる。",
+        "範囲内にいたスニークしている味方も同時にテレポートできる。",
     )
 
     const val OPEN_RIFT_ITEM_ID = "riftwalker_open_rift"

@@ -35,7 +35,7 @@ object TankClass: AnniClass(), Listener {
     override val shortName = "TNK"
     override val icon = Items.SHIELD
     override val description = arrayOf(
-        "盾を構えてる間は自身へのダメージを無効化し、",
+        "盾を構えてる間はスタミナを消費して自身へのダメージを無効化し、",
         "周囲の味方の矢から受けるダメージを無効化する。",
         "アビリティを使用すると前に突進し、ダメージを与える。"
     )

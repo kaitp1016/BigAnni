@@ -29,7 +29,7 @@ object DasherClass: AnniClass(), Listener {
     override val shortName = "DAS"
     override val icon = Items.ENDER_PEARL
     override val description = arrayOf(
-        "スニーク中にアビリティを使用すると視点の先にテレポートができる。",
+        "スニーク中にアビリティを使用すると視点先にテレポートできる。",
     )
 
     const val BLINK_ITEM_ID = "dasher_blink"

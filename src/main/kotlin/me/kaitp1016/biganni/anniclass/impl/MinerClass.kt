@@ -21,7 +21,6 @@ import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerExpChangeEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
-import kotlin.random.Random
 
 object MinerClass: AnniClass(), Listener {
     override val icon = Items.STONE_PICKAXE
@@ -137,18 +136,16 @@ object MinerClass: AnniClass(), Listener {
         if (!isSelected(player)) return
 
         if (goldrushes.any { it.player == player }) {
-            if (Random.nextInt(0,2) == 0) {
-                player.give(ItemStack(Material.COAL))
-            }
+            player.give(ItemStack(Material.COAL))
         }
 
         val blastFurnaceCount = blastFurnaceCounts.getOrPut(player) {
             player.give(ItemStack(Material.BLAST_FURNACE))
-            BlastFurnaceCount(player,0)
+            BlastFurnaceCount(player, 0)
         }
 
         blastFurnaceCount.minedCount++
-        if (blastFurnaceCount.minedCount > 11) {
+        if (blastFurnaceCount.minedCount > 8) {
             player.give(ItemStack(Material.BLAST_FURNACE))
             blastFurnaceCount.minedCount = 0
         }

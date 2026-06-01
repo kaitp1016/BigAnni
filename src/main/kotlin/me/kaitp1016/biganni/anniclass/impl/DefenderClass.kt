@@ -32,8 +32,7 @@ object DefenderClass: AnniClass(), Listener {
     override val shortName = "DEF"
     override val icon = Items.PRISMARINE_SHARD
     override val description = arrayOf(
-        "アビリティを使用することでアラートを設置できる。",
-        "自身が設置したアラートに敵が触れると音が鳴る。",
+        "アラートを設置でき、アラートに敵が触れると音を鳴らす。",
         "アビリティを使用するとネクサスにワープできる。",
         "拠点にいる時は常に再生が付与される。"
     )

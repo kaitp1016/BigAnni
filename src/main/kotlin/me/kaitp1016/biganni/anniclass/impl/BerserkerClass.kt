@@ -101,7 +101,7 @@ object BerserkerClass: AnniClass(), Listener {
         if (isSelected(killer)) {
             val attribute = killer.getAttribute(Attribute.MAX_HEALTH)!!
             var health = min(20.0,(attribute.getModifier(BERSERKER_HEALTH_PASSIVE_KEY)?.amount ?: 0.0))
-            health += if (health > 10) 0.5 else 1.0
+            health += if (health > 10) 1.0 else 2.0
 
             if (health > 20 || (event.damageSource.damageType == DamageType.ARROW && health > 10)) return
 

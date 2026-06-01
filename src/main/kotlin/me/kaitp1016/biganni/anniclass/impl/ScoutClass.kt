@@ -27,8 +27,7 @@ object ScoutClass: AnniClass(), Listener {
     override val shortName = "SCO"
     override val icon = Items.FISHING_ROD
     override val description = arrayOf(
-        "グラップリングフックが初期装備に含まれている。",
-        "グラップリングフックは高速で移動ができる。",
+        "高速で移動ができるグラップリングフックが初期装備に含まれている。",
         "戦闘中は使用できない。"
     )
 

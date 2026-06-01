@@ -27,7 +27,7 @@ object TinkererClass: AnniClass(), Listener {
     override val icon = Items.REDSTONE_BLOCK
     override val description = arrayOf(
         "一部の鉱石ブロックを設置するとバフを獲得するブロックになる。",
-        "剣を本1個とクラフトすると、エンチャントを本に移せる。",
+        "ツールを本1個とクラフトすると、エンチャントを本に移せる。",
     )
 
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {
