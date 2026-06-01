@@ -1,11 +1,11 @@
 package me.kaitp1016.biganni.anniclass.impl
 
 import me.kaitp1016.biganni.anniclass.AnniClass
+import me.kaitp1016.biganni.utils.BlockPosInfo
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.minecraft.core.BlockPos
 import net.minecraft.tags.ItemTags
 import net.minecraft.world.item.Items
-import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Blocks
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -51,9 +51,9 @@ object TinkererClass: AnniClass(), Listener {
         Material.EMERALD_BLOCK to PadType(PotionEffect(PotionEffectType.ABSORPTION,400,0),Material.EMERALD),
     )
 
-    data class PlacedPad(val level: Level, val pos: BlockPos, val owner: Player, val type: PadType)
+    data class PlacedPad(val owner: Player, val type: PadType)
 
-    val pads = mutableListOf<PlacedPad>()
+    val pads = BlockPosInfo<PlacedPad>()
 
     @EventHandler(priority = EventPriority.HIGHEST)
     fun onPlace(event: BlockPlaceEvent) {
@@ -71,14 +71,12 @@ object TinkererClass: AnniClass(), Listener {
             return
         }
 
-        pads.add(PlacedPad(level,pos,player,type))
+        pads[level,pos] = PlacedPad(player,type)
         level.setBlockAndUpdate(pos.offset(0,1,0), Blocks.STONE_PRESSURE_PLATE.defaultBlockState())
     }
 
     @EventHandler
     fun onMove(event: PlayerMoveEvent) {
-        if (pads.isEmpty()) return
-
         val from = event.from
         val to = event.to
         if (from.x.toInt() == to.x.toInt() && from.y.toInt() == to.y.toInt() && from.z.toInt() == to.z.toInt()) return
@@ -87,7 +85,7 @@ object TinkererClass: AnniClass(), Listener {
         val pos = player.blockPosition().offset(0,-1,0)
         val level = player.level()
 
-        val pad = pads.find { it.pos == pos && level == it.level } ?: return
+        val pad = pads[level,pos] ?: return
         val bukkitPlayer = event.player
         bukkitPlayer.addPotionEffect(pad.type.effect)
         bukkitPlayer.world.playSound(bukkitPlayer.location, Sound.ENTITY_BLAZE_AMBIENT,1f,1f)
@@ -95,20 +93,18 @@ object TinkererClass: AnniClass(), Listener {
 
     @EventHandler
     fun onBreak(event: BlockBreakEvent) {
-        if (pads.isEmpty()) return
-
         val block = event.block
         val level = block.world.toMC()
         val pos = BlockPos(block.x,block.y,block.z)
 
-        val pad = pads.find { it.pos == pos && level == it.level } ?: return
+        val pad = pads[level,pos] ?: return
         pad.owner.give(ItemStack(pad.type.drop).also { it.amount = 4 })
         event.player.give(ItemStack(pad.type.drop).also { it.amount = 4 })
 
         block.world.setBlockData(pos.x,pos.y + 1,pos.z, Material.AIR.createBlockData())
         block.world.setBlockData(pos.x,pos.y ,pos.z, Material.AIR.createBlockData())
 
-        pads.remove(pad)
+        pads.remove(level,pos)
         event.isCancelled = true
     }
 

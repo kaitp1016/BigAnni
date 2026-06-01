@@ -2,13 +2,13 @@ package me.kaitp1016.biganni.features
 
 import me.kaitp1016.biganni.anniclass.AnniClassManager.getAnniClass
 import me.kaitp1016.biganni.anniclass.AnniClasses
+import me.kaitp1016.biganni.utils.BlockPosInfo
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.core.BlockPos
-import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
@@ -28,7 +28,7 @@ object DelayingBlock: Listener {
     const val DELAY_EFFECT_DISTANCE = 5
     const val DELAY_PLACE_DISTANCE = 10
 
-    val delayingBlocks = mutableMapOf<ServerLevel, HashMap<BlockPos, ServerPlayer>>()
+    val delayingBlocks = BlockPosInfo<ServerPlayer>()
 
     @EventHandler(priority = EventPriority.HIGH)
     fun onPlace(event: BlockPlaceEvent) {
@@ -36,19 +36,19 @@ object DelayingBlock: Listener {
         if (event.isCancelled || item.getAnniId() != DELAYING_BLOCK_ID) return
 
         val block = event.block
+        val pos = BlockPos(block.x, block.y, block.z)
+
         val player = event.player.toMC()
         val level = player.level()
-        val pos = BlockPos(block.x,block.y,block.z)
-
-        val blocksInLevel = delayingBlocks.getOrPut(level) { HashMap() }
         val team = player.teamColor
-        if (blocksInLevel.any { it.value.teamColor == team && it.key.distManhattan(pos) < DELAY_PLACE_DISTANCE }) {
+
+        if (delayingBlocks.hasInDistance(level, pos, DELAY_PLACE_DISTANCE) { it.teamColor == team }) {
             player.bukkitEntity.sendMessage("近くにDelaying Blockがあるため設置できません!")
             event.isCancelled = true
             return
         }
 
-        blocksInLevel[pos] = player
+        delayingBlocks[level, pos] = player
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -56,40 +56,37 @@ object DelayingBlock: Listener {
         if (event.isCancelled) return
 
         val player = event.player.toMC()
-        val blocksInLevel = delayingBlocks[player.level()] ?: return
-        val block = event.block
-        val pos = BlockPos(block.x,block.y,block.z)
+        val level = player.level()
         val team = player.teamColor
 
-        val miningBlock = blocksInLevel[pos]
+        val block = event.block
+        val pos = BlockPos(block.x, block.y, block.z)
+
+        val miningBlock = delayingBlocks[level, pos]
         if (miningBlock != null) {
             if (miningBlock != player && miningBlock.teamColor == team) {
                 event.isCancelled = true
                 return
             }
 
-            blocksInLevel.remove(pos)
+            delayingBlocks.remove(level, pos)
             event.isCancelled = true
 
             val level = player.level()
             level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState())
-            level.addFreshEntity(ItemEntity(player.level(),block.x + 0.5,block.y + 0.5,block.z + 0.5, createItem().toMC()!!).apply {
+            level.addFreshEntity(ItemEntity(player.level(), block.x + 0.5, block.y + 0.5, block.z + 0.5, createItem().toMC()!!).apply {
                 setDefaultPickUpDelay()
             })
 
             return
         }
 
-        if (!blocksInLevel.any { it.value.teamColor != team && it.key.distManhattan(pos) < DELAY_EFFECT_DISTANCE }) return
-
-        val bukkitPlayer = player.bukkitEntity
-        val fitigueLevel = if (bukkitPlayer.getAnniClass() == AnniClasses.ENGINEER) 0 else 1
-        player.addEffect(MobEffectInstance(MobEffects.MINING_FATIGUE,140,fitigueLevel))
-        bukkitPlayer.world.playSound(bukkitPlayer, Sound.ENTITY_ELDER_GUARDIAN_CURSE,1f,2f)
-    }
-
-    fun isDelayingBlock(level:ServerLevel,pos: BlockPos): Boolean {
-        return delayingBlocks[level]?.contains(pos) == true
+        if (delayingBlocks.hasInDistance(level, pos, DELAY_EFFECT_DISTANCE) { it.teamColor != team }) {
+            val bukkitPlayer = player.bukkitEntity
+            val fitigueLevel = if (bukkitPlayer.getAnniClass() == AnniClasses.ENGINEER) 0 else 1
+            player.addEffect(MobEffectInstance(MobEffects.MINING_FATIGUE, 140, fitigueLevel))
+            bukkitPlayer.world.playSound(bukkitPlayer, Sound.ENTITY_ELDER_GUARDIAN_CURSE, 1f, 2f)
+        }
     }
 
     fun createItem(): ItemStack {

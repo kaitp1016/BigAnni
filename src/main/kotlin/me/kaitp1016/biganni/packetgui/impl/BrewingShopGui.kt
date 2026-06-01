@@ -1,9 +1,11 @@
 package me.kaitp1016.biganni.packetgui.impl
 
+import me.kaitp1016.biganni.features.PrivateStand
 import me.kaitp1016.biganni.game.Game
 import me.kaitp1016.biganni.mc
 import me.kaitp1016.biganni.packetgui.AbstractPacketGui
 import me.kaitp1016.biganni.packetgui.ChestPacketGui
+import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
@@ -20,7 +22,7 @@ class BrewingShopGui: ChestPacketGui {
     override val name = "Brewing Shop"
 
     val shopItems = mapOf(
-        10 to (ItemStack(Items.BREWING_STAND) to 10),
+        10 to (PrivateStand.createItem().toMC()!! to 10),
         12 to (ItemStack(Items.NETHER_WART) to 5),
         13 to (ItemStack(Items.REDSTONE) to 3),
         14 to (ItemStack(Items.FERMENTED_SPIDER_EYE) to 10),

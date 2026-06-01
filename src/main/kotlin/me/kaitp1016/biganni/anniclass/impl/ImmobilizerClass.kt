@@ -42,10 +42,10 @@ object ImmobilizerClass: AnniClass(), Listener {
 
     const val IMMOBILIZE_ITEM_ID = "imobilizer_immobilize"
     const val IMMOBILIZE_COOLDOWN = 400
-    val IMMOBILIZE_COOLDOWN_GROUP = Key.key(PLUGIN_ID,"imobilizer_immobilize")
+    val IMMOBILIZE_COOLDOWN_GROUP = Key.key(PLUGIN_ID, "imobilizer_immobilize")
 
     const val IMMOBILIZE_RECEIVE_COOLDOWN = 400
-    val IMMOBILIZE_JUMP_REDUCE_KEY = NamespacedKey(plugin,"immobilize_jump_reduce")
+    val IMMOBILIZE_JUMP_REDUCE_KEY = NamespacedKey(plugin, "immobilize_jump_reduce")
 
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {
         return super.getDefaultItems(player).also {
@@ -66,7 +66,7 @@ object ImmobilizerClass: AnniClass(), Listener {
     }
 
     data class TargetCooldown(val player: Player, var time: Int)
-    data class Immobilize(val user: Player,val target: Player,var tick: Int)
+    data class Immobilize(val user: Player, val target: Player, var tick: Int)
 
     val immobilizes = mutableListOf<Immobilize>()
     val targetCooldown = mutableListOf<TargetCooldown>()
@@ -82,32 +82,32 @@ object ImmobilizerClass: AnniClass(), Listener {
         if (event.action == Action.RIGHT_CLICK_BLOCK || event.action == Action.RIGHT_CLICK_AIR) {
             val team = player.toMC().teamColor
 
-            val targets = player.world.getNearbyPlayers(player.location,5.0).filter { target -> target.toMC().teamColor != team && targetCooldown.none { it.player == target } && !BerserkerClass.isUsingAbility(target)}
+            val targets = player.world.getNearbyPlayers(player.location, 5.0).filter { target -> target.toMC().teamColor != team && targetCooldown.none { it.player == target } && !BerserkerClass.isUsingAbility(target) }
             if (targets.isEmpty()) return
 
             var userEffectTick: Int = -1
             targets.forEach { target ->
                 val effectTime = getEffectTime(target)
-                userEffectTick = max(effectTime,userEffectTick)
+                userEffectTick = max(effectTime, userEffectTick)
 
-                applyImmobilize(target,player,effectTime)
+                applyImmobilize(target, player, effectTime)
             }
 
-            applyImmobilize(player,player,userEffectTick)
+            applyImmobilize(player, player, userEffectTick)
 
-            player.setCooldown(IMMOBILIZE_COOLDOWN_GROUP,IMMOBILIZE_COOLDOWN)
+            player.setCooldown(IMMOBILIZE_COOLDOWN_GROUP, IMMOBILIZE_COOLDOWN)
         }
 
         if (event.action == Action.LEFT_CLICK_BLOCK || event.action == Action.LEFT_CLICK_AIR) {
             val team = player.toMC().teamColor
 
-            val targets = player.world.getNearbyPlayers(player.location,5.0).filter { it.toMC().teamColor != team && !BerserkerClass.isUsingAbility(it) }
+            val targets = player.world.getNearbyPlayers(player.location, 5.0).filter { it.toMC().teamColor != team && !BerserkerClass.isUsingAbility(it) }
             if (targets.isEmpty()) return
 
             targets.forEach { target ->
-                target.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS,99, 2))
-                target.playSound(target, Sound.BLOCK_SLIME_BLOCK_BREAK,2f,2f)
-                target.playSound(player, Sound.BLOCK_SLIME_BLOCK_BREAK,2f,2f)
+                target.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS, 99, 2))
+                target.playSound(target, Sound.BLOCK_SLIME_BLOCK_BREAK, 2f, 2f)
+                target.playSound(player, Sound.BLOCK_SLIME_BLOCK_BREAK, 2f, 2f)
                 target.setCooldown(IMMOBILIZE_COOLDOWN_GROUP, IMMOBILIZE_COOLDOWN)
             }
         }
@@ -131,8 +131,10 @@ object ImmobilizerClass: AnniClass(), Listener {
                 if (user.world != target.world) return@removeIf true
 
                 val distance = user.location.distance(target.location)
-                val location = user.location.clone().add(0.0,1.25,0.0)
+                val location = user.location.clone().add(0.0, 1.25, 0.0)
                 val delta = target.location.clone().subtract(user.location).toVector().normalize().multiply(0.1)
+
+                val receivers = location.getNearbyPlayers(32.0)
 
                 repeat((distance * 10).toInt()) {
                     location.add(delta)
@@ -140,15 +142,15 @@ object ImmobilizerClass: AnniClass(), Listener {
                     Particle.CRIT.builder()
                         .location(location)
                         .count(0)
-                        .offset(0.0,0.0,0.0)
+                        .offset(0.0, 0.0, 0.0)
+                        .receivers(receivers)
                         .spawn()
                 }
 
                 if (immobilize.tick < 1) {
                     target.getAttribute(Attribute.JUMP_STRENGTH)?.removeModifier(IMMOBILIZE_JUMP_REDUCE_KEY)
                     return@removeIf true
-                }
-                else {
+                } else {
                     return@removeIf false
                 }
             }
@@ -170,10 +172,10 @@ object ImmobilizerClass: AnniClass(), Listener {
 
         target.playSound(target, Sound.ENTITY_PLAYER_BIG_FALL, 2f, 0f)
         targetCooldown.add(TargetCooldown(target, IMMOBILIZE_RECEIVE_COOLDOWN))
-        immobilizes.add(Immobilize(user,target,tick))
+        immobilizes.add(Immobilize(user, target, tick))
     }
 
     private fun getEffectTime(player: Player): Int {
-        return min(max(((player.getAttribute(Attribute.ARMOR)?.value ?: 0.0) * 5).toInt(),40),100)
+        return min(max(((player.getAttribute(Attribute.ARMOR)?.value ?: 0.0) * 5).toInt(), 40), 100)
     }
 }

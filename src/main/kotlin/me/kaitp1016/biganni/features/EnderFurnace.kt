@@ -38,6 +38,7 @@ import kotlin.math.min
 
 object EnderFurnace: Listener {
     val furnaces = mutableMapOf<UUID, EnderBlastFurnaceBlockEntity>()
+
     @EventHandler
     fun onInteract(event: PlayerInteractEvent) {
         if (event.action != Action.RIGHT_CLICK_BLOCK) return

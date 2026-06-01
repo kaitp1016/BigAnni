@@ -17,7 +17,7 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.ItemLore
 import org.bukkit.Sound
 
-class WeaeponShopGui: ChestPacketGui {
+class WeaponShopGui: ChestPacketGui {
     override val displayName = Component.literal("Weapon Shop").withColor(0xFFAA00)
     override val name = "Weapon Shop"
 
@@ -33,14 +33,14 @@ class WeaeponShopGui: ChestPacketGui {
 
         14 to (ItemStack(Items.COOKED_BEEF).also { it.count = 10 } to 5),
         15 to (ItemStack(Items.CAKE) to 1),
-        16 to (ItemStack(Items.COBWEB) to 3),
-        23 to (ItemStack(Items.EXPERIENCE_BOTTLE).also { it.count = 3 } to 3),
-        24 to (ItemStack(Items.ENDER_PEARL) to 32),
-        25 to (ItemStack(Items.MILK_BUCKET) to 3),
+        16 to (ItemStack(Items.COBWEB) to 1),
+        23 to (ItemStack(Items.EXPERIENCE_BOTTLE).also { it.count = 3 } to 2),
+        24 to (ItemStack(Items.ENDER_PEARL) to 35),
+        25 to (ItemStack(Items.MILK_BUCKET) to 5),
 
-        41 to (TeamDoor.createItem().toMC()!! to 16),
+        41 to (TeamDoor.createItem().toMC()!! to 10),
         42 to (ItemStack(Items.SPONGE) to 5),
-        43 to (DelayingBlock.createItem().toMC()!! to 16),
+        43 to (DelayingBlock.createItem().toMC()!! to 20),
         )
 
     constructor(player: ServerPlayer,parent: AbstractPacketGui? = null): super(player,54) {

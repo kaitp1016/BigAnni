@@ -21,7 +21,7 @@ import me.kaitp1016.biganni.game.boss.BossManager
 import me.kaitp1016.biganni.modifiers.KnockbackModifier
 import me.kaitp1016.biganni.packetgui.impl.AnniClassSelector
 import me.kaitp1016.biganni.packetgui.impl.BrewingShopGui
-import me.kaitp1016.biganni.packetgui.impl.WeaeponShopGui
+import me.kaitp1016.biganni.packetgui.impl.WeaponShopGui
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.server.permissions.LevelBasedPermissionSet
@@ -107,7 +107,7 @@ object AnniCommand {
 
             return@executes 1
         }.suggests(MapSuggestion))).then(Commands.literal("openweaponshop").executes {
-            WeaeponShopGui((it.source.executor as Player).toMC()).open()
+            WeaponShopGui((it.source.executor as Player).toMC()).open()
             return@executes 1
         }).then(Commands.literal("openbrewingshop").executes {
             BrewingShopGui((it.source.executor as Player).toMC()).open()

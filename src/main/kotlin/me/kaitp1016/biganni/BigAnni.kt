@@ -41,6 +41,7 @@ class BigAnni : JavaPlugin() {
             EnderFurnace,
             DelayingBlock,
             TeamDoor,
+            PrivateStand,
             ServerLink,
             FallDamageResistance,
             FullyInvisible,

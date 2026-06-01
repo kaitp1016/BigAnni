@@ -5,6 +5,7 @@ import io.papermc.paper.datacomponent.item.UseCooldown
 import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
 import me.kaitp1016.biganni.features.DelayingBlock
+import me.kaitp1016.biganni.utils.BlockPosInfo
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
@@ -53,7 +54,7 @@ object EngineerClass: AnniClass(), Listener {
 
     const val BUNKER_BUSTER_DROP_ITEM_ID = "engineer_bunker_buster"
     const val BUNKER_BUSTER_COOLDOWN = 600
-    val BUNKER_BUSTER_COOLDOWN_GROUP = Key.key(PLUGIN_ID,"engineer_bunker_buster")
+    val BUNKER_BUSTER_COOLDOWN_GROUP = Key.key(PLUGIN_ID, "engineer_bunker_buster")
 
     const val EVERTOOL_ITEM_ID = "engineer_evertool"
 
@@ -106,7 +107,7 @@ object EngineerClass: AnniClass(), Listener {
         val tool = getTool(block) ?: Material.BLAZE_ROD
         if (tool == item.type) return
 
-        player.inventory.setItem(EquipmentSlot.HAND,item.withType(tool).apply {
+        player.inventory.setItem(EquipmentSlot.HAND, item.withType(tool).apply {
             editMeta { it.isUnbreakable = true }
         })
     }
@@ -118,10 +119,8 @@ object EngineerClass: AnniClass(), Listener {
         BlockTags.MINEABLE_WITH_SHOVEL to Material.STONE_SHOVEL,
     )
 
-    enum class ExplosionType(val radius: Float,val fuseTick: Int) {
-        DYNMITE(radius = 2.2f, fuseTick = 19),
-        C4(radius = 3.5f, fuseTick = 120),
-        NUKE(radius = 10f, fuseTick = 200);
+    enum class ExplosionType(val radius: Float, val fuseTick: Int) {
+        DYNMITE(radius = 2.2f, fuseTick = 19), C4(radius = 3.5f, fuseTick = 120), NUKE(radius = 10f, fuseTick = 200);
 
         fun next(): ExplosionType {
             val entries = entries
@@ -131,7 +130,7 @@ object EngineerClass: AnniClass(), Listener {
     }
 
     // IntはTeamColor
-    val placedBlocks = mutableMapOf<ServerLevel, HashMap<BlockPos, Int>>()
+    val placedBlocks = BlockPosInfo<Int>()
     val selectedExplosions = mutableMapOf<Player, ExplosionType>()
 
     @EventHandler
@@ -147,7 +146,7 @@ object EngineerClass: AnniClass(), Listener {
             selectedExplosions[player] = explosion
 
             player.sendMessage("${explosion.name} を選択しました!")
-            player.playSound(player, Sound.UI_BUTTON_CLICK,1f,1f)
+            player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
 
             return
         }
@@ -156,19 +155,19 @@ object EngineerClass: AnniClass(), Listener {
 
         val face = event.blockFace
         val pos = event.clickedBlock?.location?.apply {
-            add(0.5,0.5,0.5)
-            add(face.modX * 1.5, face.modY * 1.5,face.modZ * 1.5)
+            add(0.5, 0.5, 0.5)
+            add(face.modX * 1.5, face.modY * 1.5, face.modZ * 1.5)
         } ?: return
 
         val mcPlayer = player.toMC()
         val level = mcPlayer.level()
         val type = selectedExplosions[player] ?: ExplosionType.entries.first()
 
-        val tnt = BunkerBusterTNT(level,pos.x,pos.y,pos.z,mcPlayer,type)
+        val tnt = BunkerBusterTNT(level, pos.x, pos.y, pos.z, mcPlayer, type)
         level.addFreshEntity(tnt)
 
         event.isCancelled = true
-        player.setCooldown(BUNKER_BUSTER_COOLDOWN_GROUP,BUNKER_BUSTER_COOLDOWN)
+        player.setCooldown(BUNKER_BUSTER_COOLDOWN_GROUP, BUNKER_BUSTER_COOLDOWN)
     }
 
     @EventHandler
@@ -177,10 +176,9 @@ object EngineerClass: AnniClass(), Listener {
         val mcPlayer = player.toMC()
         val block = event.block
         val level = mcPlayer.level()
-        val pos = BlockPos(block.x,block.y,block.z)
+        val pos = BlockPos(block.x, block.y, block.z)
 
-        val levelBlocks = placedBlocks.getOrPut(level) { hashMapOf() }
-        levelBlocks[pos] = mcPlayer.teamColor
+        placedBlocks[level, pos] = mcPlayer.teamColor
     }
 
     @EventHandler
@@ -189,10 +187,9 @@ object EngineerClass: AnniClass(), Listener {
         val mcPlayer = player.toMC()
         val block = event.block
         val level = mcPlayer.level()
-        val pos = BlockPos(block.x,block.y,block.z)
+        val pos = BlockPos(block.x, block.y, block.z)
 
-        val levelBlocks = placedBlocks[level] ?: return
-        levelBlocks.remove(pos)
+        placedBlocks.remove(level, pos)
     }
 
     @EventHandler
@@ -207,11 +204,11 @@ object EngineerClass: AnniClass(), Listener {
         target.kill(level)
     }
 
-    class BunkerBusterTNT: PrimedTnt {
+    class BunkerBusterTNT : PrimedTnt {
         val spawner: ServerPlayer
         val type: ExplosionType
 
-        constructor(level: ServerLevel,x: Double,y: Double,z: Double,spawner: ServerPlayer,type: ExplosionType):super(level,x,y,z,spawner) {
+        constructor(level: ServerLevel, x: Double, y: Double, z: Double, spawner: ServerPlayer, type: ExplosionType) : super(level, x, y, z, spawner) {
             this.spawner = spawner
             this.type = type
             this.fuse = type.fuseTick
@@ -249,14 +246,14 @@ object EngineerClass: AnniClass(), Listener {
         }
 
         fun explode() {
-            this.level().explode(this, Explosion.getDefaultDamageSource(this.level(), this), ExplosionCalculator(spawner.teamColor), this.x, this.getY(0.0625),this.z, this.explosionPower , false, ExplosionInteraction.TNT)
+            this.level().explode(this, Explosion.getDefaultDamageSource(this.level(), this), ExplosionCalculator(spawner.teamColor), this.x, this.getY(0.0625), this.z, this.explosionPower, false, ExplosionInteraction.TNT)
         }
 
-        class ExplosionCalculator(val team: Int): ExplosionDamageCalculator() {
+        class ExplosionCalculator(val team: Int) : ExplosionDamageCalculator() {
             override fun shouldBlockExplode(explosion: Explosion, level: BlockGetter, pos: BlockPos, state: BlockState, power: Float): Boolean {
                 val level = (level as ServerLevel)
-                val placedTeam = placedBlocks[level]?.get(pos)
-                if (placedTeam == null || placedTeam == team || DelayingBlock.isDelayingBlock(level,pos)) return false
+                val placedTeam = placedBlocks.get(level, pos)
+                if (placedTeam == null || placedTeam == team || DelayingBlock.delayingBlocks.has(level, pos)) return false
 
                 return super.shouldBlockExplode(explosion, level, pos, state, power)
             }
