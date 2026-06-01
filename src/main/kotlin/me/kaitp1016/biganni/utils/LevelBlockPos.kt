@@ -4,6 +4,7 @@ import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.phys.Vec3
 import org.bukkit.World
 
 class LevelBlockPos {
@@ -35,6 +36,10 @@ class LevelBlockPos {
 
     fun toBlockPos(): BlockPos {
         return BlockPos(x,y,z)
+    }
+
+    fun distanceTo(target: Vec3): Double {
+        return target.distanceTo(Vec3(x.toDouble(),y.toDouble(),z.toDouble()))
     }
 
     override fun equals(other: Any?): Boolean {
