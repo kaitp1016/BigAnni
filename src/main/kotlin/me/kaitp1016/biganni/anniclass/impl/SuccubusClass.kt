@@ -38,7 +38,7 @@ object SuccubusClass: AnniClass(), Listener {
     override val icon = Items.RED_DYE
     override val description = arrayOf(
         "敵の体力が常に表示される。",
-        "アビリティを使用すると敵のHPが30%を下回るのなら即死させる。",
+        "アビリティを使用したときに敵のHPが30%を下回るのなら残りのHPを吸収する。",
         "それ以外なら自身が敵の残りの体力分だけの貫通ダメージを受ける。"
     )
 
@@ -114,7 +114,6 @@ object SuccubusClass: AnniClass(), Listener {
                 .build()
 
             player.damage(health,source)
-            player.heal(health)
         }
         else {
             val source = DamageSource.builder(DamageType.GENERIC_KILL)
@@ -123,6 +122,8 @@ object SuccubusClass: AnniClass(), Listener {
                 .build()
 
             target.damage(10000.0,source)
+            player.heal(health)
+            target.sendMessage(Component.text("You were killed by ").color(NamedTextColor.LIGHT_PURPLE).append(player.teamDisplayName().append(Component.text("'s ").color(NamedTextColor.LIGHT_PURPLE).append(Component.text("Life Drain ").color(NamedTextColor.RED).append(Component.text("ability!").color(NamedTextColor.LIGHT_PURPLE))))))
         }
 
         player.playSound(player, Sound.ENTITY_BLAZE_AMBIENT,1f,1.4f)

@@ -57,15 +57,15 @@ object NinjaClass: AnniClass(), Listener {
 
     const val MASTERFUL_ASCENSION_ITEM_ID = "ninja_masterful_ascension"
     const val MASTERFUL_ASCENSION_COOLDOWN = 100
-    val MASTERFUL_ASCENSION_COOLDOWN_GROUP = Key.key(PLUGIN_ID,"ninja_masterful_ascension")
+    val MASTERFUL_ASCENSION_COOLDOWN_GROUP = Key.key(PLUGIN_ID, "ninja_masterful_ascension")
 
     const val SMOKE_BOMB_ITEM_ID = "ninja_smoke_bomb"
     const val SMOKE_BOMB_COOLDOWN = 800
-    val SMOKE_BOMB_COOLDOWN_GROUP = Key.key(PLUGIN_ID,"ninja_smoke_bomb")
+    val SMOKE_BOMB_COOLDOWN_GROUP = Key.key(PLUGIN_ID, "ninja_smoke_bomb")
 
     const val SHURIKEN_ITEM_ID = "ninja_shuriken"
     const val SHURIKEN_COOLDOWN = 40
-    val SHURIKEN_COOLDOWN_GROUP = Key.key(PLUGIN_ID,"ninja_shuriken")
+    val SHURIKEN_COOLDOWN_GROUP = Key.key(PLUGIN_ID, "ninja_shuriken")
 
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {
         return super.getDefaultItems(player).also {
@@ -136,15 +136,14 @@ object NinjaClass: AnniClass(), Listener {
                 enabledPlayers.remove(player)
                 player.removePotionEffect(PotionEffectType.JUMP_BOOST)
                 player.sendMessage(Component.text("Jump Boost disabled.").color(NamedTextColor.GREEN))
-            }
-            else {
+            } else {
                 enabledPlayers.add(player)
-                player.addPotionEffect(PotionEffect(PotionEffectType.JUMP_BOOST, PotionEffect.INFINITE_DURATION,1,false,false))
+                player.addPotionEffect(PotionEffect(PotionEffectType.JUMP_BOOST, PotionEffect.INFINITE_DURATION, 1, false, false))
                 player.sendMessage(Component.text("Jump Boost enabled.").color(NamedTextColor.GREEN))
-                player.setCooldown(MASTERFUL_ASCENSION_COOLDOWN_GROUP,100)
+                player.setCooldown(MASTERFUL_ASCENSION_COOLDOWN_GROUP, 100)
             }
 
-            player.playSound(player, Sound.UI_BUTTON_CLICK,1f,1f)
+            player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
 
         }
         if (item.getAnniId() == SHURIKEN_ITEM_ID) {
@@ -154,11 +153,11 @@ object NinjaClass: AnniClass(), Listener {
             val level = mcPlayer.level()
             val mcItem = item.toMC() ?: MCItemStack(Items.BOW)
             val isRightClick = event.action.isRightClick
-            val snowball = Projectile.spawnProjectileFromRotationDelayed(ProjectileFactory { level: ServerLevel, mob: LivingEntity, item: MCItemStack -> ThrowShuriken(mcPlayer, level, mob,isRightClick) }, level, mcItem, mcPlayer, -5.0f, 1.5f, 1.0f)
+            val snowball = Projectile.spawnProjectileFromRotationDelayed(ProjectileFactory { level: ServerLevel, mob: LivingEntity, item: MCItemStack -> ThrowShuriken(mcPlayer, level, mob, isRightClick) }, level, mcItem, mcPlayer, -5.0f, 1.5f, 1.0f)
             if (!snowball.attemptSpawn()) return
 
-            player.world.playSound(player.location, Sound.ENTITY_ITEM_FRAME_REMOVE_ITEM,1f,1f)
-            player.setCooldown(SHURIKEN_COOLDOWN_GROUP,SHURIKEN_COOLDOWN)
+            player.world.playSound(player.location, Sound.ENTITY_ITEM_FRAME_REMOVE_ITEM, 1f, 1f)
+            player.setCooldown(SHURIKEN_COOLDOWN_GROUP, SHURIKEN_COOLDOWN)
             item.amount--
         }
         if (item.getAnniId() == SMOKE_BOMB_ITEM_ID) {
@@ -172,8 +171,8 @@ object NinjaClass: AnniClass(), Listener {
             val snowball = Projectile.spawnProjectileFromRotationDelayed(ProjectileFactory { level: ServerLevel, mob: LivingEntity, item: MCItemStack -> SmokeBomb(mcPlayer, level, mob) }, level, mcItem, mcPlayer, -5.0f, power, 1.0f)
             if (!snowball.attemptSpawn()) return
 
-            player.world.playSound(player.location, Sound.BLOCK_LAVA_EXTINGUISH,1f,1f)
-            player.setCooldown(SMOKE_BOMB_COOLDOWN_GROUP,SMOKE_BOMB_COOLDOWN)
+            player.world.playSound(player.location, Sound.BLOCK_LAVA_EXTINGUISH, 1f, 1f)
+            player.setCooldown(SMOKE_BOMB_COOLDOWN_GROUP, SMOKE_BOMB_COOLDOWN)
         }
     }
 
@@ -181,7 +180,7 @@ object NinjaClass: AnniClass(), Listener {
         val thrower: ServerPlayer
         val isRightClick: Boolean
 
-        constructor(thrower: ServerPlayer, level: Level, mob: LivingEntity,isRightClick: Boolean) : super(level, mob, MCItemStack(Items.PRISMARINE_CRYSTALS)) {
+        constructor(thrower: ServerPlayer, level: Level, mob: LivingEntity, isRightClick: Boolean) : super(level, mob, MCItemStack(Items.PRISMARINE_CRYSTALS)) {
             this.thrower = thrower
             this.isRightClick = isRightClick
         }
@@ -191,20 +190,18 @@ object NinjaClass: AnniClass(), Listener {
             if (target !is LivingEntity || target.teamColor == thrower.teamColor) return
 
             val level = target.level() as ServerLevel
-            val source = DamageSource(mc.registryAccess().get(DamageTypes.ARROW).get(),this,thrower)
-            target.hurtServer(level,source,1f)
+            val source = DamageSource(mc.registryAccess().get(DamageTypes.ARROW).get(), this, thrower)
+            target.hurtServer(level, source, 1f)
 
             if (isRightClick) {
-                val velocity = this.position().subtract(target.position()).multiply(-1.0,0.0,-1.0).normalize().add(0.0,0.4,0.0)
+                val velocity = this.position().subtract(target.position()).multiply(-1.0, 0.0, -1.0).normalize().add(0.0, 0.4, 0.0)
                 target.lerpMotion(velocity)
                 target.hurtMarked = true
-            }
-            else {
+            } else {
                 if (Random.nextBoolean()) {
-                    target.addEffect(MobEffectInstance(MobEffects.SLOWNESS,60,0))
-                }
-                else {
-                    target.addEffect(MobEffectInstance(MobEffects.POISON,40,0))
+                    target.addEffect(MobEffectInstance(MobEffects.SLOWNESS, 60, 0))
+                } else {
+                    target.addEffect(MobEffectInstance(MobEffects.POISON, 40, 0))
                 }
             }
 
@@ -253,16 +250,16 @@ object NinjaClass: AnniClass(), Listener {
             val world = level().world
 
             repeat(30) {
-                world.spawnParticle(Particle.LARGE_SMOKE,position.x + Random.nextDouble(-4.0,4.0),position.y + Random.nextDouble(-4.0,4.0),position.z + Random.nextDouble(-4.0,4.0),0,Random.nextDouble(-0.3,0.3),Random.nextDouble(-0.3,0.3),Random.nextDouble(-0.3,0.3))
+                world.spawnParticle(Particle.LARGE_SMOKE, position.x + Random.nextDouble(-4.0, 4.0), position.y + Random.nextDouble(-4.0, 4.0), position.z + Random.nextDouble(-4.0, 4.0), 0, Random.nextDouble(-0.3, 0.3), Random.nextDouble(-0.3, 0.3), Random.nextDouble(-0.3, 0.3))
             }
 
             val team = thrower.teamColor
-            world.getNearbyPlayers(Location(world,position.x,position.y,position.z),4.0).forEach { target ->
+            world.getNearbyPlayers(Location(world, position.x, position.y, position.z), 4.0).forEach { target ->
                 if (target.toMC().teamColor == team) {
-                    target.addPotionEffect(PotionEffect(PotionEffectType.SPEED,40,1))
-                }
-                else {
-                    target.addPotionEffect(PotionEffect(PotionEffectType.BLINDNESS,40,0))
+                    target.addPotionEffect(PotionEffect(PotionEffectType.SPEED, 40, 1))
+                } else {
+                    target.addPotionEffect(PotionEffect(PotionEffectType.BLINDNESS, 40, 0))
+                    target.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS, 40, 1))
                 }
             }
         }

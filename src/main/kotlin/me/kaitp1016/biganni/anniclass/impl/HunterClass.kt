@@ -5,6 +5,7 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.UseCooldown
 import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
+import me.kaitp1016.biganni.game.Game
 import me.kaitp1016.biganni.mc
 import me.kaitp1016.biganni.packetgui.ChestPacketGui
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
@@ -28,6 +29,7 @@ import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.Items
+import net.minecraft.world.phys.Vec3
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
@@ -231,6 +233,13 @@ object HunterClass: AnniClass(), Listener {
                 val bukkitPlayer = player.bukkitEntity
                 if (size == null) {
                     bukkitPlayer.sendMessage("ここにはおけません!")
+                    close()
+                    return@execute
+                }
+
+                val position = Vec3(pos.x.toDouble(),pos.y.toDouble(),pos.z.toDouble())
+                if (Game.teams.any { it.nexus.level == level && it.nexus.distanceTo(position) < 15.0 }) {
+                    bukkitPlayer.sendMessage("ここには設置できません!")
                     close()
                     return@execute
                 }
