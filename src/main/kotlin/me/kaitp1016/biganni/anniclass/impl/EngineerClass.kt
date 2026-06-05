@@ -120,7 +120,9 @@ object EngineerClass: AnniClass(), Listener {
     )
 
     enum class ExplosionType(val radius: Float, val fuseTick: Int) {
-        DYNMITE(radius = 2.2f, fuseTick = 19), C4(radius = 3.5f, fuseTick = 120), NUKE(radius = 10f, fuseTick = 200);
+        DYNMITE(radius = 2.2f, fuseTick = 19),
+        C4(radius = 3.5f, fuseTick = 120),
+        NUKE(radius = 10f, fuseTick = 200);
 
         fun next(): ExplosionType {
             val entries = entries

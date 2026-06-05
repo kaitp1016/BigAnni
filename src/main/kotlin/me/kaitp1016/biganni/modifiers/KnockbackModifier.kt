@@ -3,6 +3,8 @@ package me.kaitp1016.biganni.modifiers
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent
 import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import io.papermc.paper.event.entity.EntityKnockbackEvent
+import me.kaitp1016.biganni.anniclass.AnniClassManager.getAnniClass
+import me.kaitp1016.biganni.anniclass.AnniClasses
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -18,7 +20,10 @@ object KnockbackModifier: Listener {
 
     @EventHandler
     fun onKnockback(event: EntityKnockbackByEntityEvent) {
-        if (event.cause != EntityKnockbackEvent.Cause.ENTITY_ATTACK || event.hitBy !is Player) return
+        if (event.cause != EntityKnockbackEvent.Cause.ENTITY_ATTACK) return
+
+        val hitBy = event.hitBy
+        if (hitBy !is Player || hitBy.getAnniClass() == AnniClasses.CHARGER) return
 
         val entity = event.entity
         val strength = event.knockbackStrength

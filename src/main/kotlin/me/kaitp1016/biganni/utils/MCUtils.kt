@@ -29,7 +29,11 @@ import net.minecraft.world.damagesource.DamageSource as MCDamageSource
 
 object MCUtils {
     fun ItemStack.toMC(): MCItemStack? {
-        return (this as CraftItemStack).handle
+        return (this as CraftItemStack?)?.handle
+    }
+
+    fun ItemStack.toMCCopy(): MCItemStack {
+        return CraftItemStack.asNMSCopy(this)
     }
 
     fun Player.toMC(): ServerPlayer {

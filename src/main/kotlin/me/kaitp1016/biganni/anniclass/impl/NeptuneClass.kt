@@ -36,7 +36,7 @@ object NeptuneClass: AnniClass(), Listener {
     override val name = "Neptune"
     override val shortName = "NEP"
     override val description = arrayOf(
-        "この職業の時は周囲の液体を凍らせることができる。",
+        "周囲の液体を凍らせることができ、切り替えれる。",
         "トライデントは2個の形態を切り替えることができる。",
     )
 

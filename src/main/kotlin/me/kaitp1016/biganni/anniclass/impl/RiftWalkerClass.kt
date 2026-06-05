@@ -35,8 +35,7 @@ object RiftWalkerClass: AnniClass(), Listener {
     override val shortName = "RIF"
     override val icon = Items.BLAZE_ROD
     override val description = arrayOf(
-        "アビリティを使用することで、指定した場所にテレポートできる。",
-        "範囲内にいたスニークしている味方も同時にテレポートできる。",
+        "自身と周囲のスニークしている味方を指定した場所に転送できる。",
     )
 
     const val OPEN_RIFT_ITEM_ID = "riftwalker_open_rift"

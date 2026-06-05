@@ -32,7 +32,7 @@ object ChargerClass: AnniClass(), Listener {
     override val shortName = "CHA"
     override val isUnique = true
     override val description = arrayOf(
-        "連打ができなくなり、連打が可能な場合は他の効果は発動しない。",
+        "連打ができなくなり、与えるノックバックがバニラと同じになる。",
         "近接ダメージがクリティカルなら1.1倍、それ以外は1.3倍になる。",
         "アビリティを使用すると周囲の敵の移動速度を低下させる。",
     )

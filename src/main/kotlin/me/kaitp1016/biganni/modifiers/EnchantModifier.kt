@@ -1,8 +1,10 @@
 package me.kaitp1016.biganni.modifiers
 
+import me.kaitp1016.biganni.utils.MCUtils.toMC
 import me.kaitp1016.biganni.utils.Scheduler
-import org.bukkit.GameMode
+import net.minecraft.tags.ItemTags
 import org.bukkit.Material
+import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -54,19 +56,38 @@ object EnchantModifier: Listener {
     fun onEnchant(event: EnchantItemEvent) {
         if (event.isCancelled) return
 
-        if (event.expLevelCost == 30 && event.enchanter.gameMode != GameMode.CREATIVE) {
-            Scheduler.scheduleTask(1) {
-                event.enchanter.level -= 2
-            }
-        }
-
         if (event.enchantsToAdd.contains(Enchantment.DEPTH_STRIDER)) {
             event.enchantsToAdd[Enchantment.DEPTH_STRIDER] = 1
+        }
+
+        val enchanter = event.enchanter
+        val mcEnchanter = enchanter.toMC()
+        if (mcEnchanter.hasInfiniteMaterials()) return
+
+        val extraCost = getExtraCost(event)
+
+        Scheduler.scheduleTask(1) {
+            enchanter.level -= extraCost
         }
     }
 
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
         event.player.enchantmentSeed = Random.nextInt()
+    }
+
+    private fun getExtraCost(event: EnchantItemEvent): Int {
+        if (event.expLevelCost == 30) {
+            return 2
+        }
+
+        /*
+        val originalCost = event.whichButton() + 1
+        val newCost = event.expLevelCost
+
+        return newCost - originalCost
+         */
+
+        return 0
     }
 }
