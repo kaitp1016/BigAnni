@@ -110,6 +110,8 @@ object Game: Listener {
 
     @EventHandler
     fun onTick(event: ServerTickStartEvent) {
+        ScoreboardManager.onTick()
+
         if (!isStarted) return
 
         if (phase < MAX_PHASE) {
