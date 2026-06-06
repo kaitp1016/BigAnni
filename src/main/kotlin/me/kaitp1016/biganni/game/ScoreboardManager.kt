@@ -191,8 +191,8 @@ object ScoreboardManager {
             return Component.literal(backwardSpace).append(Component.`object`(PlayerSprite(ResolvableProfile.createUnresolved(player), true)).append(pickaxe.append(Component.literal(fowardSpace).append(Component.`object`(AtlasSprite(Identifier.withDefaultNamespace("blocks"), Identifier.parse("block/end_stone"))).append(nexus)))))
         }
 
-        private fun randomPlayer(filtered: UUID?): UUID {
-            return (players + mc.playerList.players.map { it.uuid }).toSet().filter { it != filtered }.random()
+        private fun randomPlayer(exclude: UUID?): UUID {
+            return (players + mc.playerList.players.map { it.uuid }).toSet().filter { it != exclude }.random()
         }
     }
 }
