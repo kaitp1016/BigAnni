@@ -16,7 +16,6 @@ import net.minecraft.util.CommonColors
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.ItemLore
-import org.bukkit.Bukkit
 
 class AnniClassSelector: ChestPacketGui {
     override val displayName = Component.literal("Select a Class:")
@@ -59,11 +58,7 @@ class AnniClassSelector: ChestPacketGui {
             }
 
             player.selectAnniClass(anniClass)
-
-            player.openInventory(Bukkit.createInventory(player,27, net.kyori.adventure.text.Component.text("§o§rClass Item")).also { inv ->
-                anniClass.getDefaultArmors(player).values.forEach { inv.addItem(it) }
-                anniClass.getDefaultItems(player).forEach { inv.addItem(it) }
-            })
+            anniClass.openItemMenu(player)
         }
     }
 }

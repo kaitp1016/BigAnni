@@ -5,12 +5,15 @@ import me.kaitp1016.biganni.anniclass.AnniClassManager.isAnniClass
 import me.kaitp1016.biganni.plugin
 import me.kaitp1016.biganni.utils.ItemUtils.addLore
 import me.kaitp1016.biganni.utils.MCUtils.toMC
+import me.kaitp1016.biganni.utils.MCUtils.toMCCopy
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
 import net.minecraft.core.component.DataComponents
+import net.minecraft.tags.ItemTags
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.component.DyedItemColor
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.attribute.Attribute
@@ -43,7 +46,7 @@ abstract class AnniClass {
         }
 
         val items = getDefaultItems(player)
-        items.forEach {
+        sortItems(items).forEach {
             player.give(it)
         }
     }
@@ -85,6 +88,13 @@ abstract class AnniClass {
         )
     }
 
+    fun openItemMenu(player: Player) {
+        player.openInventory(Bukkit.createInventory(player,27, Component.text("§o§rClass Item")).also { inv ->
+            getDefaultArmors(player).values.forEach { inv.addItem(it) }
+            sortItems(getDefaultItems(player)).forEach { inv.addItem(it) }
+        })
+    }
+
     fun isSelected(player: Player):Boolean {
         return player.isAnniClass(this)
     }
@@ -112,6 +122,21 @@ abstract class AnniClass {
         }
 
         addLore(Component.text("Class Item").color(NamedTextColor.GOLD).decoration(TextDecoration.ITALIC,false))
+    }
+
+    private fun sortItems(items:List<ItemStack>): List<ItemStack> {
+        return items.sortedBy {
+            val item = it.toMCCopy()
+            if (item.`is`(ItemTags.SWORDS)) return@sortedBy 0
+            if (item.`is`(ItemTags.PICKAXES)) return@sortedBy 1
+            if (item.`is`(ItemTags.AXES)) return@sortedBy 2
+            if (item.`is`(ItemTags.SHOVELS)) return@sortedBy 3
+            if (item.`is`(ItemTags.HOES)) return@sortedBy 4
+            if (it.persistentDataContainer.has(ItemKeys.UNIQUE_CLASS_ITEM)) return@sortedBy 6
+            if (it.persistentDataContainer.has(ItemKeys.SOULBOUND)) return@sortedBy 5
+
+            return@sortedBy 10
+        }
     }
 
     companion object {

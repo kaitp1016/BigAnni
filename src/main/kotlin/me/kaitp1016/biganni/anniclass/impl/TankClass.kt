@@ -149,6 +149,7 @@ object TankClass: AnniClass(), Listener {
                         player.addPotionEffect(PotionEffect(PotionEffectType.NAUSEA,60,1))
                         player.world.playSound(player.location, Sound.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR,1f,1f)
                         player.setCooldown(THE_SHIELD_COOLDOWN_GROUP,THE_SHIELD_COOLDOWN)
+                        player.clearActiveItem()
                     }
                     else {
                         player.world.playSound(player.location, Sound.ITEM_SHIELD_BLOCK,1f,1f)
