@@ -5,10 +5,14 @@ import me.kaitp1016.biganni.anniclass.AnniClass
 import me.kaitp1016.biganni.utils.ItemUtils.addLore
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
+import me.kaitp1016.biganni.utils.MCUtils.toMC
 import me.kaitp1016.biganni.utils.Utils.toIntCorrect
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.projectile.FishingHook
 import net.minecraft.world.item.Items
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -27,8 +31,7 @@ object ScoutClass: AnniClass(), Listener {
     override val shortName = "SCO"
     override val icon = Items.FISHING_ROD
     override val description = arrayOf(
-        "高速で移動ができるグラップリングフックが初期装備に含まれている。",
-        "戦闘中は使用できない。"
+        "高速で移動ができるグラップリングフックが初期装備に含まれている。", "戦闘中は使用できない。"
     )
 
     const val GRAPPLING_HOOK_ID = "scout_grappling_hook"
@@ -36,8 +39,8 @@ object ScoutClass: AnniClass(), Listener {
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {
         return super.getDefaultItems(player).also {
             it.add(ItemStack(Material.FISHING_ROD).apply {
-                addLore(Component.text("<").decoration(TextDecoration.ITALIC,false).color(NamedTextColor.GRAY).append(Component.text("Right Click").color(NamedTextColor.AQUA).append(Component.text(">").color(NamedTextColor.GRAY).append(Component.text(" Cast your grappling").color(NamedTextColor.DARK_AQUA)))))
-                addLore(Component.text("hook").color(NamedTextColor.DARK_AQUA).decoration(TextDecoration.ITALIC,false))
+                addLore(Component.text("<").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY).append(Component.text("Right Click").color(NamedTextColor.AQUA).append(Component.text(">").color(NamedTextColor.GRAY).append(Component.text(" Cast your grappling").color(NamedTextColor.DARK_AQUA)))))
+                addLore(Component.text("hook").color(NamedTextColor.DARK_AQUA).decoration(TextDecoration.ITALIC, false))
 
                 uniqueClassItem()
                 soulbound()
@@ -54,7 +57,16 @@ object ScoutClass: AnniClass(), Listener {
         }
     }
 
-    data class Cooldown(val player: Player,var time: Int)
+    override fun onUserTick(player: Player) {
+        val mcPlayer = player.toMC()
+        val fishing = mcPlayer.fishing ?: return
+        val inv = player.inventory
+        if (inv.itemInMainHand.getAnniId() == GRAPPLING_HOOK_ID || inv.itemInOffHand.getAnniId() == GRAPPLING_HOOK_ID) {
+            fishing.deltaMovement = fishing.deltaMovement.multiply(0.95, 0.9, 0.95)
+        }
+    }
+
+    data class Cooldown(val player: Player, var time: Int)
 
     val cooldowns = mutableListOf<Cooldown>()
 
@@ -76,13 +88,12 @@ object ScoutClass: AnniClass(), Listener {
 
             val hook = event.hook
             val world = hook.world
-            if (!hook.isOnGround && world.getBlockAt(hook.x.toInt(),hook.y.toIntCorrect(),hook.z.toInt()).isPassable && world.getBlockAt(hook.x.toInt(),(hook.y - 1).toIntCorrect(),hook.z.toInt()).isPassable) {
+            if (!hook.isOnGround && world.getBlockAt(hook.x.toInt(), (hook.y + 1).toIntCorrect(), hook.z.toInt()).isPassable && world.getBlockAt(hook.x.toInt(), hook.y.toIntCorrect(), hook.z.toInt()).isPassable && world.getBlockAt(hook.x.toInt(), (hook.y - 1).toIntCorrect(), hook.z.toInt()).isPassable) {
                 return
             }
 
-            val velocity = player.location.clone().subtract(hook.location).apply {
-                y *= 0.6
-                multiply(-0.35)
+            val velocity = hook.location.clone().subtract(player.location).apply {
+                multiply(0.2)
             }
 
             player.velocity = player.velocity.add(velocity.toVector())
@@ -90,13 +101,19 @@ object ScoutClass: AnniClass(), Listener {
         if (state == PlayerFishEvent.State.CAUGHT_ENTITY) {
             event.isCancelled = true
         }
+        if (state == PlayerFishEvent.State.FISHING) {
+            val mcPlayer = player.toMC()
+            val fishing = mcPlayer.fishing ?: return
+            val motion = fishing.deltaMovement.multiply(1.5, 1.5, 1.5)
+            fishing.setDeltaMovement(motion.x, motion.y, motion.z)
+        }
     }
 
     @EventHandler
     fun onTick(event: ServerTickStartEvent) {
         if (cooldowns.isEmpty()) return
 
-        cooldowns.removeIf{
+        cooldowns.removeIf {
             it.time--
             return@removeIf it.time < 1
         }
@@ -135,6 +152,6 @@ object ScoutClass: AnniClass(), Listener {
     fun addCooldown(player: Player) {
         cooldowns.removeIf { it.player == player }
 
-        cooldowns.add(Cooldown(player,100))
+        cooldowns.add(Cooldown(player, 100))
     }
 }
