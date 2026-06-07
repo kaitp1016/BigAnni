@@ -18,6 +18,7 @@ import me.kaitp1016.biganni.features.TeamDoor
 import me.kaitp1016.biganni.game.Game
 import me.kaitp1016.biganni.game.StartCountdown
 import me.kaitp1016.biganni.game.boss.BossManager
+import me.kaitp1016.biganni.mc
 import me.kaitp1016.biganni.modifiers.KnockbackModifier
 import me.kaitp1016.biganni.packetgui.impl.AnniClassSelector
 import me.kaitp1016.biganni.packetgui.impl.BrewingShopGui
@@ -27,6 +28,7 @@ import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.server.permissions.LevelBasedPermissionSet
 import org.bukkit.entity.Player
 import java.util.concurrent.CompletableFuture
+import kotlin.random.Random
 
 object AnniCommand {
     fun register(): LiteralArgumentBuilder<CommandSourceStack> {
@@ -64,8 +66,8 @@ object AnniCommand {
             Game.phaseTime = 1
             return@executes 1
         }).then(Commands.literal("setnexus").then(Commands.argument("team", StringArgumentType.word()).then(Commands.argument("health", IntegerArgumentType.integer()).executes {
-            val teamName = StringArgumentType.getString(it,"team")
-            val health = IntegerArgumentType.getInteger(it,"health")
+            val teamName = StringArgumentType.getString(it, "team")
+            val health = IntegerArgumentType.getInteger(it, "health")
 
             val team = Game.teams.find { team -> team.name == teamName }
             if (team == null) {
@@ -94,14 +96,13 @@ object AnniCommand {
         }).then(Commands.literal("spawnboss").executes {
             BossManager.spawn()
             return@executes 1
-        }).then(Commands.literal("setmap").then(Commands.argument("map", StringArgumentType.greedyString()) .executes {
-            val mapName = StringArgumentType.getString(it,"map")
+        }).then(Commands.literal("setmap").then(Commands.argument("map", StringArgumentType.greedyString()).executes {
+            val mapName = StringArgumentType.getString(it, "map")
             val map = Config.getMap(mapName)
             if (map != null) {
                 Game.map = map
                 it.source.sender.sendMessage("マップを ${map.name} にしました!")
-            }
-            else {
+            } else {
                 it.source.sender.sendMessage("マップが見つかりませんでした!")
             }
 
@@ -121,22 +122,39 @@ object AnniCommand {
             }
             return@executes 1
         }).then(Commands.literal("kbtest").then(Commands.argument("type", StringArgumentType.word()).then(Commands.argument("num", DoubleArgumentType.doubleArg()).executes {
-            val type = StringArgumentType.getString(it,"type")
-            val num = DoubleArgumentType.getDouble(it,"num")
+            val type = StringArgumentType.getString(it, "type")
+            val num = DoubleArgumentType.getDouble(it, "num")
 
-            when(type) {
+            when (type) {
                 "normal" -> KnockbackModifier.normalMultiply = num
                 "normalY" -> KnockbackModifier.normalMultiplyY = num
                 "sprint" -> KnockbackModifier.sprintMultiply = num
                 "sprinY" -> KnockbackModifier.sprintMultiplyY = num
             }
             return@executes 1
-        })))
+        }))).then(Commands.literal("randomteam").executes { context ->
+            val unteamPlayers = mc.playerList.players.sortedBy { Random.nextInt() }.toMutableList()
+            val teams = Game.map.teams.sortedBy { Random.nextInt() }
+
+            while (unteamPlayers.isNotEmpty()) {
+                teams.forEach { anniTeam ->
+                    val player = unteamPlayers.removeFirstOrNull() ?: return@forEach
+                    val team = mc.scoreboard.playerTeams.find { it.name.equals(anniTeam.name, true) } ?: run {
+                        context.source.executor?.sendMessage("チーム ${anniTeam.name} が見つかりませんでした!")
+                        return@forEach
+                    }
+
+                    mc.scoreboard.addPlayerToTeam(player.scoreboardName, team)
+                }
+            }
+
+            return@executes 1
+        })
     }
 
-    object MapSuggestion: SuggestionProvider<CommandSourceStack> {
+    object MapSuggestion : SuggestionProvider<CommandSourceStack> {
         override fun getSuggestions(context: CommandContext<CommandSourceStack>, builder: SuggestionsBuilder): CompletableFuture<Suggestions> {
-            return SharedSuggestionProvider.suggest(Config.getMapNames(),builder)
+            return SharedSuggestionProvider.suggest(Config.getMapNames(), builder)
         }
     }
 }
