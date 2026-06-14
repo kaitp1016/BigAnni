@@ -22,7 +22,7 @@ object CivilianClass: AnniClass(), Listener {
     override val name = "Civilian"
     override val shortName = "CIV"
     override val description = arrayOf(
-        "アビリティを使用すると作業台を開ける。",
+        "どこでも作業台を開くことができる。",
     )
 
     const val CRAFT_O_MATIC_ITEM_ID = "civilatian_craft_o_matic"

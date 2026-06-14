@@ -33,7 +33,7 @@ object EnchanterClass: AnniClass(), Listener {
     override val shortName = "ENC"
     override val description = arrayOf(
         "この職業の時は常に経験値の獲得量が増える。",
-        "アビリティを使用することで経験値の獲得量がさらに増える。",
+        "アビリティの効果時間中は経験値の獲得量がさらに増える。",
         "エンチャントをしたらランダムなエンチャントのレベルが確率で昇華する。",
     )
 

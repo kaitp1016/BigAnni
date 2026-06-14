@@ -50,8 +50,8 @@ object NinjaClass: AnniClass(), Listener {
     override val name = "Ninja"
     override val shortName = "NNJ"
     override val description = arrayOf(
-        "常に跳躍の効果を獲得し、切り替えられる。",
-        "Smoke Bombを使用すると煙幕を投擲することができる。",
+        "常に跳躍の効果を獲得する。",
+        "Smoke Bombを使用すると煙幕を投げることができる。",
         "Shurikenを使用すると手裏剣を投げることができる。",
     )
 

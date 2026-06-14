@@ -3,6 +3,7 @@ package me.kaitp1016.biganni.anniclass.impl
 import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.UseCooldown
+import it.unimi.dsi.fastutil.ints.IntList
 import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
 import me.kaitp1016.biganni.game.Game
@@ -27,8 +28,11 @@ import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
+import net.minecraft.world.entity.projectile.FireworkRocketEntity
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.Items
+import net.minecraft.world.item.component.FireworkExplosion
+import net.minecraft.world.item.component.Fireworks
 import net.minecraft.world.phys.Vec3
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -158,6 +162,10 @@ object HunterClass: AnniClass(), Listener {
             }
         }
 
+        player.level().addFreshEntity(FireworkRocketEntity(level, player.x,player.y + 2.0,player.z,net.minecraft.world.item.ItemStack(Items.FIREWORK_ROCKET).apply {
+            set(DataComponents.FIREWORKS, Fireworks(0,listOf(FireworkExplosion(FireworkExplosion.Shape.CREEPER, IntList.of(255,255,255),IntList.of(255,255,255,255),true,false))) )
+        }))
+
         traps.remove(trap)
     }
 
@@ -165,8 +173,8 @@ object HunterClass: AnniClass(), Listener {
     fun onBreak(event: BlockBreakEvent) {
         if (traps.isEmpty()) return
 
-        val block = event.block
-        val level = block.world.toMC()
+            val block = event.block
+            val level = block.world.toMC()
         val pos = BlockPos(block.x, block.y, block.z)
         val levelPos = LevelBlockPos(level, pos.x, pos.y, pos.z)
 

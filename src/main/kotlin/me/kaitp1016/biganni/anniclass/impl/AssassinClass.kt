@@ -27,8 +27,8 @@ object AssassinClass: AnniClass(), Listener {
     override val shortName = "ASN"
     override val icon = Items.GOLDEN_CARROT
     override val description = arrayOf(
-        "アビリティを使用すると前に飛び、透明化を獲得する。",
-        "この透明化は防具も透明化される。"
+        "アビリティを使用すると前に飛び、透明状態になる。",
+        "この透明状態は防具も透明化される。"
     )
 
     const val LEAP_ITEM_ID = "assassin_leap"

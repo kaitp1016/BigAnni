@@ -35,7 +35,7 @@ object TransporterClass: AnniClass(), Listener {
     override val shortName = "TRA"
     override val icon = Items.QUARTZ
     override val description = arrayOf(
-        "アビリティを始点と終点で使用すると、ポータルを設置できる。",
+        "アビリティを始点と終点で使用することでポータルを設置できる。",
         "ポータルはスニークすることで通過することができ、味方も通過できる。"
     )
 

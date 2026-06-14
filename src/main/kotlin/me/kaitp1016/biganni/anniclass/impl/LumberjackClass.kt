@@ -126,12 +126,14 @@ object LumberjackClass: AnniClass(), Listener {
     }
 
     fun getDamage(item: Material): Int? {
-        if (item == Material.WOODEN_AXE) return 3
-        if (item == Material.GOLDEN_AXE) return 3
-        if (item == Material.STONE_AXE) return 6
-        if (item == Material.IRON_AXE) return 9
-        if (item == Material.DIAMOND_AXE) return 12
-        if (item == Material.NETHERITE_AXE) return 12
-        return null
+        return when(item) {
+            Material.WOODEN_AXE -> 3
+            Material.GOLDEN_AXE -> 3
+            Material.STONE_AXE -> 6
+            Material.IRON_AXE -> 9
+            Material.DIAMOND_AXE -> 12
+            Material.NETHERITE_AXE -> 12
+            else -> null
+        }
     }
 }

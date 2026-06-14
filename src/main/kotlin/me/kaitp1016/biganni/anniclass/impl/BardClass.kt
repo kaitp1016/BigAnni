@@ -52,7 +52,8 @@ object BardClass: AnniClass(), Listener {
     override val shortName = "BAR"
     override val icon = Items.JUKEBOX
     override val description = arrayOf(
-        "ジュークボックスを設置すると周囲に選択したバフかデバフを与える。",
+        "ジュークボックスを設置すると周囲に選択した効果を与える。",
+        "バフは味方に、デバフは敵にしか効果は与えられない。",
     )
 
     const val BUFF_BOX_ITEM_ID = "bard_buffbox"
@@ -80,7 +81,10 @@ object BardClass: AnniClass(), Listener {
     const val BUFF_BOX_RANGE = 15
 
     enum class Buff(val title: String, val description: String, val icon: Item, val effect: Holder<MobEffect>, val isBuff: Boolean) {
-        INVIGORATE(title = "Invigorate", description = "味方に再生を付与する。", icon = Items.MUSIC_DISC_MALL, effect = MobEffects.REGENERATION, isBuff = true), ENLIGHTEN(title = "Enlighten", description = "味方に移動速度上昇を付与する。", icon = Items.MUSIC_DISC_FAR, effect = MobEffects.SPEED, isBuff = true), INTIMIDATE(title = "Intimidate", description = "敵に弱体化を付与する。", icon = Items.MUSIC_DISC_MELLOHI, effect = MobEffects.WEAKNESS, isBuff = false), SHACKLE(title = "Shackle", description = "敵に移動速度低下を付与する。", icon = Items.MUSIC_DISC_STAL, effect = MobEffects.SLOWNESS, isBuff = false),
+        INVIGORATE(title = "Invigorate", description = "味方に再生を付与する。", icon = Items.MUSIC_DISC_MALL, effect = MobEffects.REGENERATION, isBuff = true),
+        ENLIGHTEN(title = "Enlighten", description = "味方に移動速度上昇を付与する。", icon = Items.MUSIC_DISC_FAR, effect = MobEffects.SPEED, isBuff = true),
+        INTIMIDATE(title = "Intimidate", description = "敵に弱体化を付与する。", icon = Items.MUSIC_DISC_MELLOHI, effect = MobEffects.WEAKNESS, isBuff = false),
+        SHACKLE(title = "Shackle", description = "敵に移動速度低下を付与する。", icon = Items.MUSIC_DISC_STAL, effect = MobEffects.SLOWNESS, isBuff = false),
     }
 
     data class Buffbox(val owner: Player, val level: Level, val pos: BlockPos, var buff: Buff?) {

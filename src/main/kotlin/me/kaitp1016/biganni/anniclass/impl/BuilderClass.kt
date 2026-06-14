@@ -27,8 +27,10 @@ object BuilderClass: AnniClass(), Listener {
     override val shortName = "BUI"
     override val icon = Items.BRICK
     override val description = arrayOf(
-        "アビリティを使用することで建築資材が手に入る。",
+        "アビリティを使用することで建築資材を入手できる。",
     )
+
+    // TODO コンポスターでブロックを置き換え? よくわからない
 
     const val RESOURCE_DROP_ITEM_ID = "builder_resource_drop"
     const val RESOURCE_DROP_COOLDOWN = 1800

@@ -154,12 +154,18 @@ object DefenderClass: AnniClass(), Listener {
         override fun playerTouch(player: net.minecraft.world.entity.player.Player) {
             if (player.teamColor == spawner.teamColor || this.pickupDelay > 0) return
 
+            val bukkitEntity = bukkitEntity
+            val world = bukkitEntity.world
+            val location = bukkitEntity.location
+
             kill(serverLevel)
 
             repeat(10) {
                 Scheduler.scheduleTask(it * 5) {
                     val spawner = spawner.bukkitEntity as Player
-                    spawner.playSound(spawner,Sound.BLOCK_NOTE_BLOCK_PLING,1f,1f)
+                    spawner.playSound(spawner, Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 1f)
+
+                    world.playSound(location, Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 1f)
                 }
             }
         }

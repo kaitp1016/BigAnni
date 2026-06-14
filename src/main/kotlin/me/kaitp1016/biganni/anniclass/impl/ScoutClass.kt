@@ -10,9 +10,6 @@ import me.kaitp1016.biganni.utils.Utils.toIntCorrect
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
-import net.minecraft.server.level.ServerLevel
-import net.minecraft.server.level.ServerPlayer
-import net.minecraft.world.entity.projectile.FishingHook
 import net.minecraft.world.item.Items
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -31,7 +28,8 @@ object ScoutClass: AnniClass(), Listener {
     override val shortName = "SCO"
     override val icon = Items.FISHING_ROD
     override val description = arrayOf(
-        "高速で移動ができるグラップリングフックが初期装備に含まれている。", "戦闘中は使用できない。"
+        "高速で移動ができるグラップリングフックが初期装備に含まれている。",
+        "戦闘中は使用できない。"
     )
 
     const val GRAPPLING_HOOK_ID = "scout_grappling_hook"

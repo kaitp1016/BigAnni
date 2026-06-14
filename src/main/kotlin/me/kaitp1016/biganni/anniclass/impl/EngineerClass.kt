@@ -48,7 +48,7 @@ object EngineerClass: AnniClass(), Listener {
     override val shortName = "ENG"
     override val icon = Items.TNT
     override val description = arrayOf(
-        "アビリティを使用すると爆弾を設置し、敵が設置したブロックを破壊する。",
+        "爆弾を設置することができ、敵が設置したブロックを破壊する。",
         "Evertoolは視点先のブロックに対応するツールになる。",
     )
 
