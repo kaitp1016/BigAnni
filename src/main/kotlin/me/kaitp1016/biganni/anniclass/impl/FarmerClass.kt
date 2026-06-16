@@ -60,6 +60,8 @@ object FarmerClass: AnniClass(), Listener {
         return super.getDefaultItems(player).also {
             it.add(ItemStack(Material.STONE_HOE).uniqueClassItem().soulbound())
             it.add(ItemStack(Material.BONE_MEAL).uniqueClassItem().soulbound().also { it.amount = 15 })
+            it.add(ItemStack(Material.WOODEN_SHOVEL).uniqueClassItem().soulbound())
+            it.add(ItemStack(Material.CHEST).uniqueClassItem().soulbound())
 
             it.add(ItemStack(Material.GOLDEN_CARROT).apply {
                 uniqueClassItem()

@@ -50,8 +50,6 @@ object SuccubusClass: AnniClass(), Listener {
 
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {
         return super.getDefaultItems(player).also {
-            it.add(ItemStack(Material.WOODEN_SHOVEL).uniqueClassItem().soulbound())
-
             it.add(ItemStack(Material.RED_DYE).apply {
                 uniqueClassItem()
                 soulbound()

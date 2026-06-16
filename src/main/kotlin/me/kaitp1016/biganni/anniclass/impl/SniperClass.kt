@@ -48,6 +48,8 @@ object SniperClass: AnniClass(), Listener {
             it.add(ItemStack(Material.ARROW).uniqueClassItem().soulbound().apply {
                 amount = 32
             })
+
+            it.add(ItemStack(Material.WOODEN_SHOVEL).uniqueClassItem().soulbound())
         }
     }
 

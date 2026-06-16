@@ -52,8 +52,7 @@ object BardClass: AnniClass(), Listener {
     override val shortName = "BAR"
     override val icon = Items.JUKEBOX
     override val description = arrayOf(
-        "ジュークボックスを設置すると周囲に選択した効果を与える。",
-        "バフは味方に、デバフは敵にしか効果は与えられない。",
+        "ジュークボックスを設置すると周囲に選択した効果を継続的に与える。",
     )
 
     const val BUFF_BOX_ITEM_ID = "bard_buffbox"

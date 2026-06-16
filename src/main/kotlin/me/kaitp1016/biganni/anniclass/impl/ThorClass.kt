@@ -46,8 +46,6 @@ object ThorClass: AnniClass(), Listener {
 
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {
         return super.getDefaultItems(player).also {
-            it.removeIf { it.type == Material.WOODEN_AXE }
-
             it.add(ItemStack(Material.GOLDEN_AXE).apply {
                 uniqueClassItem()
                 soulbound()

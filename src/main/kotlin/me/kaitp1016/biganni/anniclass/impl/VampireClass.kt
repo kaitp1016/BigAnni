@@ -26,8 +26,10 @@ import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import org.bukkit.potion.PotionType
 import kotlin.math.abs
 import kotlin.random.Random
 
@@ -54,6 +56,15 @@ object VampireClass: AnniClass(), Listener {
             it.add(ItemStack(Material.POTION).apply {
                 uniqueClassItem()
                 soulbound()
+
+                editMeta {
+                    (it as PotionMeta).basePotionType = PotionType.NIGHT_VISION
+                }
+            })
+
+            it.add(ItemStack(Material.BLACK_DYE).apply {
+                uniqueClassItem()
+                soulbound()
                 setAnniItem(BLOOD_SENSE_ITEM_ID)
 
                 setData(DataComponentTypes.USE_COOLDOWN, UseCooldown.useCooldown(BLOOD_SENSE_COOLDOWN / 20f).cooldownGroup(BLOOD_SENSE_COOLDOWN_GROUP).build())
@@ -74,6 +85,9 @@ object VampireClass: AnniClass(), Listener {
                     it.itemName(Component.text("Insidious Dispatch").color(NamedTextColor.GOLD))
                 }
             })
+
+            it.removeIf { it.type == Material.WOODEN_SWORD }
+            it.add(ItemStack(Material.STONE_SWORD).uniqueClassItem().soulbound())
         }
     }
 

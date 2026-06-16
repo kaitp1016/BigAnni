@@ -81,6 +81,11 @@ object TankClass: AnniClass(), Listener {
                     it.itemName(Component.text("Shield Charge").color(NamedTextColor.GOLD))
                 }
             })
+
+            it.removeIf { it.type == Material.WOODEN_SWORD }
+            it.add(ItemStack(Material.STONE_SWORD).uniqueClassItem().soulbound())
+
+            it.add(ItemStack(Material.WOODEN_SHOVEL).uniqueClassItem().soulbound())
         }
     }
 

@@ -13,6 +13,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.core.BlockPos
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket
+import net.minecraft.tags.BlockTags
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.Blocks
 import org.bukkit.*
@@ -120,6 +121,10 @@ object DasherClass: AnniClass(), Listener {
 
         val feetBlock = world.getBlockAt(block.x,block.y + 1,block.z)
         val chestBlock = world.getBlockAt(block.x,block.y + 2, block.z)
+
+        val mcFeetBlock = feetBlock.toMC()
+        if (mcFeetBlock.`is`(BlockTags.FENCES) || mcFeetBlock.`is`(BlockTags.BARS)) return false
+
         return feetBlock.isPassable && !feetBlock.isLiquid && chestBlock.isPassable && !feetBlock.isLiquid
     }
 }

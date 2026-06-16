@@ -81,7 +81,7 @@ object BloodmageClass: AnniClass(), Listener {
             it.removeIf { it.type == Material.WOODEN_SWORD }
             it.add(ItemStack(Material.STONE_SWORD).uniqueClassItem().soulbound())
 
-            it.add(ItemStack(Material.SPIDER_EYE).apply {
+            it.add(ItemStack(Material.FERMENTED_SPIDER_EYE).apply {
                 uniqueClassItem()
                 soulbound()
                 setAnniItem(CORRUPT_ITEM_ID)

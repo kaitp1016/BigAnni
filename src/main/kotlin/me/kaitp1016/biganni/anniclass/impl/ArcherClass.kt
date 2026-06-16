@@ -47,6 +47,8 @@ object ArcherClass: AnniClass(), Listener {
 
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {
         return super.getDefaultItems(player).also {
+            it.add(ItemStack(Material.WOODEN_SHOVEL).uniqueClassItem().soulbound())
+
             it.add(ItemStack(Material.BOW).apply {
                 uniqueClassItem()
                 soulbound()
@@ -56,6 +58,7 @@ object ArcherClass: AnniClass(), Listener {
             })
 
             it.add(ItemStack(Material.ARROW).uniqueClassItem().soulbound())
+
             it.add(ItemStack(Material.POTION).apply {
                 uniqueClassItem()
                 soulbound()

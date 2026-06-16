@@ -49,7 +49,7 @@ object HealerClass: AnniClass(), Listener {
 
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {
         return super.getDefaultItems(player).also {
-            it.add(ItemStack(Material.PAPER).apply {
+            it.add(ItemStack(Material.POPPED_CHORUS_FRUIT).apply {
                 uniqueClassItem()
                 soulbound()
                 setAnniItem(BANDAGE_ITEM_ID)

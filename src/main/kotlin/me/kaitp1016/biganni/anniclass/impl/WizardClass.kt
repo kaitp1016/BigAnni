@@ -40,6 +40,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityRemoveEvent
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import kotlin.math.PI
@@ -60,9 +61,9 @@ object WizardClass: AnniClass(), Listener {
 
     const val SPELLBOOK_ITEM_ID = "wizard_spellbook"
 
-    override fun getDefaultItems(player: Player): MutableList<org.bukkit.inventory.ItemStack> {
+    override fun getDefaultItems(player: Player): MutableList<ItemStack> {
         return super.getDefaultItems(player).also {
-            it.add(org.bukkit.inventory.ItemStack(Material.STICK).apply {
+            it.add(ItemStack(Material.STICK).apply {
                 uniqueClassItem()
                 soulbound()
                 setAnniItem(WAND_ITEM_ID)
@@ -74,7 +75,7 @@ object WizardClass: AnniClass(), Listener {
                 }
             })
 
-            it.add(org.bukkit.inventory.ItemStack(Material.ENCHANTED_BOOK).apply {
+            it.add(ItemStack(Material.ENCHANTED_BOOK).apply {
                 uniqueClassItem()
                 soulbound()
                 setAnniItem(SPELLBOOK_ITEM_ID)
@@ -83,6 +84,8 @@ object WizardClass: AnniClass(), Listener {
                     it.itemName(Component.text("Spellbook").color(NamedTextColor.GOLD))
                 }
             })
+
+            it.add(ItemStack(Material.WOODEN_SHOVEL).uniqueClassItem().soulbound())
         }
     }
 

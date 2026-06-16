@@ -72,6 +72,9 @@ object PyroClass: AnniClass(), Listener {
                     it.addAttributeModifier(Attribute.ATTACK_DAMAGE, AttributeModifier(AXE_ATTRIBUTE_MODIFIER_KEY,3.5, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.MAINHAND))
                 }
             })
+
+            it.removeIf { it.type == Material.WOODEN_SWORD }
+            it.add(ItemStack(Material.STONE_SWORD).uniqueClassItem().soulbound())
         }
     }
 

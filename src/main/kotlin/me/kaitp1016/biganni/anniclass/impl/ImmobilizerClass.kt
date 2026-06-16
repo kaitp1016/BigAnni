@@ -60,8 +60,6 @@ object ImmobilizerClass: AnniClass(), Listener {
                     it.itemName(Component.text("Immobilize").color(NamedTextColor.GOLD))
                 }
             })
-
-            it.add(ItemStack(Material.WOODEN_SHOVEL).uniqueClassItem().soulbound())
         }
     }
 

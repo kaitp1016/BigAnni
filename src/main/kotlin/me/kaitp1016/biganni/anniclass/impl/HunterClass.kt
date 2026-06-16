@@ -72,6 +72,9 @@ object HunterClass: AnniClass(), Listener {
                     it.itemName(Component.text("Trap Snare").color(NamedTextColor.GOLD))
                 }
             })
+
+            it.add(ItemStack(Material.WOODEN_SHOVEL).uniqueClassItem().soulbound())
+            it.add(ItemStack(Material.WOODEN_SHOVEL).uniqueClassItem().soulbound())
         }
     }
 

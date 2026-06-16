@@ -20,8 +20,10 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import org.bukkit.potion.PotionType
 import kotlin.math.min
 
 object WarriorClass: AnniClass(), Listener {
@@ -50,6 +52,15 @@ object WarriorClass: AnniClass(), Listener {
 
                 editMeta {
                     it.itemName(Component.text("Frenzy").color(NamedTextColor.GOLD))
+                }
+            })
+
+            it.add(ItemStack(Material.POTION).apply {
+                uniqueClassItem()
+                soulbound()
+
+                editMeta {
+                    (it as PotionMeta).basePotionType = PotionType.HEALING
                 }
             })
         }

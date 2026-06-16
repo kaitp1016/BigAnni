@@ -38,6 +38,7 @@ object CivilianClass: AnniClass(), Listener {
                     it.addAttributeModifier(Attribute.ATTACK_DAMAGE, AttributeModifier(AXE_ATTRIBUTE_MODIFIER_KEY,3.5, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.MAINHAND))
                 }
             })
+
             it.add(ItemStack(Material.STONE_SHOVEL).uniqueClassItem().soulbound())
 
             it.add(ItemStack(Material.BRICK).apply {
@@ -49,6 +50,8 @@ object CivilianClass: AnniClass(), Listener {
                     it.itemName(Component.text("Craft O' Matic").color(NamedTextColor.GOLD))
                 }
             })
+
+            it.add(ItemStack(Material.CHEST).uniqueClassItem().soulbound())
         }
     }
 
