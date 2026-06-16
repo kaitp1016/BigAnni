@@ -56,7 +56,7 @@ object HunterClass: AnniClass(), Listener {
     )
 
     const val TRAP_SNARE_ITEM_ID = "hunter_trap_snare"
-    const val TRAP_SNARE_COOLDOWN = 300
+    const val TRAP_SNARE_COOLDOWN = 800
     val TRAP_SNARE_COOLDOWN_GROUP = Key.key(PLUGIN_ID, "hunter_trap_snare")
 
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {
@@ -166,20 +166,30 @@ object HunterClass: AnniClass(), Listener {
             set(DataComponents.FIREWORKS, Fireworks(0,listOf(FireworkExplosion(FireworkExplosion.Shape.CREEPER, IntList.of(255,255,255),IntList.of(255,255,255,255),true,false))) )
         }))
 
-        traps.remove(trap)
+        val owner = trap.player
+        val type = trap.type
+
+        traps.removeIf {
+            it.player == owner && it.type == type
+        }
     }
 
     @EventHandler
     fun onBreak(event: BlockBreakEvent) {
         if (traps.isEmpty()) return
 
-            val block = event.block
-            val level = block.world.toMC()
+        val block = event.block
+        val level = block.world.toMC()
         val pos = BlockPos(block.x, block.y, block.z)
         val levelPos = LevelBlockPos(level, pos.x, pos.y, pos.z)
 
         val trap = traps.find { it.pos == levelPos } ?: return
-        traps.remove(trap)
+        val owner = trap.player
+        val type = trap.type
+
+        traps.removeIf {
+            it.player == owner && it.type == type
+        }
 
         event.isCancelled = true
     }
@@ -207,7 +217,12 @@ object HunterClass: AnniClass(), Listener {
         traps.forEach { trap ->
             val team = trap.player.toMC().teamColor
 
-            val builder = Particle.BLOCK_CRUMBLE.builder().location(trap.pos.level.world, trap.pos.x.toDouble() + 0.5, trap.pos.y.toDouble() + 1.1, trap.pos.z.toDouble() + 0.5).offset(0.3, 0.0, 0.3).receivers(16, true).count(6).data(trap.type.block)
+            val builder = Particle.BLOCK_CRUMBLE.builder()
+                .location(trap.pos.level.world, trap.pos.x.toDouble() + 0.5, trap.pos.y.toDouble() + 1.1, trap.pos.z.toDouble() + 0.5)
+                .offset(0.3, 0.0, 0.3)
+                .receivers(16, true)
+                .count(6)
+                .data(trap.type.block)
 
             builder.receivers(builder.receivers()!!.filter { it.toMC().teamColor == team }).spawn()
         }
@@ -252,7 +267,7 @@ object HunterClass: AnniClass(), Listener {
                     return@execute
                 }
 
-                traps.removeIf { it.player == bukkitPlayer }
+                traps.removeIf { it.player == bukkitPlayer && it.type == type }
 
                 size.forEach {
                     traps.add(Trap(bukkitPlayer, LevelBlockPos(level, pos.x + it.x, pos.y + it.y, pos.z + it.z), type))
