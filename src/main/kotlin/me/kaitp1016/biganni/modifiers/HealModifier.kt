@@ -11,6 +11,7 @@ object HealModifier: Listener {
     fun onAddEntity(event: EntityAddToWorldEvent) {
         val player = event.entity as? Player ?: return
         val mcPlayer = player.toMC()
+
         mcPlayer.foodData.saturatedRegenRate = 40
     }
 }

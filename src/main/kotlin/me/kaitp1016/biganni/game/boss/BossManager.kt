@@ -65,7 +65,7 @@ object BossManager: Listener {
             it.playSound(it, Sound.ENTITY_WITHER_SPAWN, 1f, 1f)
         }
 
-        ScoreboardManager.setLine(2, net.minecraft.network.chat.Component.literal("§6Boss§7: §5The Wither"))
+        ScoreboardManager.setLine(2, net.minecraft.network.chat.Component.literal("§6Boss: §5The Wither"))
         ScoreboardManager.setLine(3, net.minecraft.network.chat.Component.empty())
     }
 
@@ -82,7 +82,7 @@ object BossManager: Listener {
             val min = respawnTick / 20 / 60
             val sec = respawnTick / 20 % 60
 
-            ScoreboardManager.setLine(2, net.minecraft.network.chat.Component.literal("§6Boss§7: ${min}:${if (sec > 9) "$sec" else "0${sec}"}"))
+            ScoreboardManager.setLine(2, net.minecraft.network.chat.Component.literal("§6Boss: §7${min}:${if (sec > 9) "$sec" else "0${sec}"}"))
         }
         else {
             spawn()

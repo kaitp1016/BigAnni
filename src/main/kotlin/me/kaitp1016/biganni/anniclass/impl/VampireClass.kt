@@ -36,7 +36,7 @@ object VampireClass: AnniClass(), Listener {
     override val name = "Vampire"
     override val shortName = "VMP"
     override val description = arrayOf(
-        "常に近接ダメージが増え、敵を殴ると確率で自身の体力を回復する。",
+        "敵に近接ダメージを与えると確率で自身の体力を回復する。",
         "Blood Senseを使用することで、周囲の敵を発光させる。",
         "Insidisious Dispatchを使用すると、自身に背を向けてる敵にテレポートできる。",
     )
@@ -122,8 +122,6 @@ object VampireClass: AnniClass(), Listener {
         val attacker = source.causingEntity
 
         if (attacker is Player && source.damageType == DamageType.PLAYER_ATTACK && isSelected(attacker)) {
-            event.damage *= 1.25
-
             val world = attacker.world
             val chance = if (world.isDayTime) 15 else 30
             if (Random.nextInt(100) < chance) {

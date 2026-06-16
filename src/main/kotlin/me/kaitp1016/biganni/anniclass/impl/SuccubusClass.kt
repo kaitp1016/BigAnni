@@ -38,8 +38,8 @@ object SuccubusClass: AnniClass(), Listener {
     override val icon = Items.RED_DYE
     override val description = arrayOf(
         "敵の体力が常に表示される。",
-        "アビリティを使用したときに敵の体力が30%を下回るのなら残りの体力を全て吸収する。",
-        "それ以外なら自身が体力分だけの貫通ダメージを受ける。"
+        "アビリティを使用したときに敵の残り体力が30%を下回るのなら残り体力を全て吸収する。",
+        "それ以外なら自身が敵の残り体力分だけの貫通ダメージを受ける。"
     )
 
     const val DRAIN_ITEM_ID = "succubus_drain_item"

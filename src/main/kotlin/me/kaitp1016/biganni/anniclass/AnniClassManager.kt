@@ -6,8 +6,12 @@ import java.util.UUID
 object AnniClassManager {
     val classes = mutableMapOf<UUID, AnniClass>()
 
-    fun Player.getAnniClass():AnniClass? {
+    fun Player.getAnniClass(): AnniClass? {
         return classes[this.uniqueId]
+    }
+
+    fun Player.isClassSelected(): Boolean {
+        return classes[this.uniqueId] != null
     }
 
     fun Player.isAnniClass(anniClass: AnniClass): Boolean {

@@ -3,6 +3,7 @@ package me.kaitp1016.biganni.game
 import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import io.papermc.paper.event.player.AsyncChatEvent
 import me.kaitp1016.biganni.anniclass.AnniClassManager.getAnniClass
+import me.kaitp1016.biganni.anniclass.AnniClassManager.isClassSelected
 import me.kaitp1016.biganni.anniclass.AnniClassManager.selectAnniClass
 import me.kaitp1016.biganni.anniclass.AnniClasses
 import me.kaitp1016.biganni.config.Config
@@ -80,7 +81,7 @@ object Game: Listener {
             player.enchantmentSeed = Random.nextInt()
             player.clearActivePotionEffects()
 
-            if (player.getAnniClass() == null) {
+            if (!player.isClassSelected()) {
                 player.selectAnniClass(AnniClasses.CIVILIAN)
             }
 
