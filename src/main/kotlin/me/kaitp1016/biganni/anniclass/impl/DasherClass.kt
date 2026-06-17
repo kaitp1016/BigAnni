@@ -1,5 +1,6 @@
 package me.kaitp1016.biganni.anniclass.impl
 
+import com.destroystokyo.paper.MaterialTags
 import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.UseCooldown
@@ -117,13 +118,11 @@ object DasherClass: AnniClass(), Listener {
     fun canTeleport(block: Block): Boolean {
         val world = block.world
         val underBlock = world.getBlockAt(block.x,block.y,block.z)
-        if (underBlock.type == Material.GLASS || underBlock.type == Material.BRICKS) return false
+        val mcUnderBlock = underBlock.toMC()
+        if (MaterialTags.GLASS.isTagged(underBlock) || underBlock.type == Material.BRICK_SLAB || underBlock.type == Material.BRICK_STAIRS || underBlock.type == Material.BRICKS || mcUnderBlock.`is`(BlockTags.FENCES) || mcUnderBlock.`is`(BlockTags.FENCE_GATES) || mcUnderBlock.`is`(BlockTags.BARS)) return false
 
         val feetBlock = world.getBlockAt(block.x,block.y + 1,block.z)
         val chestBlock = world.getBlockAt(block.x,block.y + 2, block.z)
-
-        val mcFeetBlock = feetBlock.toMC()
-        if (mcFeetBlock.`is`(BlockTags.FENCES) || mcFeetBlock.`is`(BlockTags.BARS)) return false
 
         return feetBlock.isPassable && !feetBlock.isLiquid && chestBlock.isPassable && !feetBlock.isLiquid
     }

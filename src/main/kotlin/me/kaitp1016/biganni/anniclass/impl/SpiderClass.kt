@@ -6,7 +6,6 @@ import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import me.kaitp1016.biganni.utils.Utils.isFullBlock
-import me.kaitp1016.biganni.utils.Utils.toIntCorrect
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.core.BlockPos
@@ -62,7 +61,7 @@ object SpiderClass: AnniClass(), Listener {
                 setAnniItem(TOGGLE_WALL_CLIMB_ITEM_ID)
 
                 editMeta {
-                    it.itemName(Component.text("Toggle Wall Climb").color(NamedTextColor.GOLD))
+                    it.itemName(Component.text("Wall Cimb").color(NamedTextColor.GOLD))
                 }
             })
 
@@ -82,7 +81,7 @@ object SpiderClass: AnniClass(), Listener {
 
     const val WEB_LIMIT = 15
 
-    data class PlacedVine(val level: Level, val pos: BlockPos, var tick:Int = 200)
+    data class PlacedVine(val level: Level, val pos: BlockPos, var tick: Int = 200)
     data class PlacedWeb(val player: Player, val level: Level, val pos: BlockPos)
 
     val enabledPlayers = mutableListOf<Player>()
@@ -98,7 +97,7 @@ object SpiderClass: AnniClass(), Listener {
 
         webs.forEach {
             if (it.level.getBlockState(it.pos).block == Blocks.COBWEB) {
-                it.level.setBlockAndUpdate(it.pos,Blocks.AIR.defaultBlockState())
+                it.level.setBlockAndUpdate(it.pos, Blocks.AIR.defaultBlockState())
             }
         }
 
@@ -117,13 +116,12 @@ object SpiderClass: AnniClass(), Listener {
             if (enabledPlayers.contains(player)) {
                 enabledPlayers.remove(player)
                 player.sendMessage(Component.text("Wall Climb disabled.").color(NamedTextColor.DARK_GREEN))
-            }
-            else {
+            } else {
                 enabledPlayers.add(player)
                 player.sendMessage(Component.text("Wall Climb enabled.").color(NamedTextColor.DARK_GREEN))
             }
 
-            player.playSound(player, Sound.UI_BUTTON_CLICK,1f,1f)
+            player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
 
         }
         if (item.getAnniId() == THROWABLE_WEB_ITEM_ID) {
@@ -161,7 +159,7 @@ object SpiderClass: AnniClass(), Listener {
     @EventHandler
     fun onBlockDropItem(event: BlockDropItemEvent) {
         val block = event.block
-        val pos = BlockPos(block.x,block.y,block.z)
+        val pos = BlockPos(block.x, block.y, block.z)
         val level = block.world.toMC()
 
         if (placedWebs.removeIf { it.pos == pos && it.level == level }) {
@@ -190,7 +188,7 @@ object SpiderClass: AnniClass(), Listener {
 
         webs.forEach {
             if (it.level.getBlockState(it.pos).block == Blocks.COBWEB) {
-                it.level.setBlockAndUpdate(it.pos,Blocks.AIR.defaultBlockState())
+                it.level.setBlockAndUpdate(it.pos, Blocks.AIR.defaultBlockState())
             }
         }
     }
@@ -199,15 +197,15 @@ object SpiderClass: AnniClass(), Listener {
         if (!enabledPlayers.contains(player)) return
 
         val level = player.world.toMC()
-        val pos = BlockPos(player.x.toIntCorrect(), (player.y).toIntCorrect(), player.z.toIntCorrect())
+        val pos = BlockPos.containing(player.x, player.y, player.z)
 
         for (dx in -2..2) {
             for (dz in -2..2) {
                 for (dy in -2..2) {
                     val pos = pos.offset(dx, dy, dz)
                     val block = level.getBlockState(pos)
-                    if (canPlaceVine(level,pos)) {
-                        level.setBlockAndUpdate(pos, getVineAt(level,pos))
+                    if (canPlaceVine(level, pos)) {
+                        level.setBlockAndUpdate(pos, getVineAt(level, pos))
                         placedVines.add(PlacedVine(level, pos))
                     }
                     if (block.block == Blocks.VINE) {
@@ -219,38 +217,38 @@ object SpiderClass: AnniClass(), Listener {
     }
 
     val directions = arrayOf(
-        intArrayOf(1,0,0),
-        intArrayOf(-1,0,0),
-        intArrayOf(0,0,1),
-        intArrayOf(0,0,-1),
+        intArrayOf(1, 0, 0),
+        intArrayOf(-1, 0, 0),
+        intArrayOf(0, 0, 1),
+        intArrayOf(0, 0, -1),
     )
 
     val properties = mapOf(
-        intArrayOf(1,0,0) to VineBlock.EAST,
-        intArrayOf(-1,0,0) to VineBlock.WEST,
-        intArrayOf(0,1,0) to VineBlock.UP,
-        intArrayOf(0,0,1) to VineBlock.SOUTH,
-        intArrayOf(0,0,-1) to VineBlock.NORTH,
-        )
+        intArrayOf(1, 0, 0) to VineBlock.EAST,
+        intArrayOf(-1, 0, 0) to VineBlock.WEST,
+        intArrayOf(0, 1, 0) to VineBlock.UP,
+        intArrayOf(0, 0, 1) to VineBlock.SOUTH,
+        intArrayOf(0, 0, -1) to VineBlock.NORTH,
+    )
 
     val webPlaceOffsets = arrayOf(
-        intArrayOf(1,0,0),
-        intArrayOf(-1,0,0),
-        intArrayOf(0,1,0),
-        intArrayOf(0,0,0),
-        intArrayOf(0,-1,0),
-        intArrayOf(0,0,1),
-        intArrayOf(0,0,-1),
+        intArrayOf(1, 0, 0),
+        intArrayOf(-1, 0, 0),
+        intArrayOf(0, 1, 0),
+        intArrayOf(0, 0, 0),
+        intArrayOf(0, -1, 0),
+        intArrayOf(0, 0, 1),
+        intArrayOf(0, 0, -1),
     )
 
     fun canPlaceVine(level: ServerLevel, pos: BlockPos): Boolean {
-        return level.getBlockState(pos).isAir && directions.any { direction -> level.isFullBlock(pos.offset(direction[0],direction[1],direction[2])) }
+        return level.getBlockState(pos).isAir && directions.any { direction -> level.isFullBlock(pos.offset(direction[0], direction[1], direction[2])) }
     }
 
-    fun getVineAt(level: ServerLevel,pos: BlockPos): BlockState {
+    fun getVineAt(level: ServerLevel, pos: BlockPos): BlockState {
         var vine = Blocks.VINE.defaultBlockState()
         properties.forEach { (direction, property) ->
-            vine = vine.setValue(property,level.isFullBlock(pos.offset(direction[0],direction[1],direction[2])))
+            vine = vine.setValue(property, level.isFullBlock(pos.offset(direction[0], direction[1], direction[2])))
         }
 
         return vine
@@ -269,10 +267,10 @@ object SpiderClass: AnniClass(), Listener {
             val bukkitPlayer = thrower.bukkitEntity
 
             webPlaceOffsets.forEach { offset ->
-                val pos = position.offset(offset[0],offset[1],offset[2])
+                val pos = position.offset(offset[0], offset[1], offset[2])
                 if (level.getBlockState(pos).isAir) {
                     level.setBlockAndUpdate(pos, Blocks.COBWEB.defaultBlockState())
-                    placedWebs.add(PlacedWeb(bukkitPlayer,level,pos))
+                    placedWebs.add(PlacedWeb(bukkitPlayer, level, pos))
                 }
             }
 
@@ -282,7 +280,7 @@ object SpiderClass: AnniClass(), Listener {
                 val web = placedWebs.find { it.player == player } ?: break
                 placedWebs.remove(web)
                 if (web.level.getBlockState(web.pos).block == Blocks.COBWEB) {
-                    web.level.setBlockAndUpdate(web.pos,Blocks.AIR.defaultBlockState())
+                    web.level.setBlockAndUpdate(web.pos, Blocks.AIR.defaultBlockState())
                 }
             }
 

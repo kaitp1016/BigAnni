@@ -14,7 +14,6 @@ import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.LevelBlockPos
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import me.kaitp1016.biganni.utils.Utils.isFullBlock
-import me.kaitp1016.biganni.utils.Utils.toIntCorrect
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -131,8 +130,8 @@ object HunterClass: AnniClass(), Listener {
         if (traps.isEmpty()) return
 
         val player = event.player.toMC()
-        val loaction = event.to
-        val pos = BlockPos(loaction.x.toIntCorrect(), loaction.y.toIntCorrect(), loaction.z.toIntCorrect())
+        val location = event.to
+        val pos = BlockPos.containing(location.x, location.y, location.z)
         val level = player.level()
         val levelPos = LevelBlockPos(level, pos.x, pos.y, pos.z)
 

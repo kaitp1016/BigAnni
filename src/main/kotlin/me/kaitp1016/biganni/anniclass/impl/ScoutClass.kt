@@ -6,10 +6,10 @@ import me.kaitp1016.biganni.utils.ItemUtils.addLore
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
-import me.kaitp1016.biganni.utils.Utils.toIntCorrect
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
+import net.minecraft.core.BlockPos
 import net.minecraft.world.item.Items
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -29,7 +29,7 @@ object ScoutClass: AnniClass(), Listener {
     override val icon = Items.FISHING_ROD
     override val description = arrayOf(
         "高速で移動ができるグラップリングフックが初期装備に含まれている。",
-        "戦闘中は使用できない。"
+        "戦闘中は使用できない。",
     )
 
     const val GRAPPLING_HOOK_ID = "scout_grappling_hook"
@@ -86,7 +86,9 @@ object ScoutClass: AnniClass(), Listener {
 
             val hook = event.hook
             val world = hook.world
-            if (!hook.isOnGround && world.getBlockAt(hook.x.toInt(), (hook.y + 1).toIntCorrect(), hook.z.toInt()).isPassable && world.getBlockAt(hook.x.toInt(), hook.y.toIntCorrect(), hook.z.toInt()).isPassable && world.getBlockAt(hook.x.toInt(), (hook.y - 1).toIntCorrect(), hook.z.toInt()).isPassable) {
+            val level = world.toMC()
+            val pos = BlockPos.containing(hook.x, hook.y, hook.z)
+            if (!hook.isOnGround && !level.getBlockState(pos.offset(0, -1, 0)).block.hasCollision && !level.getBlockState(pos).block.hasCollision && !level.getBlockState(pos.offset(0, 1, 0)).block.hasCollision) {
                 return
             }
 

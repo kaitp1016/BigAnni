@@ -5,16 +5,15 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.UseCooldown
 import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
+import me.kaitp1016.biganni.utils.BlockPosInfo
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
-import me.kaitp1016.biganni.utils.Utils.toIntCorrect
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.core.BlockPos
 import net.minecraft.world.item.Items
-import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 import org.bukkit.Material
@@ -37,13 +36,13 @@ object NeptuneClass: AnniClass(), Listener {
     override val shortName = "NEP"
     override val description = arrayOf(
         "周囲の液体を凍らせることができる。",
-        "トライデントは2個の形態を切り替えることができる。",
+        "トライデントは2個のモードを切り替えることができる。",
     )
 
     const val TOGGLE_GROUND_FREEZE_ITEM_ID = "neptune_toggle_frost_walker"
     const val TIDEBRINGER_ITEM_ID = "neptune_tidebringer"
     const val TIDEBRINGER_COOLDOWN = 400
-    val TIDEBRINGE_COOLDOWN_GROUP = Key.key(PLUGIN_ID,"neptune_tidebringer")
+    val TIDEBRINGE_COOLDOWN_GROUP = Key.key(PLUGIN_ID, "neptune_tidebringer")
 
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {
         return super.getDefaultItems(player).also {
@@ -56,7 +55,7 @@ object NeptuneClass: AnniClass(), Listener {
                 setAnniItem(TOGGLE_GROUND_FREEZE_ITEM_ID)
 
                 editMeta {
-                    it.itemName(Component.text("Toggle Frost Walker").color(NamedTextColor.GOLD))
+                    it.itemName(Component.text("Ground Freeze").color(NamedTextColor.GOLD))
                 }
             })
 
@@ -69,23 +68,23 @@ object NeptuneClass: AnniClass(), Listener {
 
                 editMeta {
                     it.itemName(Component.text("Tidebringer").color(NamedTextColor.GOLD))
-                    it.addAttributeModifier(Attribute.ATTACK_DAMAGE, AttributeModifier(AXE_ATTRIBUTE_MODIFIER_KEY,4.0, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.MAINHAND))
+                    it.addAttributeModifier(Attribute.ATTACK_DAMAGE, AttributeModifier(AXE_ATTRIBUTE_MODIFIER_KEY, 4.0, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.MAINHAND))
                 }
 
-                addEnchantment(Enchantment.LOYALTY,3)
+                addEnchantment(Enchantment.LOYALTY, 3)
             })
 
             it.add(ItemStack(Material.LILY_PAD).uniqueClassItem().soulbound().also { item -> item.amount = 10 })
         }
     }
 
-    data class FrozenBlock(val level: Level, val pos: BlockPos, val frozenBlock: Block, val unfrozenBlock: Block, var tick: Int = 20)
+    data class FrozenBlock(val frozenBlock: Block, val unfrozenBlock: Block, var tick: Int = 20)
 
     val enabledPlayers = mutableListOf<Player>()
-    val frozenBlocks = mutableListOf<FrozenBlock>()
+    val frozenBlocks = BlockPosInfo<FrozenBlock>()
 
     override fun onSelect(player: Player) {
-        player.addPotionEffect(PotionEffect(PotionEffectType.WATER_BREATHING, PotionEffect.INFINITE_DURATION,0))
+        player.addPotionEffect(PotionEffect(PotionEffectType.WATER_BREATHING, PotionEffect.INFINITE_DURATION, 0))
         super.onSelect(player)
     }
 
@@ -97,7 +96,7 @@ object NeptuneClass: AnniClass(), Listener {
     }
 
     override fun onRespawn(player: Player) {
-        player.addPotionEffect(PotionEffect(PotionEffectType.WATER_BREATHING, PotionEffect.INFINITE_DURATION,0))
+        player.addPotionEffect(PotionEffect(PotionEffectType.WATER_BREATHING, PotionEffect.INFINITE_DURATION, 0))
 
         super.onRespawn(player)
     }
@@ -115,13 +114,12 @@ object NeptuneClass: AnniClass(), Listener {
             if (enabledPlayers.contains(player)) {
                 enabledPlayers.remove(player)
                 player.sendMessage(Component.text("Ground Freeze").color(NamedTextColor.AQUA).append(Component.text(" Disabled").color(NamedTextColor.RED)))
-            }
-            else {
+            } else {
                 enabledPlayers.add(player)
                 player.sendMessage(Component.text("Ground Freeze").color(NamedTextColor.AQUA).append(Component.text(" Enabled").color(NamedTextColor.GREEN)))
             }
 
-            player.playSound(player, Sound.UI_BUTTON_CLICK,1f,1f)
+            player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
 
             event.isCancelled = true
         }
@@ -130,36 +128,33 @@ object NeptuneClass: AnniClass(), Listener {
 
             if (item.containsEnchantment(Enchantment.RIPTIDE)) {
                 item.removeEnchantment(Enchantment.RIPTIDE)
-                item.addEnchantment(Enchantment.LOYALTY,3)
+                item.addEnchantment(Enchantment.LOYALTY, 3)
 
                 player.sendMessage(Component.text("Curse of the Sea に切り替えました").color(NamedTextColor.GREEN))
-            }
-            else {
+            } else {
                 item.removeEnchantment(Enchantment.LOYALTY)
-                item.addEnchantment(Enchantment.RIPTIDE,1)
+                item.addEnchantment(Enchantment.RIPTIDE, 1)
 
                 player.sendMessage(Component.text("Riptide に切り替えました").color(NamedTextColor.GREEN))
             }
 
-            player.playSound(player, Sound.UI_BUTTON_CLICK,1f,1f)
+            player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
         }
     }
 
     @EventHandler
     fun onTick(event: ServerTickStartEvent) {
-        if (!frozenBlocks.isEmpty()) {
-            frozenBlocks.removeIf { block ->
-                block.tick--
+        frozenBlocks.removeIf { level, pos, block ->
+            block.tick--
 
-                if (block.tick < 1) {
-                    if (block.level.getBlockState(block.pos).block == block.frozenBlock) {
-                        block.level.setBlockAndUpdate(block.pos, block.unfrozenBlock.defaultBlockState())
-                    }
-                    return@removeIf true
+            if (block.tick < 1) {
+                if (level.getBlockState(pos).block == block.frozenBlock) {
+                    level.setBlockAndUpdate(pos, block.unfrozenBlock.defaultBlockState())
                 }
-
-                false
+                return@removeIf true
             }
+
+            false
         }
     }
 
@@ -167,26 +162,23 @@ object NeptuneClass: AnniClass(), Listener {
         if (!enabledPlayers.contains(player)) return
 
         val level = player.world.toMC()
-        val pos = BlockPos(player.x.toIntCorrect(), (player.y - 0.999).toIntCorrect(), player.z.toIntCorrect())
+        val pos = BlockPos.containing(player.x, player.y, player.z).below()
 
         for (dx in -2..2) {
             for (dz in -2..2) {
                 val pos = pos.offset(dx, 0, dz)
                 val block = level.getBlockState(pos)
                 if (block.block == Blocks.WATER && block.fluidState.isSource && level.getBlockState(pos.offset(0, 1, 0)).isAir) {
-                    level.setBlockAndUpdate(pos, Blocks.FROSTED_ICE.defaultBlockState())
-                    frozenBlocks.add(FrozenBlock(level, pos,Blocks.FROSTED_ICE,Blocks.WATER))
+                    level.setBlockAndUpdate(pos, Blocks.ICE.defaultBlockState())
+                    frozenBlocks[level, pos] = FrozenBlock(Blocks.ICE, Blocks.WATER)
                 }
                 if (block.block == Blocks.LAVA && block.fluidState.isSource && level.getBlockState(pos.offset(0, 1, 0)).isAir) {
                     level.setBlockAndUpdate(pos, Blocks.MAGMA_BLOCK.defaultBlockState())
-                    frozenBlocks.add(FrozenBlock(level, pos,Blocks.MAGMA_BLOCK,Blocks.LAVA))
+                    frozenBlocks[level, pos] = FrozenBlock(Blocks.MAGMA_BLOCK, Blocks.LAVA)
                 }
-                if (block.block == Blocks.MAGMA_BLOCK || block.block == Blocks.FROSTED_ICE) {
-                    frozenBlocks.find { it.pos == pos }?.tick = 20
 
-                    if (block.block == Blocks.FROSTED_ICE) {
-                        level.setBlockAndUpdate(pos,Blocks.FROSTED_ICE.defaultBlockState())
-                    }
+                frozenBlocks[level, pos]?.let {
+                    it.tick = 20
                 }
             }
         }

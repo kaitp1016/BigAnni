@@ -24,7 +24,6 @@ import net.minecraft.world.entity.projectile.throwableitemprojectile.Snowball
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.HitResult
@@ -135,17 +134,16 @@ object ScorpioClass: AnniClass(), Listener {
                 if (team == target.teamColor || BerserkerClass.isUsingAbility(target.bukkitEntity)) return
 
                 val pos = thrower.getRayTrace(1, ClipContext.Fluid.ANY).location
-
                 val level = thrower.level()
-                val blockPos = BlockPos(pos.x.toInt(), pos.y.toInt(), pos.z.toInt())
-                if (!level.getBlockState(blockPos.offset(0, 0, 0)).canBeReplaced()   || !level.getBlockState(blockPos.offset(0, 1, 0)).canBeReplaced()) return
+                val blockPos = BlockPos.containing(pos.x, pos.y, pos.z)
+                if (!level.getBlockState(blockPos).canOcclude() || !level.getBlockState(blockPos.offset(0, 1, 0)).canOcclude()) return
 
                 var y = min(blockPos.y, 256)
                 var isVoid = true
 
                 while (y > -64) {
                     val state = level.getBlockState(BlockPos(blockPos.x, y, blockPos.z))
-                    if (!state.isAir && state.block != Blocks.STRUCTURE_VOID) {
+                    if (state.canOcclude()) {
                         isVoid = false
                         break
                     }
