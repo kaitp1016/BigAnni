@@ -1,5 +1,6 @@
 package me.kaitp1016.biganni.anniclass.impl
 
+import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.UseCooldown
 import me.kaitp1016.biganni.PLUGIN_ID
@@ -33,7 +34,7 @@ object SwapperClass: AnniClass(), Listener {
 
     const val SWAPPER_ITEM_ID = "swapper_swapper"
     const val SWAPPER_COOLDOWN = 1200
-    val SWAPPER_COOLDOWN_GROUP = Key.key(PLUGIN_ID,"swapper_swapper")
+    val SWAPPER_COOLDOWN_GROUP = Key.key(PLUGIN_ID, "swapper_swapper")
 
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {
         return super.getDefaultItems(player).also {
@@ -51,6 +52,10 @@ object SwapperClass: AnniClass(), Listener {
         }
     }
 
+    const val SWAP_RECEIVE_COOLDOWN = 100
+
+    val receiveCooldown = mutableMapOf<Player, Int>()
+
     @EventHandler
     fun onInteract(event: PlayerInteractEvent) {
         val player = event.player
@@ -63,28 +68,42 @@ object SwapperClass: AnniClass(), Listener {
         val pos = mcPlayer.blockPosition()
         val world = player.world
         val level = world.toMC()
-        if (!world.getBlockState(player.location).block.isEmpty || !world.getBlockState(player.location.clone().add(0.0,1.0,0.0)).block.isEmpty || !level.isFullBlock(pos.offset(0,-1,0))) {
+        if (!world.getBlockState(player.location).block.isEmpty || !world.getBlockState(player.location.clone().add(0.0, 1.0, 0.0)).block.isEmpty || !level.isFullBlock(pos.offset(0, -1, 0))) {
             player.sendMessage("ここでは使用できません!")
+            return
+        }
+
+        if (player.isSneaking) {
+            player.sendMessage("スニーク中は使用できません!")
             return
         }
 
         val raytrace = player.rayTraceEntities(20)
         val target = raytrace?.hitEntity as? Player ?: return
-        if (player.toMC().teamColor == target.toMC().teamColor || BerserkerClass.isUsingAbility(target)) return
+        if (player.toMC().teamColor == target.toMC().teamColor || target.isInvisible || BerserkerClass.isUsingAbility(target) || receiveCooldown.contains(target)) return
 
         val selfLocation = player.location
         player.teleport(target.location)
         target.teleport(selfLocation)
 
-        world.playSound(player.location, Sound.ENTITY_ENDERMAN_TELEPORT,1f,1f)
-        world.playSound(target.location, Sound.ENTITY_ENDERMAN_TELEPORT,1f,1f)
+        world.playSound(player.location, Sound.ENTITY_ENDERMAN_TELEPORT, 1f, 1f)
+        world.playSound(target.location, Sound.ENTITY_ENDERMAN_TELEPORT, 1f, 1f)
 
-        target.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION,100,1))
-        target.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS,60,0))
-        target.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION,100,1))
+        target.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION, 100, 1))
+        target.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS, 60, 1))
+        player.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION, 100, 1))
 
-        FallDamageResistance.add(target,100)
+        FallDamageResistance.add(target, 100)
+        receiveCooldown[target] = SWAP_RECEIVE_COOLDOWN
 
-        player.setCooldown(SWAPPER_COOLDOWN_GROUP,SWAPPER_COOLDOWN)
+        player.setCooldown(SWAPPER_COOLDOWN_GROUP, SWAPPER_COOLDOWN)
+    }
+
+    @EventHandler
+    fun onTick(event: ServerTickStartEvent) {
+        if (receiveCooldown.isEmpty()) return
+
+        receiveCooldown.replaceAll { player, tick -> tick - 1 }
+        receiveCooldown.entries.removeIf { it.value < 1 }
     }
 }
