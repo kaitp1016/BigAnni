@@ -21,6 +21,7 @@ import org.bukkit.damage.DamageType
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityPotionEffectEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
@@ -42,6 +43,8 @@ object BerserkerClass: AnniClass(), Listener {
     val BERSERKER_COOLDOWN_GROUP = Key.key(PLUGIN_ID,"berserker_berserker")
     val BERSERKER_HEALTH_PASSIVE_KEY = NamespacedKey(plugin,"berserker_health_passive")
 
+    val unbreakableImmunityEffects = arrayOf(PotionEffectType.SLOWNESS, PotionEffectType.LEVITATION, PotionEffectType.SLOW_FALLING, PotionEffectType.BLINDNESS, PotionEffectType.NAUSEA)
+
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {
         return super.getDefaultItems(player).also {
             it.add(ItemStack(Material.NETHERITE_INGOT).apply {
@@ -52,7 +55,7 @@ object BerserkerClass: AnniClass(), Listener {
                 setData(DataComponentTypes.USE_COOLDOWN, UseCooldown.useCooldown(BERSERKER_COOLDOWN / 20f).cooldownGroup(BERSERKER_COOLDOWN_GROUP).build())
 
                 editMeta {
-                    it.itemName(Component.text("Berserker").color(NamedTextColor.GOLD))
+                    it.itemName(Component.text("Unbreakable Will").color(NamedTextColor.GOLD))
                 }
             })
 
@@ -83,6 +86,10 @@ object BerserkerClass: AnniClass(), Listener {
         player.setCooldown(BERSERKER_COOLDOWN_GROUP,BERSERKER_COOLDOWN)
         abilityPlayers.add(player)
 
+        unbreakableImmunityEffects.forEach { type ->
+            player.removePotionEffect(type)
+        }
+
         Scheduler.scheduleTask(300) {
             player.world.playSound(player,Sound.ENTITY_WOLF_SHAKE,1f,2f)
             abilityPlayers.remove(player)
@@ -107,6 +114,17 @@ object BerserkerClass: AnniClass(), Listener {
 
             attribute.removeModifier(BERSERKER_HEALTH_PASSIVE_KEY)
             attribute.addTransientModifier(AttributeModifier(BERSERKER_HEALTH_PASSIVE_KEY,health, AttributeModifier.Operation.ADD_NUMBER))
+        }
+    }
+
+    @EventHandler
+    fun onEffect(event: EntityPotionEffectEvent) {
+        val player = event.entity as? Player ?: return
+        if (!isSelected(player) || !isUsingAbility(player)) return
+
+        val type = event.modifiedType
+        if (unbreakableImmunityEffects.contains(type) && event.action == EntityPotionEffectEvent.Action.ADDED) {
+            event.isCancelled = true
         }
     }
 

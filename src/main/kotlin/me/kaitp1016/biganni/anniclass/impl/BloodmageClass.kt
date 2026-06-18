@@ -93,7 +93,7 @@ object BloodmageClass: AnniClass(), Listener {
                 }
             })
 
-            it.add(ItemStack(Material.SOUL_SAND).apply {
+            it.add(ItemStack(Material.CRIMSON_HYPHAE).apply {
                 uniqueClassItem()
                 soulbound()
                 setAnniItem(BLOODCURSED_TERRAFORM_ITEM_ID)
@@ -187,8 +187,6 @@ object BloodmageClass: AnniClass(), Listener {
             val team = player.toMC().teamColor
 
             val targets = player.world.getNearbyPlayers(player.location, 2.5).filter { it.toMC().teamColor != team }
-            if (targets.isEmpty()) return
-
             targets.forEach { target ->
                 val attribute = target.getAttribute(Attribute.MAX_HEALTH)
                 if (attribute == null || attribute.getModifier(CORRUPT_ATTRIBUTE_KEY) != null) return@forEach

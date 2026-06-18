@@ -41,7 +41,7 @@ object ImmobilizerClass: AnniClass(), Listener {
     )
 
     const val IMMOBILIZE_ITEM_ID = "imobilizer_immobilize"
-    const val IMMOBILIZE_COOLDOWN = 400
+    const val IMMOBILIZE_COOLDOWN = 600
     val IMMOBILIZE_COOLDOWN_GROUP = Key.key(PLUGIN_ID, "imobilizer_immobilize")
 
     const val IMMOBILIZE_RECEIVE_COOLDOWN = 400

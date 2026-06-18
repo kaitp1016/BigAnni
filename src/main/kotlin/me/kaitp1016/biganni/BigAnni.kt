@@ -43,6 +43,7 @@ class BigAnni : JavaPlugin() {
             TeamDoor,
             PrivateStand,
             ServerLink,
+            CombatTag,
             FallDamageResistance,
             FullyInvisible,
             AnniClassHandler,

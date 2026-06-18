@@ -42,7 +42,7 @@ object ArcherClass: AnniClass(), Listener {
     override val icon = Items.BOW
     override val description = arrayOf(
         "最初から弓と矢を持ち、矢が与えるダメージが常に増える。",
-        "左クリックをするとアビリティを選択でき、それぞれのアビリティにはクールダウンがある。",
+        "弓を左クリックをするとアビリティを選択でき、それぞれのアビリティにはクールダウンがある。",
     )
 
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {

@@ -35,7 +35,7 @@ object SniperClass: AnniClass(), Listener {
     override val icon = Items.ARROW
     override val description = arrayOf(
         "他の能力がない弓を左クリックすると特殊な弓になる。",
-        "この弓で発射された矢は高速で発射され、重力の影響を受けない。",
+        "その弓で発射された矢は高速で発射され、重力の影響を受けない。",
     )
 
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {
@@ -54,7 +54,7 @@ object SniperClass: AnniClass(), Listener {
     }
 
     override fun onUnselect(player: Player) {
-        player.inventory.forEach{ item ->
+        player.inventory.forEach { item ->
             if (item?.getAnniId() == COMPOUND_BOW_ID) {
                 item.removeAnniItem()
 
@@ -82,17 +82,18 @@ object SniperClass: AnniClass(), Listener {
                     item.editMeta {
                         it.itemName(null)
                     }
-                    player.playSound(player, Sound.UI_BUTTON_CLICK,1f,1f)
+                    player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
                 }
                 return
             }
 
             item.setAnniItem(COMPOUND_BOW_ID)
+
             item.editMeta {
                 it.itemName(Component.text("Compound Bow").color(NamedTextColor.GREEN))
             }
 
-            player.playSound(player, Sound.UI_BUTTON_CLICK,1f,1f)
+            player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
         }
     }
 
@@ -103,7 +104,7 @@ object SniperClass: AnniClass(), Listener {
 
         if (event.force < 1f) {
             event.isCancelled = true
-            player.playSound(player, Sound.ITEM_BUNDLE_INSERT_FAIL,1f,1f)
+            player.playSound(player, Sound.ITEM_BUNDLE_INSERT_FAIL, 1f, 1f)
             return
         }
 
@@ -114,18 +115,19 @@ object SniperClass: AnniClass(), Listener {
         val weapon = event.bow?.toMC() ?: net.minecraft.world.item.ItemStack(Items.BOW)
         val power = event.force * 5f
 
-        val arrow = Projectile.spawnProjectileFromRotationDelayed({ level,shooter: LivingEntity,weapon: net.minecraft.world.item.ItemStack -> SniperArrow(level,mcPlayer,event.consumable?.toMC() ?: net.minecraft.world.item.ItemStack(Items.ARROW),weapon) },level,weapon,mcPlayer,0f,power,1f)
-        arrow.attemptSpawn()
+        val arrow = Projectile.spawnProjectileFromRotationDelayed({ level, shooter: LivingEntity, weapon: net.minecraft.world.item.ItemStack -> SniperArrow(level, mcPlayer, event.consumable?.toMC() ?: net.minecraft.world.item.ItemStack(Items.ARROW), weapon) }, level, weapon, mcPlayer, 0f, power, 1f)
+        if (!arrow.attemptSpawn()) return
 
         player.setRotation(player.yaw + Random.nextFloat() * 10 - 5, player.pitch + Random.nextFloat() * 10 - 5)
+
         val hand = if (event.hand == EquipmentSlot.HAND) net.minecraft.world.entity.EquipmentSlot.MAINHAND else net.minecraft.world.entity.EquipmentSlot.OFFHAND
-        event.bow?.toMC()?.hurtAndBreak(10,mcPlayer,hand)
+        event.bow?.toMC()?.hurtAndBreak(10, mcPlayer, hand)
     }
 
-    class SniperArrow: Arrow {
+    class SniperArrow : Arrow {
         val player: ServerPlayer
 
-        constructor(level: ServerLevel,owner: ServerPlayer,arrow: net.minecraft.world.item.ItemStack,weapon: net.minecraft.world.item.ItemStack):super(level,owner,arrow,weapon) {
+        constructor(level: ServerLevel, owner: ServerPlayer, arrow: net.minecraft.world.item.ItemStack, weapon: net.minecraft.world.item.ItemStack) : super(level, owner, arrow, weapon) {
             this.player = owner
             this.isNoGravity = true
         }
@@ -134,10 +136,10 @@ object SniperClass: AnniClass(), Listener {
             super.tick()
 
             Particle.FIREWORK.builder()
-                .location(bukkitEntity.world,x,y,z)
+                .location(bukkitEntity.world, x, y, z)
                 .count(0)
-                .offset(0.0,0.0,0.0)
-                .receivers(32,true)
+                .offset(0.0, 0.0, 0.0)
+                .receivers(32, true)
                 .spawn()
 
             if (tickCount > 200) {
