@@ -45,8 +45,8 @@ object ScorpioClass: AnniClass(), Listener {
     override val name = "Scropio"
     override val shortName = "SCP"
     override val description = arrayOf(
-        "右クリックでアビリティを使用すると、当った敵を自身の視点の先にテレポートさせる。",
-        "左クリックでアビリティを使用すると、当たった味方に向かって移動できる。",
+        "右クリックでHookを投げて敵に当たると敵を自身の視点の先にテレポートさせる。",
+        "左クリックでHookを投げて味方に充てると当たった味方に向かって移動できる。",
     )
 
     const val SCORPIO_HOOK_ITEM_ID = "scorpio_hook"

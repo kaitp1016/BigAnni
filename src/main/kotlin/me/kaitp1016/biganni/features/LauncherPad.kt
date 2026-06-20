@@ -15,16 +15,16 @@ import org.bukkit.util.Vector
 object LauncherPad: Listener {
     const val LAUNCHER_PAD_COOLDOWN = 100
 
-    data class LauncherPadData(val block: Material,val strength: Float,val upwards: Float = 0f)
-    data class LauncherPadCooldown(val player: Player,var tick: Int)
+    data class LauncherPadData(val block: Material, val strength: Float, val upwards: Float = 0f)
+    data class LauncherPadCooldown(val player: Player, var tick: Int)
 
     val launcherPadDatas = arrayOf(
-        LauncherPadData(Material.IRON_BLOCK,strength = 2f),
-        LauncherPadData(Material.REDSTONE_LAMP,strength = 3f),
-        LauncherPadData(Material.DIAMOND_BLOCK,strength = 4f),
+        LauncherPadData(Material.IRON_BLOCK, strength = 2f),
+        LauncherPadData(Material.REDSTONE_LAMP, strength = 3f),
+        LauncherPadData(Material.DIAMOND_BLOCK, strength = 4f),
 
-        LauncherPadData(Material.EMERALD_BLOCK,strength = 1.2f, upwards = 7f),
-        LauncherPadData(Material.GOLD_BLOCK,strength = 1.4f, upwards = 9f),
+        LauncherPadData(Material.EMERALD_BLOCK, strength = 1.2f, upwards = 7f),
+        LauncherPadData(Material.GOLD_BLOCK, strength = 1.4f, upwards = 9f),
     )
 
     val cooldowns = mutableListOf<LauncherPadCooldown>()
@@ -55,7 +55,7 @@ object LauncherPad: Listener {
         FallDamageResistance.add(bukkitPlayer, 200)
         bukkitPlayer.world.playSound(bukkitPlayer.location, Sound.ENTITY_WITHER_SHOOT, 1f, 2f)
 
-        cooldowns.add(LauncherPadCooldown(bukkitPlayer,LAUNCHER_PAD_COOLDOWN))
+        cooldowns.add(LauncherPadCooldown(bukkitPlayer, LAUNCHER_PAD_COOLDOWN))
     }
 
     @EventHandler

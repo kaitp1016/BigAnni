@@ -4,6 +4,7 @@ import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.minecraft.tags.BlockTags
 import net.minecraft.tags.ItemTags
 import net.minecraft.world.item.Items
+import net.minecraft.world.level.block.Blocks
 import org.bukkit.GameMode
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -12,13 +13,6 @@ import org.bukkit.event.block.BlockBreakEvent
 
 object RequiredTool: Listener {
     val blockTags = listOf(
-        BlockTags.MINEABLE_WITH_PICKAXE,
-        BlockTags.MINEABLE_WITH_AXE,
-        BlockTags.MINEABLE_WITH_HOE,
-        BlockTags.MINEABLE_WITH_SHOVEL,
-    )
-
-    val itemTags = mapOf(
         BlockTags.MINEABLE_WITH_PICKAXE to ItemTags.PICKAXES,
         BlockTags.MINEABLE_WITH_AXE to ItemTags.AXES,
         BlockTags.MINEABLE_WITH_HOE to ItemTags.HOES,
@@ -37,6 +31,7 @@ object RequiredTool: Listener {
             if (item?.item != Items.SHEARS) {
                 event.isCancelled = true
             }
+
             return
         }
 
@@ -44,10 +39,20 @@ object RequiredTool: Listener {
             return
         }
 
-        val blockTag = blockTags.find { block.`is`(it) } ?: return
-        val itemTag = itemTags[blockTag] ?: return
+        if (item?.item == Items.SHEARS && (block.`is`(BlockTags.LEAVES) || block.block == Blocks.VINE)) {
+            return
+        }
 
-        if (item?.`is`(itemTag) != true) {
+        if (block.`is`(BlockTags.LEAVES) && item?.`is`(ItemTags.HOES) == true) {
+            event.isCancelled = true
+            return
+        }
+
+
+        val tags = blockTags.filter { block.`is`(it.first) }
+        if (tags.isEmpty()) return
+
+        if (tags.all { item?.`is`(it.second) != true }) {
             event.isCancelled = true
         }
     }

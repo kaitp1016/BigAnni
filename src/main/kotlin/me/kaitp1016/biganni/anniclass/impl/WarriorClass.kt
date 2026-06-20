@@ -7,6 +7,7 @@ import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
+import me.kaitp1016.biganni.utils.Scheduler
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -32,12 +33,12 @@ object WarriorClass: AnniClass(), Listener {
     override val shortName = "WAR"
     override val description = arrayOf(
         "この職業の時は常に攻撃力が増える。",
-        "アビリティを使用すると追加で攻撃力が増え、移動速度が増える。",
+        "アビリティを使用すると追加で攻撃力が増える。",
     )
 
     const val FRENZY_ITEM_ID = "warrior_frenzy"
     const val FRENZY_COOLDOWN = 1200
-    val FRENZY_COOLDOWN_GROUP = Key.key(PLUGIN_ID,"warrior_frenzy")
+    val FRENZY_COOLDOWN_GROUP = Key.key(PLUGIN_ID, "warrior_frenzy")
 
     const val FRENZY_TIME = 240
 
@@ -78,11 +79,17 @@ object WarriorClass: AnniClass(), Listener {
         val item = event.item ?: return
         if (item.getAnniId() != FRENZY_ITEM_ID || player.hasCooldown(item)) return
 
-        player.addPotionEffect(PotionEffect(PotionEffectType.SPEED,FRENZY_TIME,0))
-        player.playSound(player.location, Sound.ENTITY_POLAR_BEAR_WARNING,1f,1f)
+        player.addPotionEffect(PotionEffect(PotionEffectType.SPEED, FRENZY_TIME, 0))
+        player.playSound(player.location, Sound.ENTITY_POLAR_BEAR_WARNING, 1f, 1f)
 
-        frenzies.add(FrenzyAbility(player,FRENZY_TIME))
-        player.setCooldown(FRENZY_COOLDOWN_GROUP,FRENZY_COOLDOWN)
+        frenzies.add(FrenzyAbility(player, FRENZY_TIME))
+        player.setCooldown(FRENZY_COOLDOWN_GROUP, FRENZY_COOLDOWN)
+
+        repeat(3) {
+            Scheduler.scheduleTask(it * 80) {
+                player.heal(2.0)
+            }
+        }
     }
 
     @EventHandler
@@ -99,8 +106,8 @@ object WarriorClass: AnniClass(), Listener {
     fun onDamage(event: EntityDamageEvent) {
         val source = event.damageSource
         val entity = event.entity
-        if (entity is Player && isSelected(entity) && frenzies.any{ it.player == entity }) {
-            event.damage = min(event.damage * 1.25,999999999.9)
+        if (entity is Player && isSelected(entity) && frenzies.any { it.player == entity }) {
+            event.damage = min(event.damage * 1.25, 999999999.9)
         }
 
         val attacker = source.causingEntity

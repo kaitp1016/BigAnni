@@ -37,7 +37,8 @@ object ThorClass: AnniClass(), Listener {
     override val shortName = "THO"
     override val icon = Items.GOLDEN_AXE
     override val description = arrayOf(
-        "アビリティを使用すると周りの敵に魔法ダメージを与え、耐性を獲得する",
+        "ノックバックがついたハンマーを最初から所持している。",
+        "ハンマーを使用すると周囲の敵に魔法ダメージを与え、耐性を獲得する",
     )
 
     const val HAMMER_ITEM_ID = "thor_hammer"

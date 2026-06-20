@@ -27,8 +27,8 @@ object MinerClass: AnniClass(), Listener {
     override val name = "Miner"
     override val shortName = "MIN"
     override val description = arrayOf(
-        "この職業の時は常に一部の鉱石の獲得量が増える。",
-        "アビリティを使用することで鉱石の獲得量がさらに増える。",
+        "この職業の時は常に鉱石の獲得量が増える。",
+        "アビリティの効果中は鉱石の獲得量がさらに増える。",
     )
 
     const val GOLD_RUSH_ITEM_ID = "miner_gold_rush"

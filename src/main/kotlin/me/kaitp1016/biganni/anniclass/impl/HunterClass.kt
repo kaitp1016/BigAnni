@@ -51,7 +51,7 @@ object HunterClass: AnniClass(), Listener {
     override val shortName = "HUN"
     override val icon = Items.LEAD
     override val description = arrayOf(
-        "アビリティを使用するとトラップを設置できる。",
+        "トラップを設置できる。",
     )
 
     const val TRAP_SNARE_ITEM_ID = "hunter_trap_snare"
