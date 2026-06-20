@@ -109,8 +109,13 @@ object RobinHoodClass: AnniClass(), Listener {
                 val horse = horses[player]!!
                 horse.remove(Entity.RemovalReason.DISCARDED)
 
-                horses[player] = RobinHoodHorse(level,mcPlayer).apply {
-                    this.health = horse.health
+                if (horse.isDeadOrDying) {
+                    horses.remove(player)
+                }
+                else {
+                    horses[player] = RobinHoodHorse(level,mcPlayer).apply {
+                        this.health = horse.health
+                    }
                 }
 
                 return

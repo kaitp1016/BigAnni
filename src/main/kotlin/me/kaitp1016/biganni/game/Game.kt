@@ -34,6 +34,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
+import org.bukkit.event.entity.EntityPortalEvent
 import org.bukkit.event.entity.EntityRemoveEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -220,6 +221,11 @@ object Game: Listener {
             player.teleport(location)
             event.isCancelled = true
         }
+    }
+
+    @EventHandler
+    fun onEntityPortal(event: EntityPortalEvent) {
+        event.isCancelled = true
     }
 
     @EventHandler

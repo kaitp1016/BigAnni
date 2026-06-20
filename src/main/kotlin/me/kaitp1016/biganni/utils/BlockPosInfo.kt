@@ -34,7 +34,7 @@ class BlockPosInfo<T> {
 
     fun hasInDistance(level: ServerLevel, pos: BlockPos, distance: Int): Boolean {
         val levelData = datas.getOrPut(level) { mutableMapOf() }
-        return levelData.any { it.key.distManhattan(pos) >= distance }
+        return levelData.any { it.key.distManhattan(pos) <= distance }
     }
 
     fun hasInDistance(level: ServerLevel, pos: BlockPos, distance: Int, predication: (T) -> Boolean): Boolean {
