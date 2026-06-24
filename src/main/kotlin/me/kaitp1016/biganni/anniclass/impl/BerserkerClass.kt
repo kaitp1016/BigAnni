@@ -39,7 +39,7 @@ object BerserkerClass: AnniClass(), Listener {
     )
 
     const val BERSERKER_ITEM_ID = "berserker_berserker"
-    const val BERSERKER_COOLDOWN = 2400
+    const val BERSERKER_COOLDOWN = 1300
     val BERSERKER_COOLDOWN_GROUP = Key.key(PLUGIN_ID,"berserker_berserker")
     val BERSERKER_HEALTH_PASSIVE_KEY = NamespacedKey(plugin,"berserker_health_passive")
 

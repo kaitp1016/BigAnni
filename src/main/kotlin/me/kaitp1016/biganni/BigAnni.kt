@@ -46,6 +46,7 @@ class BigAnni : JavaPlugin() {
             CombatTag,
             FallDamageResistance,
             FullyInvisible,
+            CooldownVisualizer,
             AnniClassHandler,
             PacketGuiManager,
             EventManager,

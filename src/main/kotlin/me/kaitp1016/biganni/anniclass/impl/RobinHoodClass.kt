@@ -61,7 +61,7 @@ object RobinHoodClass: AnniClass(), Listener {
                 soulbound()
                 setAnniItem(STEED_ITEM_ID)
 
-                setData(DataComponentTypes.USE_COOLDOWN, UseCooldown.useCooldown(STEED_RESPAWN_COOLDOWN / 20f).cooldownGroup(STEED_COOLDOWN_GROUP).build())
+                setData(DataComponentTypes.USE_COOLDOWN, UseCooldown.useCooldown(STEED_DEATH_COOLDOWN / 20f).cooldownGroup(STEED_COOLDOWN_GROUP).build())
                 setData(DataComponentTypes.ITEM_MODEL, Key.key("minecraft:leather_horse_armor"))
 
                 editMeta {
@@ -165,6 +165,7 @@ object RobinHoodClass: AnniClass(), Listener {
 
         override fun die(source: DamageSource) {
             ownerPlayer.bukkitEntity.setCooldown(STEED_COOLDOWN_GROUP,STEED_DEATH_COOLDOWN)
+            horses.remove(ownerPlayer.bukkitEntity)
 
             super.die(source)
         }
