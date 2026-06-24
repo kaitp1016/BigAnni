@@ -76,10 +76,10 @@ object TeamDoor: Listener {
 
         val direction = mcPlayer.position().subtract(pos.center).multiply(1.0, 0.0, 1.0).normalize()
         val isX = abs(direction.x) > abs(direction.z)
-        val location = to.add(if (isX) direction.x * -1.5 else 0.0, 0.0, if (isX) 0.0 else direction.z * -1.5)
+        val location = to.clone().add(if (isX) direction.x * -1.5 else 0.0, 0.0, if (isX) 0.0 else direction.z * -1.5).toBlockLocation().add(0.5,0.0,0.5)
         if (!location.block.isPassable || !location.clone().add(0.0, 1.0, 0.0).block.isPassable) return
 
-        player.teleport(location.toCenterLocation().add(0.0, -0.5, 0.0))
+        event.to = location
         player.world.playSound(player.location, Sound.ENTITY_CHICKEN_EGG, 1f, 0f)
     }
 
