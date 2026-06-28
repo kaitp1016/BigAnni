@@ -39,10 +39,18 @@ object CooldownVisualizer: Listener {
         val dataComponent = if (item.has(DataComponents.CUSTOM_NAME)) DataComponents.CUSTOM_NAME else DataComponents.ITEM_NAME
         val component = item.get(dataComponent)?.copy() ?: return
 
-        component.siblings.removeIf { it.string.startsWith(COOLDOWN_PREFFIX) }
+        val siblings = component.siblings
+        for (sibling in siblings) {
+            val string = sibling.string
+            if (!string.startsWith(COOLDOWN_PREFFIX)) continue
+            if (string == name) return
+
+            siblings.remove(sibling)
+            break
+        }
+
         component.append(Component.literal("$COOLDOWN_PREFFIX $name").withColor(color))
 
-        item.displayName
         item.set(dataComponent, component)
     }
 }

@@ -129,7 +129,7 @@ object AnniCommand {
                 "normal" -> KnockbackModifier.normalMultiply = num
                 "normalY" -> KnockbackModifier.normalMultiplyY = num
                 "sprint" -> KnockbackModifier.sprintMultiply = num
-                "sprinY" -> KnockbackModifier.sprintMultiplyY = num
+                "sprintY" -> KnockbackModifier.sprintMultiplyY = num
             }
             return@executes 1
         }))).then(Commands.literal("randomteam").executes { context ->

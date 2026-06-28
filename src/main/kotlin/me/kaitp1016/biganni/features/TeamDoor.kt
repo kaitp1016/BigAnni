@@ -44,7 +44,7 @@ object TeamDoor: Listener {
         val level = player.level()
         val pos = BlockPos(block.x, block.y, block.z)
 
-        if (teamsDoors.hasInDistance(level, pos, TEAM_DOOR_PLACE_DISTANCE)) {
+        if (teamsDoors.hasInRange(level, pos, TEAM_DOOR_PLACE_DISTANCE)) {
             player.bukkitEntity.sendMessage("近くにTeam Doorがあるため設置できません!")
             event.isCancelled = true
             return

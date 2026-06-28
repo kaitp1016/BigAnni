@@ -1,18 +1,15 @@
 package me.kaitp1016.biganni.packetgui.impl
 
-import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.features.DelayingBlock
 import me.kaitp1016.biganni.features.TeamDoor
 import me.kaitp1016.biganni.mc
 import me.kaitp1016.biganni.packetgui.AbstractPacketGui
 import me.kaitp1016.biganni.packetgui.ChestPacketGui
 import me.kaitp1016.biganni.utils.MCUtils.toMC
-import net.kyori.adventure.key.Key
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket
-import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.util.CommonColors
 import net.minecraft.world.item.ItemStack
@@ -20,7 +17,7 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.ItemLore
 import net.minecraft.world.item.component.UseCooldown
 import org.bukkit.Sound
-import java.util.Optional
+import java.util.*
 
 class WeaponShopGui: ChestPacketGui {
     override val displayName = Component.literal("Weapon Shop").withColor(0xFFAA00)
@@ -40,7 +37,7 @@ class WeaponShopGui: ChestPacketGui {
         15 to (ItemStack(Items.CAKE) to 1),
         16 to (ItemStack(Items.COBWEB) to 1),
         23 to (ItemStack(Items.EXPERIENCE_BOTTLE).also { it.count = 3 } to 2),
-        24 to (ItemStack(Items.ENDER_PEARL).also { it.set(DataComponents.USE_COOLDOWN, UseCooldown(20f, Optional.of(Identifier.fromNamespaceAndPath(PLUGIN_ID,"ender_pearl_cooldown")))) } to 35),
+        24 to (ItemStack(Items.ENDER_PEARL).also { it.set(DataComponents.USE_COOLDOWN, UseCooldown(10f, Optional.empty())) } to 35),
         25 to (ItemStack(Items.MILK_BUCKET) to 5),
 
         41 to (TeamDoor.createItem().toMC()!! to 10),

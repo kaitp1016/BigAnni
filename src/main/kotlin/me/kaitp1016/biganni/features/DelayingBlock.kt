@@ -42,7 +42,7 @@ object DelayingBlock: Listener {
         val level = player.level()
         val team = player.teamColor
 
-        if (delayingBlocks.hasInDistance(level, pos, DELAY_PLACE_DISTANCE) { it.teamColor == team }) {
+        if (delayingBlocks.hasInRange(level, pos, DELAY_PLACE_DISTANCE) { it.teamColor == team }) {
             player.bukkitEntity.sendMessage("近くにDelaying Blockがあるため設置できません!")
             event.isCancelled = true
             return
@@ -81,7 +81,7 @@ object DelayingBlock: Listener {
             return
         }
 
-        if (delayingBlocks.hasInDistance(level, pos, DELAY_EFFECT_DISTANCE) { it.teamColor != team }) {
+        if (delayingBlocks.hasInRange(level, pos, DELAY_EFFECT_DISTANCE) { it.teamColor != team }) {
             val bukkitPlayer = player.bukkitEntity
             val fitigueLevel = if (bukkitPlayer.getAnniClass() == AnniClasses.ENGINEER) 0 else 1
             player.addEffect(MobEffectInstance(MobEffects.MINING_FATIGUE, 140, fitigueLevel))

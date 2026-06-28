@@ -14,7 +14,7 @@ class LevelBlockPos {
     val y: Int
     val z: Int
 
-    constructor(world: World,x: Int,y: Int,z: Int) {
+    constructor(world: World, x: Int, y: Int, z: Int) {
         this.world = world
         this.level = world.toMC()
         this.x = x
@@ -22,7 +22,7 @@ class LevelBlockPos {
         this.z = z
     }
 
-    constructor(level: ServerLevel,x: Int,y: Int,z: Int) {
+    constructor(level: ServerLevel, x: Int, y: Int, z: Int) {
         this.level = level
         this.world = level.world
         this.x = x
@@ -31,15 +31,15 @@ class LevelBlockPos {
     }
 
     fun getBlock(): BlockState {
-        return level.getBlockState(BlockPos(x,y,z))
+        return level.getBlockState(BlockPos(x, y, z))
     }
 
     fun toBlockPos(): BlockPos {
-        return BlockPos(x,y,z)
+        return BlockPos(x, y, z)
     }
 
     fun distanceTo(target: Vec3): Double {
-        return target.distanceTo(Vec3(x.toDouble(),y.toDouble(),z.toDouble()))
+        return target.distanceTo(Vec3(x.toDouble(), y.toDouble(), z.toDouble()))
     }
 
     override fun equals(other: Any?): Boolean {

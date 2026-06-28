@@ -32,14 +32,14 @@ class BlockPosInfo<T> {
         return levelData.contains(pos)
     }
 
-    fun hasInDistance(level: ServerLevel, pos: BlockPos, distance: Int): Boolean {
+    fun hasInRange(level: ServerLevel, pos: BlockPos, range: Int): Boolean {
         val levelData = datas.getOrPut(level) { mutableMapOf() }
-        return levelData.any { it.key.distManhattan(pos) <= distance }
+        return levelData.any { it.key.distManhattan(pos) <= range }
     }
 
-    fun hasInDistance(level: ServerLevel, pos: BlockPos, distance: Int, predication: (T) -> Boolean): Boolean {
+    fun hasInRange(level: ServerLevel, pos: BlockPos, range: Int, predication: (T) -> Boolean): Boolean {
         val levelData = datas.getOrPut(level) { mutableMapOf() }
-        return levelData.any { pos.distManhattan(it.key) < distance && predication(it.value) }
+        return levelData.any { pos.distManhattan(it.key) < range && predication(it.value) }
     }
 
     fun forEach(func: (ServerLevel, BlockPos, T) -> (Unit)) {

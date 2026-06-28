@@ -41,6 +41,8 @@ object TransporterClass: AnniClass(), Listener {
 
     const val PORTAL_MAKER_ID = "transporter_portal_maker"
 
+    const val PORTAL_COOLDOWN = 40
+
     override fun getDefaultItems(player: Player): MutableList<ItemStack> {
         return super.getDefaultItems(player).also {
             it.add(ItemStack(Material.QUARTZ).apply {
@@ -80,8 +82,11 @@ object TransporterClass: AnniClass(), Listener {
 
             if (otherSide == null || !canUse(world,pos)) return
 
+            val portal = portal ?: return
+            if (portal.cooldown > 0) return
+
             world.getNearbyPlayers(location.clone().add(0.5,1.0,0.5),0.3,0.1).forEach { player ->
-                val ownerUUID = portal?.owner ?: return@forEach
+                val ownerUUID = portal.owner
                 val owner = Bukkit.getPlayer(ownerUUID) ?: return@forEach
                 val ownerName = owner.teamDisplayName()
                 player.sendActionBar(ownerName.append(Component.text("'s Portal").color(NamedTextColor.GRAY)))
@@ -96,6 +101,9 @@ object TransporterClass: AnniClass(), Listener {
 
                 teleportPlayers.add(player)
                 player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT,1f,1f)
+                portal.cooldown = PORTAL_COOLDOWN
+
+                if (owner != player) owner.giveExp(1)
 
                 owner.sendMessage("${player.name} used your portal.")
             }
@@ -121,7 +129,9 @@ object TransporterClass: AnniClass(), Listener {
         }
     }
 
-    data class Portal(val owner: UUID, val first: PortalBlock, var secound: PortalBlock?)
+    data class Portal(val owner: UUID, val first: PortalBlock, var secound: PortalBlock?) {
+        var cooldown = -1
+    }
 
     val portals = mutableListOf<Portal>()
     val teleportPlayers = mutableListOf<Player>()
@@ -145,6 +155,7 @@ object TransporterClass: AnniClass(), Listener {
 
         destroyNeeded.forEach {
             destroy(it)
+            Bukkit.getPlayer(it.owner)?.sendMessage("ポータルが壊された!")
         }
 
         if (event.action != Action.RIGHT_CLICK_BLOCK || !isSelected(player)) return
@@ -220,6 +231,7 @@ object TransporterClass: AnniClass(), Listener {
         }
 
         portals.forEach { portal ->
+            if (portal.cooldown > 0) portal.cooldown--
             portal.first.tick()
             portal.secound?.tick()
         }
