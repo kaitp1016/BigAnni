@@ -49,6 +49,7 @@ object Game: Listener {
 
     val teams = mutableListOf<AnniTeam>()
     var map = Config.MapConfig.default()
+    var mapId = "default"
 
     var isStarted = false
     var phaseTime: Int = -1
@@ -64,8 +65,9 @@ object Game: Listener {
         BossBarManager.setColor(BarColor.BLUE)
 
         ScoreboardManager.reset()
-        ScoreboardManager.setLine(0, Component.literal("§6apple.playit.plus"))
-        ScoreboardManager.setLine(1, Component.empty())
+        ScoreboardManager.setLine(-1, Component.literal("§b Port: 1041"))
+        ScoreboardManager.setLine(0, Component.literal("§b[統合版] applebedrock.playit.plus"))
+        ScoreboardManager.setLine(1, Component.literal("§6[Java] 88gate.playit.plus"))
 
         map.teams.forEach {
             teams.add(it.create())

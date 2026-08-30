@@ -16,6 +16,7 @@ import me.kaitp1016.biganni.config.Config
 import me.kaitp1016.biganni.features.DelayingBlock
 import me.kaitp1016.biganni.features.TeamDoor
 import me.kaitp1016.biganni.game.Game
+import me.kaitp1016.biganni.game.MapResetManager
 import me.kaitp1016.biganni.game.StartCountdown
 import me.kaitp1016.biganni.game.boss.BossManager
 import me.kaitp1016.biganni.mc
@@ -26,6 +27,7 @@ import me.kaitp1016.biganni.packetgui.impl.WeaponShopGui
 import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.server.permissions.LevelBasedPermissionSet
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import java.util.concurrent.CompletableFuture
 import kotlin.random.Random
@@ -101,13 +103,54 @@ object AnniCommand {
             val map = Config.getMap(mapName)
             if (map != null) {
                 Game.map = map
+                Game.mapId = mapName
                 it.source.sender.sendMessage("マップを ${map.name} にしました!")
             } else {
                 it.source.sender.sendMessage("マップが見つかりませんでした!")
             }
 
             return@executes 1
-        }.suggests(MapSuggestion))).then(Commands.literal("openweaponshop").executes {
+        }.suggests(MapSuggestion))).then(Commands.literal("savemapbackup").executes {
+            val world = Game.map.bossLocation.world
+            val sender = it.source.sender
+
+            val saved = MapResetManager.saveBackup(world)
+            if (saved) {
+                sender.sendMessage("§a${world.name} の現在の状態をマップバックアップとして保存しました。")
+            } else {
+                sender.sendMessage("§cバックアップの保存に失敗しました。")
+            }
+
+            return@executes 1
+        }).then(Commands.literal("resetmap").executes {
+            val sender = it.source.sender
+
+            if (Game.isStarted || StartCountdown.isStarted) {
+                sender.sendMessage("試合が始まっているためマップをリセットできません。/anni resetをしてから実行してください。")
+                return@executes 1
+            }
+
+            if (MapResetManager.isResetting) {
+                sender.sendMessage("すでにマップをリセット中です。")
+                return@executes 1
+            }
+
+            val worldName = Game.map.bossLocation.world.name
+
+            if (!MapResetManager.hasBackup(worldName)) {
+                sender.sendMessage("§c${worldName} のマップバックアップがありません。先に /anni savemapbackup を実行してください。")
+                return@executes 1
+            }
+
+            sender.sendMessage("§eマップをリセットしています…")
+
+            MapResetManager.resetWorld(worldName) {
+                Game.map = Config.getMap(Game.mapId) ?: Game.map
+                Bukkit.broadcast(net.kyori.adventure.text.Component.text("§aマップのリセットが完了しました。次の試合を開始できます。"))
+            }
+
+            return@executes 1
+        }).then(Commands.literal("openweaponshop").executes {
             WeaponShopGui((it.source.executor as Player).toMC()).open()
             return@executes 1
         }).then(Commands.literal("openbrewingshop").executes {
