@@ -16,6 +16,7 @@ import me.kaitp1016.biganni.config.Config
 import me.kaitp1016.biganni.features.DelayingBlock
 import me.kaitp1016.biganni.features.TeamDoor
 import me.kaitp1016.biganni.game.Game
+import me.kaitp1016.biganni.game.MapPool
 import me.kaitp1016.biganni.game.MapResetManager
 import me.kaitp1016.biganni.game.StartCountdown
 import me.kaitp1016.biganni.game.boss.BossManager
@@ -110,7 +111,53 @@ object AnniCommand {
             }
 
             return@executes 1
-        }.suggests(MapSuggestion))).then(Commands.literal("savemapbackup").executes {
+        }.suggests(MapSuggestion))).then(Commands.literal("nextmap").then(Commands.argument("prefix", StringArgumentType.greedyString()).executes {
+            val prefix = StringArgumentType.getString(it, "prefix")
+            val sender = it.source.sender
+
+            if (Game.isStarted || StartCountdown.isStarted) {
+                sender.sendMessage("試合が始まっているためマップを切り替えられません。/anni resetをしてから実行してください。")
+                return@executes 1
+            }
+
+            val candidate = MapPool.unusedCandidates(prefix).firstOrNull()
+            if (candidate == null) {
+                val total = MapPool.candidates(prefix).size
+                sender.sendMessage("§c接頭辞 \"$prefix\" に一致する未使用のマップがありません。(該当マップ数: $total, 使用済み: ${MapPool.usedMapIdsSorted().size})")
+                return@executes 1
+            }
+
+            val map = Config.getMap(candidate)
+            if (map == null) {
+                sender.sendMessage("§cマップ \"$candidate\" の読み込みに失敗しました。")
+                return@executes 1
+            }
+
+            Game.map = map
+            Game.mapId = candidate
+            MapPool.markUsed(candidate)
+
+            sender.sendMessage("§aマップを ${map.name} ($candidate) にしました! (残り未使用: ${MapPool.unusedCandidates(prefix).size})")
+
+            return@executes 1
+        })).then(Commands.literal("poolstatus").then(Commands.argument("prefix", StringArgumentType.greedyString()).executes {
+            val prefix = StringArgumentType.getString(it, "prefix")
+            val sender = it.source.sender
+
+            val all = MapPool.candidates(prefix)
+            val used = all.filter { name -> MapPool.isUsed(name) }
+            val unused = all.filter { name -> !MapPool.isUsed(name) }
+
+            sender.sendMessage("§e接頭辞 \"$prefix\": 全${all.size}件 / 使用済み${used.size}件 / 未使用${unused.size}件")
+            sender.sendMessage("§7使用済み: ${if (used.isEmpty()) "なし" else used.joinToString(", ")}")
+            sender.sendMessage("§7未使用: ${if (unused.isEmpty()) "なし" else unused.joinToString(", ")}")
+
+            return@executes 1
+        })).then(Commands.literal("poolreset").executes {
+            MapPool.reset()
+            it.source.sender.sendMessage("§aマップの使用済み記録をリセットしました。(ワールド自体は掃除されていないので、荒れたままのマップを選ばないよう注意してください)")
+            return@executes 1
+        }).then(Commands.literal("savemapbackup").executes {
             val world = Game.map.bossLocation.world
             val sender = it.source.sender
 
@@ -147,6 +194,15 @@ object AnniCommand {
             MapResetManager.resetWorld(worldName) {
                 Game.map = Config.getMap(Game.mapId) ?: Game.map
                 Bukkit.broadcast(net.kyori.adventure.text.Component.text("§aマップのリセットが完了しました。次の試合を開始できます。"))
+            }
+
+            return@executes 1
+        }).then(Commands.literal("mapdebug").executes {
+            val sender = it.source.sender
+            val world = Game.map.bossLocation.world
+
+            MapResetManager.debugInfo(world).forEach { line ->
+                sender.sendMessage(line)
             }
 
             return@executes 1
