@@ -7,6 +7,8 @@ import me.kaitp1016.biganni.gson
 import me.kaitp1016.biganni.mc
 import me.kaitp1016.biganni.plugin
 import me.kaitp1016.biganni.utils.LevelBlockPos
+import me.kaitp1016.biganni.utils.MCUtils.toMC
+import me.kaitp1016.biganni.utils.Utils.reloadWorld
 import net.kyori.adventure.key.Key
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.Identifier
@@ -49,7 +51,24 @@ object Config {
         }
     }
 
-    data class MapConfig(val name: String, val phaseTime: Int, val bossPortals: List<LevelBlockPos>, val bossLocation: Location, val teams: List<TeamConfig>, val blockedClasses: List<String>, val doubleNexusDamage: Boolean) {
+    data class MapConfig(val name: String, val dimension: Identifier, val phaseTime: Int, val bossPortals: List<LevelBlockPos>, val bossLocation: Location, val teams: List<TeamConfig>, val blockedClasses: List<String>, val doubleNexusDamage: Boolean) {
+        fun reloadWorld() {
+            bossLocation.reloadWorld()
+
+            bossPortals.forEach {
+                it.reloadWorld()
+            }
+
+            teams.forEach {
+                it.nexusWarp.reloadWorld()
+                it.bossSpawn.reloadWorld()
+                it.riftLocation.reloadWorld()
+                it.spawn.reloadWorld()
+                it.witchLocation.reloadWorld()
+                it.nexus.reloadWorld()
+            }
+        }
+
         companion object {
             fun fromJson(json: JsonObject): MapConfig {
                 val name = json.get("name").asString
@@ -59,14 +78,16 @@ object Config {
                 val teams = parseTeams(json.get("teams").asJsonArray)
                 val blockedClasses = json.get("blocked_classes").asJsonArray.map { it.asString }
                 val doubleNexusDamage = json.get("double_nexus_damage")?.asBoolean ?: true
+                val dimension = json.get("dimension")?.asString?.let { Identifier.parse(it) } ?: bossLocation.world.toMC().dimension().identifier()
 
-                return MapConfig(name, phaseTime, bossPortals, bossLocation, teams, blockedClasses, doubleNexusDamage)
+                return MapConfig(name, dimension, phaseTime, bossPortals, bossLocation, teams, blockedClasses, doubleNexusDamage)
             }
 
             fun default(): MapConfig {
                 getMap("default")?.let { return it }
 
                 val name = "Coastal"
+                val dimension = Identifier.parse("sys:coastal")
                 val phaseTime = 9600
                 val world = Bukkit.getWorld(Key.key("sys:coastal"))!!
                 val bossPortals = listOf(LevelBlockPos(world, 95, -48, 3), LevelBlockPos(world, -97, -48, -3))
@@ -79,7 +100,7 @@ object Config {
 
                 val doubleNexusDamage = false
 
-                return MapConfig(name, phaseTime, bossPortals, bossLocation, teams, blockedClasses, doubleNexusDamage)
+                return MapConfig(name, dimension, phaseTime, bossPortals, bossLocation, teams, blockedClasses, doubleNexusDamage)
             }
         }
     }

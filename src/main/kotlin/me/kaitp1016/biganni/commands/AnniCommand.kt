@@ -17,6 +17,7 @@ import me.kaitp1016.biganni.features.DelayingBlock
 import me.kaitp1016.biganni.features.TeamDoor
 import me.kaitp1016.biganni.game.Game
 import me.kaitp1016.biganni.game.StartCountdown
+import me.kaitp1016.biganni.game.WorldResetter
 import me.kaitp1016.biganni.game.boss.BossManager
 import me.kaitp1016.biganni.mc
 import me.kaitp1016.biganni.modifiers.KnockbackModifier
@@ -24,8 +25,16 @@ import me.kaitp1016.biganni.packetgui.impl.AnniClassSelector
 import me.kaitp1016.biganni.packetgui.impl.BrewingShopGui
 import me.kaitp1016.biganni.packetgui.impl.WeaponShopGui
 import me.kaitp1016.biganni.utils.MCUtils.toMC
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.Style
+import net.kyori.adventure.text.format.TextDecoration
 import net.minecraft.commands.SharedSuggestionProvider
+import net.minecraft.core.registries.Registries
+import net.minecraft.resources.ResourceKey
 import net.minecraft.server.permissions.LevelBasedPermissionSet
+import org.bukkit.Bukkit
+import org.bukkit.Sound
 import org.bukkit.entity.Player
 import java.util.concurrent.CompletableFuture
 import kotlin.random.Random
@@ -146,6 +155,33 @@ object AnniCommand {
 
                     mc.scoreboard.addPlayerToTeam(player.scoreboardName, team)
                 }
+            }
+
+            return@executes 1
+        }).then(Commands.literal("resetworld").executes {
+            if (Game.isStarted || StartCountdown.isStarted) {
+                it.source.sender.sendMessage("ゲームが始まっているためマップをリセットできません。/anni resetをしてから開始してください。")
+                return@executes 1
+            }
+
+            val map = Game.map
+            val registry = ResourceKey.create(Registries.DIMENSION, map.dimension)
+            val level = mc.getLevel(registry)!!
+
+            Bukkit.broadcast(Component.text("マップをリセット中です。数秒固まることがあります。").style(Style.style().decoration(TextDecoration.BOLD, true).color(NamedTextColor.RED).build()))
+
+            val start = System.currentTimeMillis()
+
+            if (!WorldResetter.reset(level.world, map.name)) {
+                it.source.sender.sendMessage("§cマップのリセットに失敗しました!")
+            }
+            else {
+                val timeTook = System.currentTimeMillis() - start
+                it.source.sender.sendMessage("§aマップをリセットしました! (${timeTook}ms)")
+            }
+
+            Bukkit.getOnlinePlayers().forEach { player ->
+                player.playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 1f)
             }
 
             return@executes 1

@@ -103,8 +103,7 @@ object TransporterClass: AnniClass(), Listener {
                 player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT,1f,1f)
                 portal.cooldown = PORTAL_COOLDOWN
 
-                if (owner != player) owner.giveExp(1)
-
+                owner.giveExp(1)
                 owner.sendMessage("${player.name} used your portal.")
             }
         }

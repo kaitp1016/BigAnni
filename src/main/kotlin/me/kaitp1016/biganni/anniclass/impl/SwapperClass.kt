@@ -93,7 +93,7 @@ object SwapperClass: AnniClass(), Listener {
         target.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS, 60, 1))
         player.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION, 100, 1))
 
-        FallDamageResistance.add(target, 100)
+        FallDamageResistance.add(target, 200)
         receiveCooldown[target] = SWAP_RECEIVE_COOLDOWN
 
         player.setCooldown(SWAPPER_COOLDOWN_GROUP, SWAPPER_COOLDOWN)

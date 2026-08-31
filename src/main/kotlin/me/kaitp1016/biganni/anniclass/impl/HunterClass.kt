@@ -44,6 +44,7 @@ import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerMoveEvent
+import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.ItemStack
 
 object HunterClass: AnniClass(), Listener {
@@ -200,6 +201,15 @@ object HunterClass: AnniClass(), Listener {
     fun onDeath(event: PlayerDeathEvent) {
         val player = event.player
         if (!isSelected(player)) return
+
+        traps.removeIf {
+            it.player == player
+        }
+    }
+
+    @EventHandler
+    fun onQuit(event: PlayerQuitEvent) {
+        val player = event.player
 
         traps.removeIf {
             it.player == player

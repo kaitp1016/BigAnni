@@ -5,11 +5,15 @@ import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.Vec3
+import org.bukkit.Bukkit
 import org.bukkit.World
 
 class LevelBlockPos {
-    val world: World
-    val level: ServerLevel
+    var world: World
+        private set
+    var level: ServerLevel
+        private set
+
     val x: Int
     val y: Int
     val z: Int
@@ -40,6 +44,12 @@ class LevelBlockPos {
 
     fun distanceTo(target: Vec3): Double {
         return target.distanceTo(Vec3(x.toDouble(), y.toDouble(), z.toDouble()))
+    }
+
+    fun reloadWorld() {
+        val world = Bukkit.getWorld(world.key)!!
+        this.world = world
+        this.level = world.toMC()
     }
 
     override fun equals(other: Any?): Boolean {

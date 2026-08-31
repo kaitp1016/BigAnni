@@ -25,7 +25,9 @@ object ScoreboardManager {
     private val OBJECTIVE = Objective(mc.scoreboard, INTERNAL_OBJECTIVE_NAME, ObjectiveCriteria.DUMMY, Component.literal("§c§lANNI§e§lHI§9§lLATI§a§lON"), ObjectiveCriteria.RenderType.INTEGER, false, BlankFormat.INSTANCE)
 
     private val lines = mutableMapOf<Int, Component>(
-        0 to Component.literal("§6apple.playit.plus"),
+        -2 to Component.literal("§b Port: 1041"),
+        -1 to Component.literal("§b[統合版] applebedrock.playit.plus"),
+        0 to Component.literal("§6[Java] 88gate.playit.plus"),
         1 to Component.empty(),
         2 to Component.empty(),
         3 to Component.empty(),
