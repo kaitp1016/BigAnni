@@ -40,6 +40,7 @@ import org.bukkit.event.entity.EntityRemoveEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.*
+import java.util.UUID
 import kotlin.random.Random
 import net.kyori.adventure.text.Component as BukkitComponent
 
@@ -47,6 +48,9 @@ object Game: Listener {
     const val MAX_PHASE = 5
     const val BLAZE_POWDER_USABLE_PHASE = 4
     val ATTACK_SPEED_MODIFIER = NamespacedKey(plugin,"anni_attack_speed_modifier")
+
+    val joinedPlayers = mutableSetOf<UUID>()
+    val previousGamePlayers = mutableSetOf<UUID>()
 
     val teams = mutableListOf<AnniTeam>()
     var map = Config.MapConfig.default()
@@ -80,6 +84,9 @@ object Game: Listener {
 
         EnderFurnace.reset()
 
+        previousGamePlayers.clear()
+        previousGamePlayers.addAll(joinedPlayers)
+
         Bukkit.getOnlinePlayers().forEach { player ->
             player.totalExperience = 0
             player.enchantmentSeed = Random.nextInt()
@@ -94,6 +101,8 @@ object Game: Listener {
                 player.enderChest.clear()
                 player.kill()
             }
+
+            previousGamePlayers.remove(player.uniqueId)
         }
 
         Scheduler.scheduleTask(5) {
@@ -247,6 +256,15 @@ object Game: Listener {
         }
 
         attackSpeed?.baseValue = 4.0
+
+        if (previousGamePlayers.contains(player.uniqueId)) {
+            player.enderChest.clear()
+            player.inventory.clear()
+            player.kill()
+            previousGamePlayers.remove(player.uniqueId)
+        }
+
+        joinedPlayers.add(player.uniqueId)
     }
 
     @EventHandler
