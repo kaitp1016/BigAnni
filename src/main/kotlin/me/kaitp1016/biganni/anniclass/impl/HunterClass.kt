@@ -7,6 +7,7 @@ import it.unimi.dsi.fastutil.ints.IntList
 import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
 import me.kaitp1016.biganni.game.Game
+import me.kaitp1016.biganni.game.MapProtector
 import me.kaitp1016.biganni.mc
 import me.kaitp1016.biganni.packetgui.ChestPacketGui
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
@@ -120,8 +121,12 @@ object HunterClass: AnniClass(), Listener {
         val anniId = item.getAnniId()
         if (anniId == TRAP_SNARE_ITEM_ID) {
             val pos = event.clickedBlock ?: return
-            val mcPlayer = player.toMC()
+            if (MapProtector.isProtected(pos.location)) {
+                player.sendMessage("§cそこにはおけません!")
+                return
+            }
 
+            val mcPlayer = player.toMC()
             PlaceTrapGui(player.toMC(), LevelBlockPos(mcPlayer.level(), pos.x, pos.y, pos.z)).open()
         }
     }
@@ -298,7 +303,7 @@ object HunterClass: AnniClass(), Listener {
         }
 
         fun canPlaceAt(level: ServerLevel, pos: BlockPos): Boolean {
-            return level.isFullBlock(pos) && level.getBlockState(pos.offset(0, 1, 0)).isAir && level.getBlockState(pos.offset(0, 2, 0)).isAir
+            return level.isFullBlock(pos) && level.getBlockState(pos.offset(0, 1, 0)).isAir && level.getBlockState(pos.offset(0, 2, 0)).isAir && !MapProtector.isProtected(level, pos)
         }
     }
 

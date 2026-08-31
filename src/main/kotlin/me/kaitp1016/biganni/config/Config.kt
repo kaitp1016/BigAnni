@@ -8,6 +8,7 @@ import me.kaitp1016.biganni.mc
 import me.kaitp1016.biganni.plugin
 import me.kaitp1016.biganni.utils.LevelBlockPos
 import me.kaitp1016.biganni.utils.MCUtils.toMC
+import me.kaitp1016.biganni.utils.Region
 import me.kaitp1016.biganni.utils.Utils.reloadWorld
 import net.kyori.adventure.key.Key
 import net.minecraft.core.registries.Registries
@@ -51,7 +52,7 @@ object Config {
         }
     }
 
-    data class MapConfig(val name: String, val dimension: Identifier, val phaseTime: Int, val bossPortals: List<LevelBlockPos>, val bossLocation: Location, val teams: List<TeamConfig>, val blockedClasses: List<String>, val doubleNexusDamage: Boolean) {
+    data class MapConfig(val name: String, val dimension: Identifier, val phaseTime: Int, val bossPortals: List<LevelBlockPos>, val bossLocation: Location, val teams: List<TeamConfig>, val blockedClasses: List<String>, val doubleNexusDamage: Boolean, val protectedRegions: List<Region>, val mapRegion: Region) {
         fun reloadWorld() {
             bossLocation.reloadWorld()
 
@@ -79,8 +80,10 @@ object Config {
                 val blockedClasses = json.get("blocked_classes").asJsonArray.map { it.asString }
                 val doubleNexusDamage = json.get("double_nexus_damage")?.asBoolean ?: true
                 val dimension = json.get("dimension")?.asString?.let { Identifier.parse(it) } ?: bossLocation.world.toMC().dimension().identifier()
+                val protectedRegions = json.get("protected_regions").asJsonArray.map { parseRegion(it.asJsonObject) }
+                val mapRegion = parseRegion(json.get("map_region").asJsonObject)
 
-                return MapConfig(name, dimension, phaseTime, bossPortals, bossLocation, teams, blockedClasses, doubleNexusDamage)
+                return MapConfig(name, dimension, phaseTime, bossPortals, bossLocation, teams, blockedClasses, doubleNexusDamage, protectedRegions, mapRegion)
             }
 
             fun default(): MapConfig {
@@ -99,8 +102,10 @@ object Config {
                 )
 
                 val doubleNexusDamage = false
+                val protectedRegions = emptyList<Region>()
+                val mapRegion = Region(0,0,0,0,0,0,Identifier.parse("nothing:nothing"))
 
-                return MapConfig(name, dimension, phaseTime, bossPortals, bossLocation, teams, blockedClasses, doubleNexusDamage)
+                return MapConfig(name, dimension, phaseTime, bossPortals, bossLocation, teams, blockedClasses, doubleNexusDamage, protectedRegions, mapRegion)
             }
         }
     }
@@ -143,6 +148,18 @@ object Config {
         return AABB(minX, minY, minZ, maxX, maxY, maxZ)
     }
 
+    private fun parseRegion(json: JsonObject): Region {
+        val minX = json.get("min_x").asInt
+        val minY = json.get("min_y").asInt
+        val minZ = json.get("min_z").asInt
+        val maxX = json.get("max_x").asInt
+        val maxY = json.get("max_y").asInt
+        val maxZ = json.get("max_z").asInt
+        val dimension = Identifier.parse(json.get("dimension").asString)
+
+        return Region(minX, minY, minZ, maxX, maxY, maxZ, dimension)
+    }
+
     private fun parseLevelBlockPoses(json: JsonArray): List<LevelBlockPos> {
         return json.map { parseLevelBlockPos(it.asJsonObject) }
     }
@@ -164,6 +181,6 @@ object Config {
     }
 
     fun getMapNames(): List<String> {
-        return MAPS_DIRECTORY.listFiles().filter { it.isFile }.map { it.nameWithoutExtension }
+        return MAPS_DIRECTORY.listFiles()!!.filter { it.isFile }.map { it.nameWithoutExtension }
     }
 }

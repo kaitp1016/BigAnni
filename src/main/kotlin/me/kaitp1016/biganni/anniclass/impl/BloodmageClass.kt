@@ -6,6 +6,7 @@ import io.papermc.paper.datacomponent.item.UseCooldown
 import me.kaitp1016.biganni.PLUGIN_ID
 import me.kaitp1016.biganni.anniclass.AnniClass
 import me.kaitp1016.biganni.game.Game
+import me.kaitp1016.biganni.game.MapProtector
 import me.kaitp1016.biganni.plugin
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
@@ -214,12 +215,13 @@ object BloodmageClass: AnniClass(), Listener {
             val mcPlayer = player.toMC()
             val level = mcPlayer.level()
 
-            if (Game.teams.any { it.nexus.level == level && it.nexus.distanceTo(mcPlayer.position()) < 35.0 }) {
+            val pos = LevelBlockPos(level, mcPlayer.x.toInt(), mcPlayer.y.toInt(), mcPlayer.z.toInt())
+            if (MapProtector.isProtected(pos.world, pos.x, pos.y, pos.z) || Game.teams.any { it.nexus.level == level && it.nexus.distanceTo(mcPlayer.position()) < 35.0 }) {
                 player.sendMessage("ここには設置できません!")
                 return
             }
 
-            val pos = LevelBlockPos(level, mcPlayer.x.toInt(), mcPlayer.y.toInt(), mcPlayer.z.toInt())
+
             val terraform = Terraform(pos, player)
             terraform.start()
 

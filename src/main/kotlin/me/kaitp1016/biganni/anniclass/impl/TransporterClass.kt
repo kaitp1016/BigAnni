@@ -2,6 +2,7 @@ package me.kaitp1016.biganni.anniclass.impl
 
 import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import me.kaitp1016.biganni.anniclass.AnniClass
+import me.kaitp1016.biganni.game.MapProtector
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
@@ -248,7 +249,7 @@ object TransporterClass: AnniClass(), Listener {
 
     private fun canPlace(level: ServerLevel,pos: BlockPos): Boolean {
         val block = level.getBlockState(pos)
-        return canUse(level.world,pos) && level.isFullBlock(pos) && !block.hasBlockEntity() && block.block != Blocks.NETHER_QUARTZ_ORE
+        return canUse(level.world,pos) && level.isFullBlock(pos) && !block.hasBlockEntity() && block.block != Blocks.NETHER_QUARTZ_ORE && !MapProtector.isProtected(level, pos)
     }
 
     private fun canUse(world: World, pos: BlockPos): Boolean {

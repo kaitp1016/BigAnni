@@ -2,6 +2,7 @@ package me.kaitp1016.biganni.anniclass.impl
 
 import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import me.kaitp1016.biganni.anniclass.AnniClass
+import me.kaitp1016.biganni.game.MapProtector
 import me.kaitp1016.biganni.utils.ItemUtils.getAnniId
 import me.kaitp1016.biganni.utils.ItemUtils.setAnniItem
 import me.kaitp1016.biganni.utils.MCUtils.toMC
@@ -242,7 +243,7 @@ object SpiderClass: AnniClass(), Listener {
     )
 
     fun canPlaceVine(level: ServerLevel, pos: BlockPos): Boolean {
-        return level.getBlockState(pos).isAir && directions.any { direction -> level.isFullBlock(pos.offset(direction[0], direction[1], direction[2])) }
+        return level.getBlockState(pos).isAir && directions.any { direction -> level.isFullBlock(pos.offset(direction[0], direction[1], direction[2])) } && !MapProtector.isProtected(level, pos, true)
     }
 
     fun getVineAt(level: ServerLevel, pos: BlockPos): BlockState {
@@ -268,7 +269,7 @@ object SpiderClass: AnniClass(), Listener {
 
             webPlaceOffsets.forEach { offset ->
                 val pos = position.offset(offset[0], offset[1], offset[2])
-                if (level.getBlockState(pos).isAir) {
+                if (level.getBlockState(pos).isAir && !MapProtector.isProtected(level, pos)) {
                     level.setBlockAndUpdate(pos, Blocks.COBWEB.defaultBlockState())
                     placedWebs.add(PlacedWeb(bukkitPlayer, level, pos))
                 }
