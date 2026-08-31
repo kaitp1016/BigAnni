@@ -42,7 +42,6 @@ import org.bukkit.event.block.BlockDropItemEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
-import java.util.*
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -258,5 +257,13 @@ object BardClass: AnniClass(), Listener {
                 close()
             }
         }
+    }
+
+    override fun resetBlocks() {
+        buffboxes.forEach { box ->
+            box.level.setBlockAndUpdate(box.pos,Blocks.AIR.defaultBlockState())
+        }
+
+        buffboxes.clear()
     }
 }

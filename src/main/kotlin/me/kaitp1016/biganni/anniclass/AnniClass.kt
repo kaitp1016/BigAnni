@@ -67,6 +67,10 @@ abstract class AnniClass {
 
     }
 
+    open fun resetBlocks() {
+
+    }
+
     open fun getDefaultArmors(player: Player): MutableMap<EquipmentSlot,ItemStack> {
         return mutableMapOf(
             EquipmentSlot.FEET to ItemStack(Material.LEATHER_BOOTS).color(player).soulbound(),

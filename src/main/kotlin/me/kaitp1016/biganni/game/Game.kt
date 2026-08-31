@@ -7,6 +7,7 @@ import me.kaitp1016.biganni.anniclass.AnniClassManager.isClassSelected
 import me.kaitp1016.biganni.anniclass.AnniClassManager.selectAnniClass
 import me.kaitp1016.biganni.anniclass.AnniClasses
 import me.kaitp1016.biganni.config.Config
+import me.kaitp1016.biganni.features.EnderFurnace
 import me.kaitp1016.biganni.game.boss.BossManager
 import me.kaitp1016.biganni.game.boss.FinalBossFight
 import me.kaitp1016.biganni.mc
@@ -76,6 +77,8 @@ object Game: Listener {
         ScoreboardManager.setLine(teams.size + 4, Component.empty())
         ScoreboardManager.setLine(teams.size + 5, Component.literal("§6Map: §l${map.name}"))
         ScoreboardManager.setLine(teams.size + 6, Component.empty())
+
+        EnderFurnace.reset()
 
         Bukkit.getOnlinePlayers().forEach { player ->
             player.totalExperience = 0

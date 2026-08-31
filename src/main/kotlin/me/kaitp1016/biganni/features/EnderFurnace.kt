@@ -208,7 +208,10 @@ object EnderFurnace: Listener {
                     return true
                 }
             }
-
         }
+    }
+
+    fun reset() {
+        furnaces.clear()
     }
 }

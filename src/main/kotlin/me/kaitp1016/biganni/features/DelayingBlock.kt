@@ -98,4 +98,12 @@ object DelayingBlock: Listener {
             setAnniItem(DELAYING_BLOCK_ID)
         }
     }
+
+    fun resetBlocks() {
+        delayingBlocks.forEach { level, pos, player ->
+            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState())
+        }
+
+        delayingBlocks.clear()
+    }
 }

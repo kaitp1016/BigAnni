@@ -99,4 +99,12 @@ object PrivateStand: Listener {
             setAnniItem(PRIVATE_STAND_ID)
         }
     }
+
+    fun resetBlocks() {
+        privateStands.forEach { level, pos, player ->
+            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState())
+        }
+
+        privateStands.clear()
+    }
 }

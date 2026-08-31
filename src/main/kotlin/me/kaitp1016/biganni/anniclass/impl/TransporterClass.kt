@@ -261,4 +261,10 @@ object TransporterClass: AnniClass(), Listener {
         portal.first.destroy()
         portal.secound?.destroy()
     }
+
+    override fun resetBlocks() {
+        portals.toMutableList().forEach {
+            destroy(it)
+        }
+    }
 }

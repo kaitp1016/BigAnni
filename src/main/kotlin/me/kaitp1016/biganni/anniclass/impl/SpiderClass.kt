@@ -304,4 +304,17 @@ object SpiderClass: AnniClass(), Listener {
             return false
         }
     }
+
+    override fun resetBlocks() {
+        placedVines.forEach {
+            it.level.setBlockAndUpdate(it.pos, Blocks.AIR.defaultBlockState())
+        }
+
+        placedWebs.forEach {
+            it.level.setBlockAndUpdate(it.pos, Blocks.AIR.defaultBlockState())
+        }
+
+        placedWebs.clear()
+        placedVines.clear()
+    }
 }

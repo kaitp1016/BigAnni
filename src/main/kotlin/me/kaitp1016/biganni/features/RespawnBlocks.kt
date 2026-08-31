@@ -142,4 +142,8 @@ object RespawnBlocks: Listener {
             return@removeIf false
         }
     }
+    fun resetBlocks() {
+        placedBlocks.clear()
+        respawingBlocks.clear()
+    }
 }

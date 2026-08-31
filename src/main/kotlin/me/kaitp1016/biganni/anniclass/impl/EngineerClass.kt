@@ -278,4 +278,8 @@ object EngineerClass: AnniClass(), Listener {
 
         return null
     }
+
+    override fun resetBlocks() {
+        placedBlocks.clear()
+    }
 }

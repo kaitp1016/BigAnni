@@ -14,6 +14,7 @@ import io.papermc.paper.command.brigadier.argument.ArgumentTypes
 import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver
 import me.kaitp1016.biganni.config.Config
 import me.kaitp1016.biganni.features.DelayingBlock
+import me.kaitp1016.biganni.features.EnderFurnace
 import me.kaitp1016.biganni.features.TeamDoor
 import me.kaitp1016.biganni.game.Game
 import me.kaitp1016.biganni.game.StartCountdown

@@ -301,4 +301,8 @@ object HunterClass: AnniClass(), Listener {
             return level.isFullBlock(pos) && level.getBlockState(pos.offset(0, 1, 0)).isAir && level.getBlockState(pos.offset(0, 2, 0)).isAir
         }
     }
+
+    override fun resetBlocks() {
+        traps.clear()
+    }
 }

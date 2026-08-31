@@ -271,4 +271,12 @@ object AlchemistClass: AnniClass(), Listener {
             }
         }
     }
+
+    override fun resetBlocks() {
+        stands.forEach { level, pos, player ->
+            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState())
+        }
+
+        stands.clear()
+    }
 }

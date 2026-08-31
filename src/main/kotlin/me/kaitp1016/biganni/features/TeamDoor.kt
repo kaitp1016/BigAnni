@@ -32,7 +32,7 @@ object TeamDoor: Listener {
     const val TEAM_DOOR_ITEM_ID = "anni_team_door"
     const val TEAM_DOOR_PLACE_DISTANCE = 5
 
-    val teamsDoors = BlockPosInfo<ServerPlayer>()
+    val teamDoors = BlockPosInfo<ServerPlayer>()
 
     @EventHandler(priority = EventPriority.HIGH)
     fun onPlace(event: BlockPlaceEvent) {
@@ -44,7 +44,7 @@ object TeamDoor: Listener {
         val level = player.level()
         val pos = BlockPos(block.x, block.y, block.z)
 
-        if (teamsDoors.hasInRange(level, pos, TEAM_DOOR_PLACE_DISTANCE)) {
+        if (teamDoors.hasInRange(level, pos, TEAM_DOOR_PLACE_DISTANCE)) {
             player.bukkitEntity.sendMessage("近くにTeam Doorがあるため設置できません!")
             event.isCancelled = true
             return
@@ -60,7 +60,7 @@ object TeamDoor: Listener {
             level.setBlockAndUpdate(pos.offset(0, 1, 0), Block.updateFromNeighbourShapes(doorBlock.defaultBlockState(), level, pos.offset(0, 1, 0)))
         }
 
-        teamsDoors[level, pos] = player
+        teamDoors[level, pos] = player
     }
 
     @EventHandler
@@ -71,7 +71,7 @@ object TeamDoor: Listener {
 
         val to = event.to
         val pos = BlockPos(to.blockX, to.blockY, to.blockZ)
-        val teamDoor = teamsDoors[level, pos] ?: return
+        val teamDoor = teamDoors[level, pos] ?: return
         if (teamDoor.teamColor != mcPlayer.teamColor) return
 
         val direction = mcPlayer.position().subtract(pos.center).multiply(1.0, 0.0, 1.0).normalize()
@@ -94,9 +94,9 @@ object TeamDoor: Listener {
         for (dy in -1..1) {
             val pos = BlockPos(block.x, block.y + dy, block.z)
 
-            val miningBlock = teamsDoors[level, pos]
+            val miningBlock = teamDoors[level, pos]
             if (miningBlock != null) {
-                teamsDoors.remove(level, pos)
+                teamDoors.remove(level, pos)
 
                 val level = player.level()
                 level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState())
@@ -117,7 +117,7 @@ object TeamDoor: Listener {
         val level = block.world.toMC()
         val pos = BlockPos(block.x, block.y, block.z)
 
-        val miningBlock = teamsDoors[level, pos] ?: teamsDoors[level, pos.offset(0, -1, 0)]
+        val miningBlock = teamDoors[level, pos] ?: teamDoors[level, pos.offset(0, -1, 0)]
         if (miningBlock != null) {
             val player = event.player
             player.addPotionEffect(PotionEffect(PotionEffectType.MINING_FATIGUE, 120, 19))
@@ -137,5 +137,9 @@ object TeamDoor: Listener {
 
     fun getTeamDoorBlock(player: ServerPlayer): Block {
         return Game.getTeam(player.bukkitEntity)?.teamDoorBlock ?: Blocks.GLASS_PANE
+    }
+
+    fun resetBlocks() {
+        teamDoors.clear()
     }
 }

@@ -141,12 +141,7 @@ object BloodmageClass: AnniClass(), Listener {
             tick--
 
             if (tick < 1) {
-                terraforms.forEach { terraform ->
-                    val pos = terraform.pos
-                    val level = pos.level
-                    val blockPos = BlockPos(pos.x, pos.y, pos.z)
-                    if (level.getBlockState(blockPos).bukkitMaterial == terraform.current) level.setBlock(blockPos, terraform.original, 818)
-                }
+                revertBlocks()
 
                 return true
             }
@@ -167,6 +162,15 @@ object BloodmageClass: AnniClass(), Listener {
             }
 
             return false
+        }
+
+        fun revertBlocks() {
+            terraforms.forEach { terraform ->
+                val pos = terraform.pos
+                val level = pos.level
+                val blockPos = BlockPos(pos.x, pos.y, pos.z)
+                if (level.getBlockState(blockPos).bukkitMaterial == terraform.current) level.setBlock(blockPos, terraform.original, 818)
+            }
         }
     }
 
@@ -265,5 +269,13 @@ object BloodmageClass: AnniClass(), Listener {
                 return@removeIf it.tick < 1
             }
         }
+    }
+
+    override fun resetBlocks() {
+        terraforms.forEach {
+            it.revertBlocks()
+        }
+
+        terraforms.clear()
     }
 }

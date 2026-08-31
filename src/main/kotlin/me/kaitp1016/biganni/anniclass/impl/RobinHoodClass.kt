@@ -187,7 +187,7 @@ object RobinHoodClass: AnniClass(), Listener {
         }
 
         override fun dropAllDeathLoot(level: ServerLevel, source: DamageSource): EntityDeathEvent {
-            return CraftEventFactory.callEntityDeathEvent(this,source)
+            return CraftEventFactory.callEntityDeathEvent(this, source)
         }
 
         override fun checkDespawn() {

@@ -248,4 +248,8 @@ object FarmerClass: AnniClass(), Listener {
             player.saturation += 2f
         }
     }
+
+    override fun resetBlocks() {
+        plants.clear()
+    }
 }

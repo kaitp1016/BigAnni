@@ -65,4 +65,8 @@ class BlockPosInfo<T> {
             }
         }
     }
+
+    fun clear() {
+        datas.clear()
+    }
 }

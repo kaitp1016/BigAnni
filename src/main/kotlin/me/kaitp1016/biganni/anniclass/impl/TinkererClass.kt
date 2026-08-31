@@ -129,4 +129,12 @@ object TinkererClass: AnniClass(), Listener {
 
         event.inventory.result = book
     }
+
+    override fun resetBlocks() {
+        pads.forEach { level, pos, pad ->
+            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState())
+        }
+
+        pads.clear()
+    }
 }

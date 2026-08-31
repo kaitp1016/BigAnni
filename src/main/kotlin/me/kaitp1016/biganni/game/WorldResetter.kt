@@ -1,10 +1,15 @@
 package me.kaitp1016.biganni.game
 
 import io.papermc.paper.world.PaperWorldLoader
+import me.kaitp1016.biganni.anniclass.AnniClasses
+import me.kaitp1016.biganni.features.DelayingBlock
+import me.kaitp1016.biganni.features.PrivateStand
+import me.kaitp1016.biganni.features.RespawnBlocks
+import me.kaitp1016.biganni.features.TeamDoor
 import me.kaitp1016.biganni.mc
 import me.kaitp1016.biganni.plugin
-import me.kaitp1016.biganni.utils.MCUtils.toMC
 import net.minecraft.core.registries.Registries
+import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
 import net.minecraft.world.level.dimension.LevelStem
 import org.bukkit.Bukkit
@@ -15,8 +20,8 @@ object WorldResetter {
 
     fun reset(world: World, id: String): Boolean {
         try {
-            val teleportLocation = Bukkit.getWorld("world")!!.spawnLocation
-            val dimension = world.toMC().dimension()
+            val teleportLocation = mc.overworld().world.spawnLocation
+            val dimension = ResourceKey.create(Registries.DIMENSION, Identifier.fromNamespaceAndPath(world.key.namespace,world.key.key))
 
             Bukkit.getOnlinePlayers().forEach { player ->
                 if (player.world == world) {
@@ -48,6 +53,7 @@ object WorldResetter {
             mc.prepareLevel(loadedLevel)
 
             Game.map.reloadWorld()
+            resetCustomBlocks()
 
             return true
         }
@@ -55,5 +61,16 @@ object WorldResetter {
             e.printStackTrace()
             return false
         }
+    }
+
+    private fun resetCustomBlocks() {
+        AnniClasses.ALL_CLASSES.forEach {
+            it.resetBlocks()
+        }
+
+        DelayingBlock.resetBlocks()
+        PrivateStand.resetBlocks()
+        RespawnBlocks.resetBlocks()
+        TeamDoor.resetBlocks()
     }
 }
