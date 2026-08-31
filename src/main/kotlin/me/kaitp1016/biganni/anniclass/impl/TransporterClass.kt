@@ -92,7 +92,12 @@ object TransporterClass: AnniClass(), Listener {
                 val ownerName = owner.teamDisplayName()
                 player.sendActionBar(ownerName.append(Component.text("'s Portal").color(NamedTextColor.GRAY)))
 
-                if (owner.toMC().teamColor !=  player.toMC().teamColor || !player.isSneaking || teleportPlayers.contains(player) || !canUse(otherSide!!.world,otherSide!!.pos)) return@forEach
+                if (owner.toMC().teamColor !=  player.toMC().teamColor || !player.isSneaking || teleportPlayers.contains(player)) return@forEach
+
+                if (!canUse(otherSide!!.world,otherSide!!.pos)) {
+                    player.sendMessage("反対側のポータルがふさがれています!")
+                    return@forEach
+                }
 
                 player.teleport(otherSide!!.location.clone().apply {
                     add(0.5,1.0,0.5)
