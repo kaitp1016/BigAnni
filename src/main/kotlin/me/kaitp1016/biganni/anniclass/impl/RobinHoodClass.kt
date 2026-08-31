@@ -29,6 +29,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.entity.EntityRegainHealthEvent
 import org.bukkit.event.entity.EntityRemoveEvent
+import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
@@ -141,6 +142,15 @@ object RobinHoodClass: AnniClass(), Listener {
                 player.removePotionEffect(PotionEffectType.SLOW_FALLING)
             }
         }
+    }
+
+    @EventHandler
+    fun onDeath(event: PlayerDeathEvent) {
+        val player = event.player
+        if (!isSelected(player)) return
+
+        val level = player.world.toMC()
+        horses[player]?.kill(level)
     }
 
     class RobinHoodHorse: Horse {
