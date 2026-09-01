@@ -32,8 +32,8 @@ object MinerClass: AnniClass(), Listener {
     )
 
     const val GOLD_RUSH_ITEM_ID = "miner_gold_rush"
-    const val GOLD_RUSH_COOLDOWN = 2400
-    val GOLD_RUSH_COOLDOWN_GROUP = Key.key(PLUGIN_ID,"miner_gold_rush")
+    const val GOLD_RUSH_COOLDOWN = 1200
+    val GOLD_RUSH_COOLDOWN_GROUP = Key.key(PLUGIN_ID, "miner_gold_rush")
 
     const val GOLD_RUSH_TIME = 400
 
@@ -55,7 +55,7 @@ object MinerClass: AnniClass(), Listener {
             it.add(ItemStack(Material.STONE_PICKAXE).apply {
                 uniqueClassItem()
                 soulbound()
-                addEnchantment(Enchantment.EFFICIENCY,1)
+                addEnchantment(Enchantment.EFFICIENCY, 1)
             })
 
         }
@@ -71,7 +71,7 @@ object MinerClass: AnniClass(), Listener {
     data class BlastFurnaceCount(val player: Player, var minedCount: Int)
 
     val goldrushes = mutableListOf<GoldRushAbility>()
-    val blastFurnaceCounts = mutableMapOf<Player,BlastFurnaceCount>()
+    val blastFurnaceCounts = mutableMapOf<Player, BlastFurnaceCount>()
 
     @EventHandler
     fun onInteract(event: PlayerInteractEvent) {
@@ -81,8 +81,8 @@ object MinerClass: AnniClass(), Listener {
         val item = event.item ?: return
         if (item.getAnniId() != GOLD_RUSH_ITEM_ID || player.hasCooldown(item)) return
 
-        goldrushes.add(GoldRushAbility(player,GOLD_RUSH_TIME))
-        player.setCooldown(GOLD_RUSH_COOLDOWN_GROUP,GOLD_RUSH_COOLDOWN)
+        goldrushes.add(GoldRushAbility(player, GOLD_RUSH_TIME))
+        player.setCooldown(GOLD_RUSH_COOLDOWN_GROUP, GOLD_RUSH_COOLDOWN)
     }
 
     @EventHandler
@@ -96,7 +96,7 @@ object MinerClass: AnniClass(), Listener {
     }
 
     @EventHandler
-    fun onExp(event:PlayerExpChangeEvent) {
+    fun onExp(event: PlayerExpChangeEvent) {
         val player = event.player
         if (!isSelected(player)) return
 
@@ -113,16 +113,11 @@ object MinerClass: AnniClass(), Listener {
 
         val face = event.blockFace
         val pos = event.clickedBlock?.location?.apply {
-            add(0.5,0.5,0.5)
-            add(face.modX * 0.65, face.modY * 0.65,face.modZ * 0.65)
+            add(0.5, 0.5, 0.5)
+            add(face.modX * 0.65, face.modY * 0.65, face.modZ * 0.65)
         } ?: return
 
-        Particle.DUST.builder()
-            .location(pos.world,pos.x,pos.y,pos.z)
-            .receivers(12,true)
-            .count(1)
-            .color(255,220,220,50)
-            .spawn()
+        Particle.DUST.builder().location(pos.world, pos.x, pos.y, pos.z).receivers(12, true).count(1).color(255, 220, 220, 50).spawn()
     }
 
     fun getMultiply(player: Player): Int {
