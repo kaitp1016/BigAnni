@@ -49,8 +49,7 @@ object Game: Listener {
     const val BLAZE_POWDER_USABLE_PHASE = 4
     val ATTACK_SPEED_MODIFIER = NamespacedKey(plugin,"anni_attack_speed_modifier")
 
-    val joinedPlayers = mutableSetOf<UUID>()
-    val previousGamePlayers = mutableSetOf<UUID>()
+    val currentGamePlayers = mutableSetOf<UUID>()
 
     val teams = mutableListOf<AnniTeam>()
     var map = Config.MapConfig.default()
@@ -65,6 +64,9 @@ object Game: Listener {
         isStarted = true
 
         teams.clear()
+
+        BossManager.reset()
+        FinalBossFight.reset()
 
         BossBarManager.setColor(BarColor.BLUE)
 
@@ -84,8 +86,7 @@ object Game: Listener {
 
         EnderFurnace.reset()
 
-        previousGamePlayers.clear()
-        previousGamePlayers.addAll(joinedPlayers)
+        currentGamePlayers.clear()
 
         Bukkit.getOnlinePlayers().forEach { player ->
             player.totalExperience = 0
@@ -102,7 +103,7 @@ object Game: Listener {
                 player.kill()
             }
 
-            previousGamePlayers.remove(player.uniqueId)
+            currentGamePlayers.add(player.uniqueId)
         }
 
         Scheduler.scheduleTask(5) {
@@ -257,16 +258,14 @@ object Game: Listener {
 
         attackSpeed?.baseValue = 4.0
 
-        if (previousGamePlayers.contains(player.uniqueId)) {
+        if (!currentGamePlayers.contains(player.uniqueId)) {
             mc.scoreboard.removePlayerFromTeam(player.scoreboardEntryName)
             player.enderChest.clear()
             player.inventory.clear()
             player.kill()
-
-            previousGamePlayers.remove(player.uniqueId)
         }
 
-        joinedPlayers.add(player.uniqueId)
+        currentGamePlayers.add(player.uniqueId)
     }
 
     @EventHandler
