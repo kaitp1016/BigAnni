@@ -136,14 +136,14 @@ object ScorpioClass: AnniClass(), Listener {
                 val pos = thrower.getRayTrace(1, ClipContext.Fluid.ANY).location
                 val level = thrower.level()
                 val blockPos = BlockPos.containing(pos.x, pos.y, pos.z)
-                if (!level.getBlockState(blockPos).canOcclude() || !level.getBlockState(blockPos.offset(0, 1, 0)).canOcclude()) return
+                if (level.getBlockState(blockPos).canOcclude() || level.getBlockState(blockPos.offset(0, 1, 0)).canOcclude()) return
 
                 var y = min(blockPos.y, 256)
                 var isVoid = true
 
                 while (y > -64) {
                     val state = level.getBlockState(BlockPos(blockPos.x, y, blockPos.z))
-                    if (state.canOcclude()) {
+                    if (!state.isAir) {
                         isVoid = false
                         break
                     }
