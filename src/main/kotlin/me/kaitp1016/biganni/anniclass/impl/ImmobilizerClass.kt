@@ -84,7 +84,7 @@ object ImmobilizerClass: AnniClass(), Listener {
             if (targets.isEmpty()) return
 
             var userEffectTick: Int = -1
-            targets.forEach { target ->
+            targets.take(1).forEach { target ->
                 val effectTime = getEffectTime(target)
                 userEffectTick = max(effectTime, userEffectTick)
 
