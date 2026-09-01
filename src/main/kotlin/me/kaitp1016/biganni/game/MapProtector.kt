@@ -9,7 +9,9 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
+import org.bukkit.event.block.BlockExplodeEvent
 import org.bukkit.event.block.BlockPlaceEvent
+import org.bukkit.event.entity.EntityExplodeEvent
 import org.bukkit.event.player.PlayerBucketEmptyEvent
 import org.bukkit.event.player.PlayerBucketFillEvent
 
@@ -28,6 +30,11 @@ object MapProtector: Listener {
         if (isProtected(block.location) && !canBypass(event.player)) {
             event.isCancelled = true
         }
+    }
+
+    @EventHandler
+    fun onExplode(event: EntityExplodeEvent) {
+        event.blockList().removeIf { block -> isProtected(block.location) }
     }
 
     @EventHandler

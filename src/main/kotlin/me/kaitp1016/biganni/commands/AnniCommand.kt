@@ -12,9 +12,11 @@ import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.command.brigadier.Commands
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes
 import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver
+import me.kaitp1016.biganni.anniclass.AnniClassManager.isClassSelected
+import me.kaitp1016.biganni.anniclass.AnniClassManager.selectAnniClass
+import me.kaitp1016.biganni.anniclass.AnniClasses
 import me.kaitp1016.biganni.config.Config
 import me.kaitp1016.biganni.features.DelayingBlock
-import me.kaitp1016.biganni.features.EnderFurnace
 import me.kaitp1016.biganni.features.TeamDoor
 import me.kaitp1016.biganni.game.Game
 import me.kaitp1016.biganni.game.StartCountdown
@@ -186,7 +188,30 @@ object AnniCommand {
             }
 
             return@executes 1
-        })
+        }).then(Commands.literal("setteam").then(Commands.argument("player", StringArgumentType.word()).then(Commands.argument("team", StringArgumentType.greedyString()).executes {
+            val playerName = StringArgumentType.getString(it, "player")
+            val team = StringArgumentType.getString(it, "team")
+            val player = mc.playerList.getPlayer(playerName)
+            if (player == null) {
+                it.source.sender.sendMessage("§cプレイヤーが見つかりませんでした!")
+                return@executes 1
+            }
+
+            val mcTeam = mc.scoreboard.playerTeams.find { it.name.equals(team, true) }
+            if (mcTeam == null) {
+                it.source.sender.sendMessage("§cチームが見つかりませんでした!")
+                return@executes 1
+            }
+
+            mc.scoreboard.addPlayerToTeam(player.scoreboardName, mcTeam)
+            player.kill(player.level())
+
+            if (!player.bukkitEntity.isClassSelected()) {
+                player.bukkitEntity.selectAnniClass(AnniClasses.CIVILIAN)
+            }
+
+            return@executes 1
+        })))
     }
 
     object MapSuggestion : SuggestionProvider<CommandSourceStack> {

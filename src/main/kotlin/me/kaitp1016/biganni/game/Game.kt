@@ -258,9 +258,11 @@ object Game: Listener {
         attackSpeed?.baseValue = 4.0
 
         if (previousGamePlayers.contains(player.uniqueId)) {
+            mc.scoreboard.removePlayerFromTeam(player.scoreboardEntryName)
             player.enderChest.clear()
             player.inventory.clear()
             player.kill()
+
             previousGamePlayers.remove(player.uniqueId)
         }
 

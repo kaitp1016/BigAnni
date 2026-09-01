@@ -7,7 +7,7 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.enchantment.EnchantItemEvent
 import org.bukkit.event.entity.PlayerDeathEvent
-import org.bukkit.event.inventory.InventoryAction
+import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.inventory.PrepareItemCraftEvent
@@ -60,7 +60,7 @@ object TaggedItem: Listener {
             return
         }
 
-        if (event.action == InventoryAction.HOTBAR_SWAP && event.whoClicked.inventory.getItem(event.hotbarButton)?.persistentDataContainer?.has(ItemKeys.SOULBOUND) == true) {
+        if (event.click == ClickType.NUMBER_KEY && event.whoClicked.inventory.getItem(event.hotbarButton)?.persistentDataContainer?.has(ItemKeys.SOULBOUND) == true) {
             event.isCancelled = true
         }
     }
