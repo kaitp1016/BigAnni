@@ -2,20 +2,22 @@ package me.kaitp1016.biganni.game
 
 import net.minecraft.core.BlockPos
 import net.minecraft.world.level.Level
-import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.World
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
+import org.bukkit.event.player.PlayerBucketEmptyEvent
+import org.bukkit.event.player.PlayerBucketFillEvent
 
 object MapProtector: Listener {
     @EventHandler
     fun onPlace(event: BlockPlaceEvent) {
         val block = event.blockPlaced
-        if (isProtected(block.location) && event.player.gameMode != GameMode.CREATIVE) {
+        if (isProtected(block.location) && !canBypass(event.player)) {
             event.isCancelled = true
         }
     }
@@ -23,7 +25,25 @@ object MapProtector: Listener {
     @EventHandler
     fun onBreak(event: BlockBreakEvent) {
         val block = event.block
-        if (isProtected(block.location) && event.player.gameMode != GameMode.CREATIVE) {
+        if (isProtected(block.location) && !canBypass(event.player)) {
+            event.isCancelled = true
+        }
+    }
+
+    @EventHandler
+    fun onBucketEmpty(event: PlayerBucketEmptyEvent) {
+        val block = event.block
+
+        if (isProtected(block.location) && !canBypass(event.player)) {
+            event.isCancelled = true
+        }
+    }
+
+    @EventHandler
+    fun onBucketFill(event: PlayerBucketFillEvent) {
+        val block = event.block
+
+        if (isProtected(block.location) && !canBypass(event.player)) {
             event.isCancelled = true
         }
     }
@@ -42,5 +62,9 @@ object MapProtector: Listener {
         if (!ignoreOutbound && mapRegion.isInDimension(world) && !mapRegion.contains(x, y, z)) return true
 
         return map.protectedRegions.any { region -> region.contains(world, x, y, z) }
+    }
+
+    private fun canBypass(player: Player): Boolean {
+        return player.gameMode == GameMode.CREATIVE
     }
 }
