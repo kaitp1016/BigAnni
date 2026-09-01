@@ -69,7 +69,7 @@ object Game: Listener {
         BossBarManager.setColor(BarColor.BLUE)
 
         ScoreboardManager.reset()
-        ScoreboardManager.setLine(0, Component.literal("§6apple.playit.plus"))
+        ScoreboardManager.setLine(0, Component.literal("§688gate.playit.plus"))
         ScoreboardManager.setLine(1, Component.empty())
 
         map.teams.forEach {
