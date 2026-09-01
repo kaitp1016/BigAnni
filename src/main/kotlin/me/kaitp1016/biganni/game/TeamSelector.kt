@@ -1,6 +1,5 @@
 package me.kaitp1016.biganni.game
 
-import com.destroystokyo.paper.event.server.ServerTickStartEvent
 import me.kaitp1016.biganni.anniclass.AnniClassManager.isClassSelected
 import me.kaitp1016.biganni.anniclass.AnniClassManager.selectAnniClass
 import me.kaitp1016.biganni.anniclass.AnniClasses
@@ -41,7 +40,6 @@ object TeamSelector: Listener {
         if (player.toMC().team != null) return
 
         player.give(createTeamSelectorItem())
-
 
         Scheduler.scheduleTask(1) {
             Bukkit.getOnlinePlayers().forEach {

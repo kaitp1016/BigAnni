@@ -110,6 +110,8 @@ object LumberjackClass: AnniClass(), Listener {
         if (attacker !is Player || !isSelected(attacker) || bruteForces.none { it.player == attacker } || !attacker.toMC().mainHandItem.`is`(ItemTags.AXES) || source.damageType != DamageType.PLAYER_ATTACK) return
 
         val target = entity.toMC()
+        if (target.invulnerableTime > target.invulnerableDuration / 2f) return
+
         val damage = getDamage(attacker.inventory.itemInMainHand.type) ?: return
 
         armorSlots.forEach {
